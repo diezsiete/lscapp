@@ -16,7 +16,7 @@
             android:id="@+id/nav_leaderboard"
             android:icon="@drawable/ic_language_black"
             android:title="@string/leaderboard" />
-        
+
         <item
             android:id="@+id/nav_configuration"
             android:icon="@drawable/ic_menu_manage"

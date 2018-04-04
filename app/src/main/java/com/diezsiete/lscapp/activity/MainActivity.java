@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.fragment.DictionaryFragment;
 import com.diezsiete.lscapp.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -48,12 +49,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void attachFragment() {
+    private void attachFragment(Fragment fragment) {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
-        Fragment fragment = supportFragmentManager.findFragmentById(R.id.main_container);
-        if (!(fragment instanceof SettingsFragment)) {
-            fragment = SettingsFragment.newInstance();
-        }
         supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, fragment)
                 .commit();
@@ -69,11 +66,11 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_practice) {
             // Handle the camera action
         } else if (id == R.id.nav_dictionary) {
-
+            attachFragment(DictionaryFragment.newInstance());
         } else if (id == R.id.nav_leaderboard) {
 
         } else if (id == R.id.nav_configuration) {
-            attachFragment();
+            attachFragment(SettingsFragment.newInstance());
 
         } else if (id == R.id.nav_about) {
 
