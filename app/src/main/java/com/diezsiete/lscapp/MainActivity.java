@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //menu item practicar seleccionado por default
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
