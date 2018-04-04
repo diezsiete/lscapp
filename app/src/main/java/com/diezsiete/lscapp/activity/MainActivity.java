@@ -2,14 +2,18 @@ package com.diezsiete.lscapp.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +48,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void attachFragment() {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        Fragment fragment = supportFragmentManager.findFragmentById(R.id.main_container);
+        if (!(fragment instanceof SettingsFragment)) {
+            fragment = SettingsFragment.newInstance();
+        }
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .commit();
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -58,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_leaderboard) {
 
         } else if (id == R.id.nav_configuration) {
+            attachFragment();
 
         } else if (id == R.id.nav_about) {
 

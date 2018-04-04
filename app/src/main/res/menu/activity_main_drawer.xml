@@ -16,24 +16,20 @@
             android:id="@+id/nav_leaderboard"
             android:icon="@drawable/ic_language_black"
             android:title="@string/leaderboard" />
+        
+        <item
+            android:id="@+id/nav_configuration"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/configuration" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_outline_black"
+            android:title="@string/about" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/ic_clear_black"
+            android:title="@string/sign_out" />
 
     </group>
-
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/nav_configuration"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/configuration" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_info_outline_black"
-                android:title="@string/about" />
-            <item
-                android:id="@+id/nav_sign_out"
-                android:icon="@drawable/ic_clear_black"
-                android:title="@string/sign_out" />
-        </menu>
-    </item>
 
 </menu>
