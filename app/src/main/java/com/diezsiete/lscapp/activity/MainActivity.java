@@ -1,4 +1,4 @@
-package com.diezsiete.lscapp;
+package com.diezsiete.lscapp.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.diezsiete.lscapp.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
