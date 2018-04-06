@@ -1,7 +1,6 @@
 package com.diezsiete.lscapp.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,10 +15,8 @@ import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.DictionaryAdapter;
+import com.diezsiete.lscapp.utils.DictioinaryJsonUtils;
 import com.diezsiete.lscapp.utils.NetworkUtils;
-import com.diezsiete.lscapp.utils.OpenWeatherJsonUtils;
-
-import java.net.URL;
 
 
 public class DictionaryFragment extends Fragment implements DictionaryAdapter.ListItemClickListener{
@@ -71,7 +68,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
      */
     private void loadDictionaryData() {
         showDictionaryDataView();
-        new FetchDictionaryTask(this.getContext()).execute("94043,USA");
+        new FetchDictionaryTask(this.getContext()).execute();
     }
 
     /**
@@ -111,23 +108,10 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
 
         @Override
         protected String[] doInBackground(String... params) {
-
-            /* If there's no zip code, there's nothing to look up. */
-            if (params.length == 0) {
-                return null;
-            }
-
-            String location = params[0];
-            URL weatherRequestUrl = NetworkUtils.buildUrl(location);
-
             try {
-                String jsonWeatherResponse = NetworkUtils
-                        .getResponseFromHttpUrl(weatherRequestUrl);
+                String jsonDictionary = NetworkUtils.getDictionary();
 
-                String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                        .getSimpleWeatherStringsFromJson(mContext, jsonWeatherResponse);
-
-                return simpleJsonWeatherData;
+                return DictioinaryJsonUtils.getWordsFromDictionaryJson(jsonDictionary);
 
             } catch (Exception e) {
                 e.printStackTrace();
