@@ -1,28 +1,47 @@
 package com.diezsiete.lscapp.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.DictionaryAdapter;
+import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.utils.DictioinaryJsonUtils;
 import com.diezsiete.lscapp.utils.NetworkUtils;
+import com.diezsiete.lscapp.utils.ProxyApp;
+import com.diezsiete.lscapp.widget.SignVideoPlayer;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 
 public class DictionaryFragment extends Fragment implements DictionaryAdapter.ListItemClickListener{
 
     private DictionaryAdapter mAdapter;
     private RecyclerView mDictionaryList;
+    private LayoutInflater mInflater;
 
     private Toast mToast;
 
@@ -42,6 +61,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mInflater = inflater;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
 
@@ -88,13 +108,41 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
 
 
     @Override
-    public void onListItemClick(String word) {
-        Context context = this.getContext();
-        Toast.makeText(context, word, Toast.LENGTH_SHORT)
-                .show();
+    public void onListItemClick(final Concept concept) {
+
+        View popupView = mInflater.inflate(R.layout.dictionary_popup_window, null);
+
+        TextView textView = (TextView) popupView.findViewById(R.id.tv_dictionary_popup_window);
+        textView.setText(concept.getMeaning());
+
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);
+
+
+        //exoplayer
+        //SimpleExoPlayerView exoPlayerView = popupView.findViewById(R.id.dictionary_video_view);
+        //SignVideoPlayer player = new SignVideoPlayer(popupView.getContext(), exoPlayerView);
+        //player.addExternalResource("https://lscapp.pta.com.co/video/APARTAMENTO.mp4");
+        //player.initialize();
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
 
-    public class FetchDictionaryTask extends AsyncTask<String, Void, String[]> {
+    public class FetchDictionaryTask extends AsyncTask<String, Void, Concept[]> {
 
         private Context mContext;
         public FetchDictionaryTask(Context context){
@@ -107,12 +155,9 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
         }
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected Concept[] doInBackground(String... params) {
             try {
-                String jsonDictionary = NetworkUtils.getDictionary();
-
-                return DictioinaryJsonUtils.getWordsFromDictionaryJson(jsonDictionary);
-
+                return ProxyApp.getDictionary();
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -120,7 +165,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
         }
 
         @Override
-        protected void onPostExecute(String[] dictionaryData) {
+        protected void onPostExecute(Concept[] dictionaryData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (dictionaryData != null) {
                 showDictionaryDataView();

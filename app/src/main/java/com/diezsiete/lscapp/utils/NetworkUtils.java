@@ -38,11 +38,9 @@ public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String URL_BASE = "https://lscapp.pta.com.co";
-    private static final String URL_DICTIONARY = "/dictionary";
 
-
-    public static String getDictionary() throws IOException {
-        String url = URL_BASE + URL_DICTIONARY;
+    public static String get(String url) throws IOException {
+        url = URL_BASE + url;
 
         Request request = new Request.Builder().url(url).build();
 

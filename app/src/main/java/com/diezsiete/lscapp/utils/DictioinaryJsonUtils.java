@@ -45,7 +45,6 @@ public class DictioinaryJsonUtils {
         }
 
         return parsedDictionaryData;
-
     }
 
 }

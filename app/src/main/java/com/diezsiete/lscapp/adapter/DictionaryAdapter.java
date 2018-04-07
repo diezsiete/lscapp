@@ -9,15 +9,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.model.Concept;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.DictionaryViewHolder> {
 
-    private String[] mDictionaryData;
+    private Concept[] mDictionaryData;
 
     final private ListItemClickListener mOnClickListener;
 
     public interface ListItemClickListener {
-        void onListItemClick(String word);
+        void onListItemClick(Concept concept);
     }
 
     public DictionaryAdapter(ListItemClickListener listener) {
@@ -38,7 +39,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
 
     @Override
     public void onBindViewHolder(DictionaryViewHolder holder, int position) {
-        String word = mDictionaryData[position];
+        String word = mDictionaryData[position].getMeaning();
         holder.listItemDictionaryView.setText(word);
     }
 
@@ -48,7 +49,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         return mDictionaryData.length;
     }
 
-    public void setDictionaryData(String[] weatherData) {
+    public void setDictionaryData(Concept[] weatherData) {
         mDictionaryData = weatherData;
         notifyDataSetChanged();
     }
@@ -66,8 +67,8 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            String word = mDictionaryData[adapterPosition];
-            mOnClickListener.onListItemClick(word);
+            Concept concept = mDictionaryData[adapterPosition];
+            mOnClickListener.onListItemClick(concept);
         }
     }
 }
