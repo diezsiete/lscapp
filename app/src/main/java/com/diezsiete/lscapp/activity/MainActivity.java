@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.fragment.DictionaryFragment;
+import com.diezsiete.lscapp.fragment.LevelSelectionFragment;
 import com.diezsiete.lscapp.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //menu item practicar seleccionado por default
         navigationView.getMenu().getItem(0).setChecked(true);
+        attachFragment(LevelSelectionFragment.newInstance());
     }
 
     @Override
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_practice) {
-            // Handle the camera action
+            attachFragment(LevelSelectionFragment.newInstance());
         } else if (id == R.id.nav_dictionary) {
             attachFragment(DictionaryFragment.newInstance());
         } else if (id == R.id.nav_leaderboard) {

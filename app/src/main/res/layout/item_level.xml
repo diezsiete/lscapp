@@ -1,0 +1,22 @@
+<layout>
+    <data>
+        <variable name="level" type="com.diezsiete.lscapp.model.Level" />
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:tools="http://schemas.android.com/tools"
+                 android:id="@+id/category_item"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:foreground="@drawable/selector_subtle"
+                 tools:ignore="UseCompoundDrawables">
+
+        <TextView
+                android:id="@+id/level_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{level.name}"
+                android:layout_gravity="bottom"
+                android:padding="@dimen/spacing_double" />
+
+    </FrameLayout>
+</layout>

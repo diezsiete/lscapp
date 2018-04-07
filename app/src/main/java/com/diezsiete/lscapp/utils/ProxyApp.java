@@ -1,6 +1,7 @@
 package com.diezsiete.lscapp.utils;
 
 import com.diezsiete.lscapp.model.Concept;
+import com.diezsiete.lscapp.model.Level;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import java.net.HttpURLConnection;
 public class ProxyApp {
 
     private static final String URL_DICTIONARY = "/dictionary";
+    private static final String URL_LEVELS = "/levels";
 
     private static String getRestJson(String url) throws IOException, JSONException {
         String jsonString = NetworkUtils.get(url);
@@ -41,18 +43,12 @@ public class ProxyApp {
         return json.getString(CONTENT);
     }
 
-    public static Concept[] getDictionary() throws IOException, JSONException {
-        String dictionaryJsonString = getRestJson(URL_DICTIONARY);
-        return getConceptsFromDictionaryJson(dictionaryJsonString);
-    }
 
-    public static Concept[] getConceptsFromDictionaryJson(String dictionaryJsonString) throws JSONException {
+    private static Concept[] getConceptsFromDictionaryJson(String dictionaryJsonString) throws JSONException {
         JSONArray dictionaryArray = new JSONArray(dictionaryJsonString);
 
         /* String array que tiene las palabras del diccionario */
-        Concept[] parsedDictionaryData = null;
-
-        parsedDictionaryData = new Concept[dictionaryArray.length()];
+        Concept[] parsedDictionaryData = new Concept[dictionaryArray.length()];
 
         for (int i = 0; i < dictionaryArray.length(); i++) {
             JSONObject conceptJson = dictionaryArray.getJSONObject(i);
@@ -61,4 +57,24 @@ public class ProxyApp {
 
         return parsedDictionaryData;
     }
+
+    private static Level[] getLevelsFromJson(String jsonString) throws JSONException {
+        JSONArray jsonArray = new JSONArray(jsonString);
+        Level[] parsedData = new Level[jsonArray.length()];
+
+        for (int i = 0; i < jsonArray.length(); i++)
+            parsedData[i] = new Level(jsonArray.getJSONObject(i));
+
+        return parsedData;
+    }
+
+    public static Concept[] getDictionary() throws IOException, JSONException {
+        return getConceptsFromDictionaryJson(getRestJson(URL_DICTIONARY));
+    }
+
+    public static Level[] getLevels() throws IOException, JSONException {
+        return getLevelsFromJson(getRestJson(URL_LEVELS));
+    }
+
+
 }
