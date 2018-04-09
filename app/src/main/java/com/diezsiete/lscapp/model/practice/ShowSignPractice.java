@@ -13,40 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.diezsiete.lscapp.model.practice;
 
-package com.lscapp.model.quiz;
 
-import android.annotation.SuppressLint;
-import android.os.Parcel;
+import org.json.JSONArray;
+import org.json.JSONException;
 
-import com.lscapp.helper.ParcelableHelper;
+public final class ShowSignPractice extends Practice {
 
-@SuppressLint("ParcelCreator")
-public final class ShowSignQuiz extends Quiz<String> {
+    private String mMeaning;
+    private String[] mVideo;
 
-    public ShowSignQuiz(String question, String answer, boolean solved) {
-        super(question, answer, solved);
-    }
-
-    @SuppressWarnings("unused")
-    public ShowSignQuiz(Parcel in) {
-        super(in);
-        setAnswer(in.readString());
+    public ShowSignPractice(String meaning, String[] video) {
+        super();
+        mMeaning = meaning;
+        mVideo = video;
     }
 
     @Override
-    public String getStringAnswer() {
-        return getAnswer().toString();
+    public PracticeType getType() {
+        return PracticeType.SHOW_SIGN;
     }
 
     @Override
-    public QuizType getType() {
-        return QuizType.SHOW_SIGN;
+    public String getQuestion(){
+        return mMeaning;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(getAnswer());
+
+    public String getMeaning() { return  mMeaning; }
+
+    public String[] getVideo() {
+        return mVideo;
     }
+
 }

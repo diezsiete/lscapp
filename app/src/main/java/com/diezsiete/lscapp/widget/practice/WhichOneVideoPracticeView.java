@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lscapp.widget.quiz;
+package com.diezsiete.lscapp.widget.practice;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,18 +26,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 
+import com.diezsiete.lscapp.adapter.PracticeOptionsTextAdapter;
+import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.lscapp.R;
-import com.lscapp.adapter.OptionsQuizAdapter;
-import com.lscapp.helper.ApiLevelHelper;
-import com.lscapp.model.Category;
-import com.lscapp.model.quiz.WhichOneVideoQuiz;
-import com.lscapp.widget.SignVideoPlayer;
+import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.widget.SignVideoPlayer;
+
+
 
 @SuppressLint("ViewConstructor")
-public class WhichOneVideoQuizView extends AbsQuizView<WhichOneVideoQuiz> {
+public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPractice> {
 
     private static final String KEY_ANSWER = "ANSWER";
     private int mAnswered = -1;
@@ -45,26 +44,21 @@ public class WhichOneVideoQuizView extends AbsQuizView<WhichOneVideoQuiz> {
 
     private SignVideoPlayer videoPlayer;
 
-    public WhichOneVideoQuizView(Context context, Category category, WhichOneVideoQuiz quiz) {
-        super(context, category, quiz);
+    public WhichOneVideoPracticeView(Context context, WhichOneVideoPractice practice) {
+        super(context, practice);
     }
 
-    @Override
-    protected void setUpQuestionView() {
-        super.setUpQuestionView();
-        mQuestionView.setText(getResources().getString(R.string.quiz_select_option));
-    }
 
     @Override
     protected View createQuizContentView() {
         final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.quiz_which_one_video, this, false);
+                R.layout.practice_which_one_video, this, false);
 
         mAnswerView = new GridView(getContext());
         mAnswerView.setSelector(R.drawable.selector_button);
         mAnswerView.setNumColumns(2);
-        mAnswerView.setAdapter(new OptionsQuizAdapter(getQuiz().getOptions(),
-                R.layout.item_answer));
+        mAnswerView.setAdapter(new PracticeOptionsTextAdapter(getPractice().getOptions(),
+                R.layout.practice_item_answer));
         mAnswerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,14 +71,13 @@ public class WhichOneVideoQuizView extends AbsQuizView<WhichOneVideoQuiz> {
         SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
 
         videoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
-        Resources res = getContext().getResources();
-        int videoId = res.getIdentifier(getQuiz().getQuestion(), "raw", getContext().getPackageName());
-        videoPlayer.addLocalResource(videoId);
+        for(String video : getPractice().getVideo())
+            videoPlayer.addExternalResource(video);
 
 
         container.addView(mAnswerView);
         return container;
-        //return mAnswerView;
+
     }
 
     @Override
@@ -100,28 +93,12 @@ public class WhichOneVideoQuizView extends AbsQuizView<WhichOneVideoQuiz> {
         if (savedInput == null) {
             return;
         }
-        mAnswered = savedInput.getInt(KEY_ANSWER);
-        if (mAnswered != -1) {
-            if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.KITKAT) && isLaidOut()) {
-                setUpUserListSelection(mAnswerView, mAnswered);
-            } else {
-                addOnLayoutChangeListener(new OnLayoutChangeListener() {
-                    @Override
-                    public void onLayoutChange(View v, int left, int top,
-                                               int right, int bottom,
-                                               int oldLeft, int oldTop,
-                                               int oldRight, int oldBottom) {
-                        v.removeOnLayoutChangeListener(this);
-                        setUpUserListSelection(mAnswerView, mAnswered);
-                    }
-                });
-            }
-        }
     }
 
     @Override
     protected boolean isAnswerCorrect() {
-        return getQuiz().isAnswerCorrect(new int[]{mAnswered});
+        return true;
+        //return getPractice().isAnswerCorrect(new int[]{mAnswered});
     }
 
 

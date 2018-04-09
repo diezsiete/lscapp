@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.lscapp.model.quiz;
+package com.diezsiete.lscapp.model.practice;
 
-import com.lscapp.model.JsonAttributes;
+import com.diezsiete.lscapp.model.JsonAttributes;
 
 /**
- * Available types of quizzes.
- * Maps {@link JsonAttributes.QuizType} to subclasses of {@link Quiz}.
+ * Available types of practices.
+ * Maps {@link JsonAttributes.PracticeType} to subclasses of {@link Practice}.
  */
-public enum QuizType {
+public enum PracticeType {
 
-    SHOW_SIGN(JsonAttributes.QuizType.SHOW_SIGN, ShowSignQuiz.class),
-    WHICH_ONE_VIDEOS(JsonAttributes.QuizType.WHICH_ONE_VIDEOS, WhichOneVideosQuiz.class),
-    WHICH_ONE_VIDEO(JsonAttributes.QuizType.WHICH_ONE_VIDEO, WhichOneVideoQuiz.class);
+    SHOW_SIGN(JsonAttributes.PracticeType.SHOW_SIGN, ShowSignPractice.class),
+    WHICH_ONE_VIDEOS(JsonAttributes.PracticeType.WHICH_ONE_VIDEOS, WhichOneVideosPractice.class),
+    WHICH_ONE_VIDEO(JsonAttributes.PracticeType.WHICH_ONE_VIDEO, WhichOneVideoPractice.class);
 
     private final String mJsonName;
-    private final Class<? extends Quiz> mType;
+    private final Class<? extends Practice> mType;
 
-    QuizType(final String jsonName, final Class<? extends Quiz> type) {
+    PracticeType(final String jsonName, final Class<? extends Practice> type) {
         mJsonName = jsonName;
         mType = type;
     }
@@ -40,7 +40,7 @@ public enum QuizType {
         return mJsonName;
     }
 
-    public Class<? extends Quiz> getType() {
+    public Class<? extends Practice> getType() {
         return mType;
     }
 }

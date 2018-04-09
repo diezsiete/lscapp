@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lscapp.helper;
+package com.diezsiete.lscapp.utils;
 
 import android.util.Log;
 
@@ -51,6 +51,20 @@ public class JsonHelper {
             Log.e(TAG, "Error during Json processing: ", e);
         }
         return new String[0];
+    }
+
+    public static String[][] jsonMatrixToStringMatrix(String json) throws JSONException {
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            String[][] stringArray = new String[jsonArray.length()][];
+            for (int i = 0; i < jsonArray.length(); i++) {
+                stringArray[i] = jsonArrayToStringArray(jsonArray.getString(i));
+            }
+            return stringArray;
+        } catch (JSONException e) {
+            Log.e(TAG, "Error during Json processing: ", e);
+        }
+        throw new JSONException("Error during Json processing:");
     }
 
     /**

@@ -14,94 +14,36 @@
  * limitations under the License.
  */
 
-package com.lscapp.model.quiz;
+package com.diezsiete.lscapp.model.practice;
 
-import android.os.Parcel;
 
-import com.lscapp.helper.AnswerHelper;
+public final class WhichOneVideosPractice extends Practice {
 
-import java.util.Arrays;
+    private String mQuestion;
+    private int mAnswer;
+    private String[][] mOptions;
 
-public final class WhichOneVideosQuiz extends OptionsQuiz<String> {
-
-    public static final Creator<WhichOneVideosQuiz> CREATOR
-            = new Creator<WhichOneVideosQuiz>() {
-        @Override
-        public WhichOneVideosQuiz createFromParcel(Parcel in) {
-            return new WhichOneVideosQuiz(in);
-        }
-
-        @Override
-        public WhichOneVideosQuiz[] newArray(int size) {
-            return new WhichOneVideosQuiz[size];
-        }
-    };
-
-    public WhichOneVideosQuiz(String question, int[] answer, String[] options, boolean solved) {
-        super(question, answer, options, solved);
-    }
-
-    public WhichOneVideosQuiz(Parcel in) {
-        super(in);
-        String options[] = in.createStringArray();
-        setOptions(options);
+    public WhichOneVideosPractice(String question, int answer, String[][] options) {
+        super();
+        mQuestion = question;
+        mAnswer = answer;
+        mOptions = options;
     }
 
     @Override
-    public QuizType getType() {
-        return QuizType.WHICH_ONE_VIDEOS;
+    public PracticeType getType() {
+        return PracticeType.WHICH_ONE_VIDEOS;
     }
 
+
     @Override
-    public String getStringAnswer() {
-        return AnswerHelper.getAnswer(getAnswer(), getOptions());
+    public String getQuestion() {
+        return mQuestion;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        String[] options = getOptions();
-        dest.writeStringArray(options);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof WhichOneVideosQuiz)) {
-            return false;
-        }
-
-        WhichOneVideosQuiz quiz = (WhichOneVideosQuiz) o;
-        final int[] answer = getAnswer();
-        final String question = getQuestion();
-        if (answer != null ? !Arrays.equals(answer, quiz.getAnswer()) : quiz.getAnswer() != null) {
-            return false;
-        }
-        if (!question.equals(quiz.getQuestion())) {
-            return false;
-        }
-
-        //noinspection RedundantIfStatement
-        if (!Arrays.equals(getOptions(), quiz.getOptions())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(getOptions());
-        result = 31 * result + Arrays.hashCode(getAnswer());
-        return result;
+    public String[][] getOptions() {
+        return mOptions;
     }
 
 }

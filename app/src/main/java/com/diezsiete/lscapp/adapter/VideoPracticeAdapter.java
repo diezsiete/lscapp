@@ -14,69 +14,46 @@
  * limitations under the License.
  */
 
-package com.lscapp.adapter;
+package com.diezsiete.lscapp.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.annotation.LayoutRes;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.lscapp.R;
-import com.lscapp.helper.SignVideoPlayerHelper;
-import com.lscapp.widget.SignVideoPlayer;
-
-import java.util.ArrayList;
+import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.utils.SignVideoPlayerHelper;
+import com.diezsiete.lscapp.widget.SignVideoPlayer;
 
 /**
  * A simple adapter to display a options of a quiz.
  */
-public class VideoQuizAdapter extends BaseAdapter {
+public class VideoPracticeAdapter extends BaseAdapter {
 
-    private final String[] mOptions;
+    private final String[][] mOptions;
     private final int mLayoutId;
-    private final String[] mAlphabet;
+
 
     private int videoPlayers = 0;
 
     /**
-     * Creates an {@link VideoQuizAdapter}.
+     * Creates an {@link VideoPracticeAdapter}.
      *
      * @param options The options to add to the adapter.
      * @param layoutId Must consist of a single {@link TextView}.
      */
-    public VideoQuizAdapter(String[] options, @LayoutRes int layoutId) {
+    public VideoPracticeAdapter(String[][] options, @LayoutRes int layoutId) {
         mOptions = options;
         mLayoutId = layoutId;
-        mAlphabet = null;
     }
 
-    /**
-     * Creates an {@link VideoQuizAdapter}.
-     *
-     * @param options The options to add to the adapter.
-     * @param layoutId Must consist of a single {@link TextView}.
-     * @param context The context for the adapter.
-     * @param withPrefix True if a prefix should be given to all items.
-     */
-    public VideoQuizAdapter(String[] options, @LayoutRes int layoutId,
-                            Context context, boolean withPrefix) {
-        mOptions = options;
-        mLayoutId = layoutId;
-        if (withPrefix) {
-            mAlphabet = context.getResources().getStringArray(R.array.alphabet);
-        } else {
-            mAlphabet = null;
-        }
-    }
+
 
     @Override
     public int getCount() {
@@ -84,7 +61,7 @@ public class VideoQuizAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public String[] getItem(int position) {
         return mOptions[position];
     }
 
@@ -121,10 +98,12 @@ public class VideoQuizAdapter extends BaseAdapter {
         SignVideoPlayer videoPlayer = SignVideoPlayerHelper.create(context, exoPlayerView);
 
 
-        String videoName = getItem(position);
-        Resources res = context.getResources();
-        int videoId = res.getIdentifier(videoName, "raw", context.getPackageName());
-        videoPlayer.addLocalResource(videoId);
+        String[] videoSrc = getItem(position);
+        for(String video : videoSrc)
+            videoPlayer.addExternalResource(video);
+        //Resources res = context.getResources();
+        //int videoId = res.getIdentifier(videoName, "raw", context.getPackageName());
+        //videoPlayer.addLocalResource(videoId);
 
 
         videoPlayer.setOnSingleTapUp(new SignVideoPlayer.onSingleTapUpListener() {

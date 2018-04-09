@@ -40,7 +40,7 @@
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:controller_layout_id="@layout/custom_playback_control"
+            app:controller_layout_id="@layout/exoplayer_custom_playback_control"
             app:use_controller="false">
 
         </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
@@ -48,7 +48,6 @@
     </FrameLayout>
 
     <TextView
-        style="@style/LSCApp.CompoundButton.True"
         android:id="@+id/tv_show_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

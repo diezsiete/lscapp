@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +28,19 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.utils.SignVideoPlayerHelper;
+import com.diezsiete.lscapp.widget.SignVideoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.lscapp.R;
-import com.lscapp.helper.SignVideoPlayerHelper;
-import com.lscapp.model.Category;
-import com.lscapp.model.quiz.ShowSignQuiz;
-import com.lscapp.widget.SignVideoPlayer;
+
 
 @SuppressLint("ViewConstructor")
-public class ShowSignQuizView extends AbsQuizView<ShowSignQuiz> {
+public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
 
     private TextView mTextWord;
 
-    private static final String KEY_SELECTION = "SELECTION";
+
     private static final LinearLayout.LayoutParams LAYOUT_PARAMS =
             new LinearLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT, 1);
 
@@ -47,10 +48,9 @@ public class ShowSignQuizView extends AbsQuizView<ShowSignQuiz> {
         LAYOUT_PARAMS.gravity = Gravity.CENTER;
     }
 
-    private boolean mAnswer = true;
 
-    public ShowSignQuizView(Context context, Category category, ShowSignQuiz quiz) {
-        super(context, category, quiz);
+    public ShowSignPracticeView(Context context, ShowSignPractice practice) {
+        super(context, practice);
     }
 
     @Override
@@ -63,24 +63,19 @@ public class ShowSignQuizView extends AbsQuizView<ShowSignQuiz> {
     @Override
     protected View createQuizContentView() {
         final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.quiz_show_sign, this, false);
+                R.layout.practice_show_sign, this, false);
 
-        if(!getQuiz().isSolved()) {
+        if(!getPractice().isSolved()) {
             SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
             SignVideoPlayer videoPlayer = SignVideoPlayerHelper.create(getContext(), exoPlayerView);
-
-            Resources res = getContext().getResources();
-
-            int videoId = res.getIdentifier(getQuiz().getAnswer(), "raw", getContext().getPackageName());
-            videoPlayer.addLocalResource(videoId);
+            for(String video : getPractice().getVideo())
+                videoPlayer.addExternalResource(video);
             SignVideoPlayerHelper.initialize();
 
             mTextWord = (TextView) container.findViewById(R.id.tv_show_sign);
-            mTextWord.setText(getQuiz().getQuestion());
+            mTextWord.setText(getPractice().getMeaning());
         }
-
         allowAnswer();
-
         return container;
     }
 
@@ -92,9 +87,7 @@ public class ShowSignQuizView extends AbsQuizView<ShowSignQuiz> {
 
     @Override
     public Bundle getUserInput() {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(KEY_SELECTION, mAnswer);
-        return bundle;
+        return new Bundle();
     }
 
     @Override

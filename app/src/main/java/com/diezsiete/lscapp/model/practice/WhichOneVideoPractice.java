@@ -17,22 +17,29 @@
 package com.diezsiete.lscapp.model.practice;
 
 
-public final class WhichOneVideosPractice extends Practice {
+import android.content.res.Resources;
+
+import com.diezsiete.lscapp.R;
+
+public final class WhichOneVideoPractice extends Practice {
 
     private String mQuestion;
+    private String[] mVideo;
     private int mAnswer;
-    private String[][] mOptions;
+    private String[] mOptions;
 
-    public WhichOneVideosPractice(String question, int answer, String[][] options) {
+
+    public WhichOneVideoPractice(String question, String[] video, String[] options, int answer) {
         super();
         mQuestion = question;
-        mAnswer = answer;
+        mVideo = video;
         mOptions = options;
+        mAnswer = answer;
     }
 
     @Override
     public PracticeType getType() {
-        return PracticeType.WHICH_ONE_VIDEOS;
+        return PracticeType.WHICH_ONE_VIDEO;
     }
 
 
@@ -41,9 +48,12 @@ public final class WhichOneVideosPractice extends Practice {
         return mQuestion;
     }
 
-
-    public String[][] getOptions() {
+    public String[] getOptions() {
         return mOptions;
+    }
+
+    public String[] getVideo() {
+        return mVideo;
     }
 
 }

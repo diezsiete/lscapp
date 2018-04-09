@@ -1,12 +1,11 @@
-package com.lscapp.helper;
+package com.diezsiete.lscapp.utils;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.util.Util;
-import com.lscapp.widget.SignVideoPlayer;
+import com.diezsiete.lscapp.widget.SignVideoPlayer;
 
 import java.util.ArrayList;
 

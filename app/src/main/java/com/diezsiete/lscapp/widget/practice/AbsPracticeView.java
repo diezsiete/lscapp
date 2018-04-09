@@ -14,59 +14,46 @@
  * limitations under the License.
  */
 
-package com.diezsiete.lscapp.widget.quiz;
+package com.diezsiete.lscapp.widget.practice;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
+
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.os.Build;
+
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
+
 import android.support.v4.view.MarginLayoutParamsCompat;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.util.Property;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
+
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.practice.Practice;
-import com.lscapp.R;
-import com.lscapp.activity.QuizActivity;
-import com.lscapp.helper.ApiLevelHelper;
-import com.lscapp.helper.SignVideoPlayerHelper;
-import com.lscapp.helper.ViewUtils;
-import com.lscapp.model.Category;
-import com.lscapp.model.quiz.Quiz;
-import com.lscapp.widget.fab.CheckableFab;
+import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.widget.fab.CheckableFab;
+
+
+
 
 
 public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
+
+
+    private final Q mPractice;
 
     private static final int ANSWER_HIDE_DELAY = 500;
     private static final int FOREGROUND_COLOR_CHANGE_DELAY = 750;
     private final int mSpacingDouble;
     private final LayoutInflater mLayoutInflater;
-    private final Category mCategory;
-    private final Q mPractice;
-    private final Interpolator mLinearOutSlowInInterpolator;
-    private final Handler mHandler;
-    private final InputMethodManager mInputMethodManager;
+
+
     private boolean mAnswered;
     private CheckableFab mSubmitAnswer;
-    private Runnable mHideFabRunnable;
-    private Runnable mMoveOffScreenRunnable;
 
     protected TextView mQuestionView;
 
@@ -75,22 +62,16 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
      * Enables creation of views for quizzes.
      *
      * @param context The context for this view.
-     * @param category The {@link Category} this view is running in.
-     * @param quiz The actual {@link Quiz} that is going to be displayed.
+     * @param practice The actual {@link Practice} that is going to be displayed.
      */
-    public AbsQuizView(Context context, Category category, Q quiz) {
+    public AbsPracticeView(Context context, Q practice) {
         super(context);
-        mQuiz = quiz;
-        mCategory = category;
+        mPractice = practice;
         mSpacingDouble = getResources().getDimensionPixelSize(R.dimen.spacing_double);
         mLayoutInflater = LayoutInflater.from(context);
         mSubmitAnswer = getSubmitButton();
-        mLinearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
-        mHandler = new Handler();
-        mInputMethodManager = (InputMethodManager) context.getSystemService
-                (Context.INPUT_METHOD_SERVICE);
 
-        setId(quiz.getId());
+        //setId(practice.getId());
         setUpQuestionView();
         LinearLayout container = createContainerLayout(context);
         View quizContentView = getInitializedContentView();
@@ -106,34 +87,55 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
         });
     }
 
+    private CheckableFab getSubmitButton() {
+        if (null == mSubmitAnswer) {
+            mSubmitAnswer = (CheckableFab) getLayoutInflater()
+                    .inflate(R.layout.answer_submit, this, false);
+            mSubmitAnswer.hide();
+            mSubmitAnswer.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitAnswer(v);
+                    mSubmitAnswer.setEnabled(false);
+                }
+            });
+        }
+        return mSubmitAnswer;
+    }
+
     /**
      * Sets the behaviour for all question views.
      */
     protected void setUpQuestionView() {
         mQuestionView = (TextView) mLayoutInflater.inflate(R.layout.question, this, false);
-        mQuestionView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                mCategory.getTheme().getPrimaryColor()));
-        mQuestionView.setText(getQuiz().getQuestion());
+
+        mQuestionView.setText(getPractice().getQuestion());
+    }
+
+    public Q getPractice() {
+        return mPractice;
     }
 
     private LinearLayout createContainerLayout(Context context) {
         LinearLayout container = new LinearLayout(context);
-        container.setId(R.id.absQuizViewContainer);
+        container.setId(R.id.absPracticeViewContainer);
         container.setOrientation(LinearLayout.VERTICAL);
         return container;
     }
 
     private View getInitializedContentView() {
         View quizContentView = createQuizContentView();
-        quizContentView.setId(R.id.quiz_content);
+        quizContentView.setId(R.id.practice_content);
         quizContentView.setSaveEnabled(true);
-        setDefaultPadding(quizContentView);
+        quizContentView.setPadding(mSpacingDouble, mSpacingDouble, mSpacingDouble, mSpacingDouble);
+
         if (quizContentView instanceof ViewGroup) {
             ((ViewGroup) quizContentView).setClipToPadding(false);
         }
-        setMinHeightInternal(quizContentView);
+        quizContentView.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.min_height_question));
         return quizContentView;
     }
+
 
     protected void addContentView(LinearLayout container, View quizContentView) {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -142,6 +144,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
         container.addView(quizContentView, layoutParams);
         addView(container, layoutParams);
     }
+
 
     private void addFloatingActionButton() {
         final int fabSize = getResources().getDimensionPixelSize(R.dimen.size_fab);
@@ -156,34 +159,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
                 0, // right
                 mSpacingDouble); // bottom
         MarginLayoutParamsCompat.setMarginEnd(fabLayoutParams, mSpacingDouble);
-        if (ApiLevelHelper.isLowerThan(Build.VERSION_CODES.LOLLIPOP)) {
-            // Account for the fab's emulated shadow.
-            fabLayoutParams.topMargin -= (mSubmitAnswer.getPaddingTop() / 2);
-        }
         addView(mSubmitAnswer, fabLayoutParams);
-    }
-
-    private CheckableFab getSubmitButton() {
-        if (null == mSubmitAnswer) {
-            mSubmitAnswer = (CheckableFab) getLayoutInflater()
-                    .inflate(R.layout.answer_submit, this, false);
-            mSubmitAnswer.hide();
-            mSubmitAnswer.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submitAnswer(v);
-                    if (mInputMethodManager.isAcceptingText()) {
-                        mInputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    }
-                    mSubmitAnswer.setEnabled(false);
-                }
-            });
-        }
-        return mSubmitAnswer;
-    }
-
-    private void setDefaultPadding(View view) {
-        view.setPadding(mSpacingDouble, mSpacingDouble, mSpacingDouble, mSpacingDouble);
     }
 
     protected LayoutInflater getLayoutInflater() {
@@ -192,7 +168,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
 
     /**
      * Implementations should create the content view for the type of
-     * {@link com.lscapp.model.quiz.Quiz} they want to display.
+     * {@link com.diezsiete.lscapp.model.practice.Practice} they want to display.
      *
      * @return the created view to solve the quiz.
      */
@@ -220,9 +196,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
      */
     public abstract void setUserInput(Bundle savedInput);
 
-    public Q getQuiz() {
-        return mQuiz;
-    }
+
 
     protected boolean isAnswered() {
         return mAnswered;
@@ -264,126 +238,6 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
     @SuppressWarnings("UnusedParameters")
     private void submitAnswer(final View v) {
         final boolean answerCorrect = isAnswerCorrect();
-        mQuiz.setSolved(true);
-        performScoreAnimation(answerCorrect);
+        mPractice.setSolved(true);
     }
-
-    /**
-     * Animates the view nicely when the answer has been submitted.
-     *
-     * @param answerCorrect <code>true</code> if the answer was correct, else <code>false</code>.
-     */
-    private void performScoreAnimation(final boolean answerCorrect) {
-        ((QuizActivity) getContext()).lockIdlingResource();
-        // Decide which background color to use.
-        final int backgroundColor = ContextCompat.getColor(getContext(),
-                answerCorrect ? R.color.green : R.color.red);
-        adjustFab(answerCorrect, backgroundColor);
-        resizeView();
-        moveViewOffScreen(answerCorrect);
-        // Animate the foreground color to match the background color.
-        // This overlays all content within the current view.
-        animateForegroundColor(backgroundColor);
-    }
-
-    @SuppressLint("NewApi")
-    private void adjustFab(boolean answerCorrect, int backgroundColor) {
-        mSubmitAnswer.setChecked(answerCorrect);
-        mSubmitAnswer.setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
-        mHideFabRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mSubmitAnswer.hide();
-            }
-        };
-        mHandler.postDelayed(mHideFabRunnable, ANSWER_HIDE_DELAY);
-    }
-
-    private void resizeView() {
-        final float widthHeightRatio = (float) getHeight() / (float) getWidth();
-        // Animate X and Y scaling separately to allow different start delays.
-        // object animators for x and y with different durations and then run them independently
-        resizeViewProperty(View.SCALE_X, .5f, 200);
-        resizeViewProperty(View.SCALE_Y, .5f / widthHeightRatio, 300);
-    }
-
-    private void resizeViewProperty(Property<View, Float> property,
-                                    float targetScale, int durationOffset) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this, property,
-                1f, targetScale);
-        animator.setInterpolator(mLinearOutSlowInInterpolator);
-        animator.setStartDelay(FOREGROUND_COLOR_CHANGE_DELAY + durationOffset);
-        animator.start();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        if (mHideFabRunnable != null) {
-            mHandler.removeCallbacks(mHideFabRunnable);
-        }
-        if (mMoveOffScreenRunnable != null) {
-            mHandler.removeCallbacks(mMoveOffScreenRunnable);
-        }
-        super.onDetachedFromWindow();
-    }
-
-    private void animateForegroundColor(@ColorInt final int targetColor) {
-        ObjectAnimator animator = ObjectAnimator.ofInt(this, ViewUtils.FOREGROUND_COLOR,
-                Color.TRANSPARENT, targetColor);
-        animator.setEvaluator(new ArgbEvaluator());
-        animator.setStartDelay(FOREGROUND_COLOR_CHANGE_DELAY);
-        animator.start();
-    }
-
-    private void moveViewOffScreen(final boolean answerCorrect) {
-        // Move the current view off the screen.
-        mMoveOffScreenRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mCategory.setScore(getQuiz(), answerCorrect);
-                SignVideoPlayerHelper.release();
-                if (getContext() instanceof QuizActivity) {
-                    ((QuizActivity) getContext()).proceed();
-                }
-            }
-        };
-        mHandler.postDelayed(mMoveOffScreenRunnable,
-                FOREGROUND_COLOR_CHANGE_DELAY * 2);
-    }
-
-    private void setMinHeightInternal(View view) {
-        view.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.min_height_question));
-    }
-
-    protected void setUpUserListSelection(final AbsListView listView, final int index) {
-        listView.post(new Runnable() {
-            @Override
-            public void run() {
-                listView.requestFocusFromTouch();
-                listView.performItemClick(listView.getChildAt(index), index,
-                        listView.getAdapter().getItemId(index));
-                listView.setSelection(index);
-            }
-        });
-    }
-
-
-    public void onStart() {
-        //Log.d("jose", "onStart");
-        SignVideoPlayerHelper.onStart();
-    }
-    public void onResume() {
-        //Log.d("jose", "onResume");
-        SignVideoPlayerHelper.onResume();
-    }
-    public void onPause() {
-        //Log.d("jose", "onPause");
-        SignVideoPlayerHelper.onPause();
-    }
-    public void onStop() {
-        //Log.d("jose", "onStop");
-        SignVideoPlayerHelper.onStop();
-    }
-
-
 }

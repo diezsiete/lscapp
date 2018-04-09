@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.lscapp.widget.fab;
+package com.diezsiete.lscapp.widget.fab;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 
-import com.lscapp.R;
+import com.diezsiete.lscapp.R;
 
 /**
  * A {@link FloatingActionButton} that implements {@link Checkable} to allow display of different

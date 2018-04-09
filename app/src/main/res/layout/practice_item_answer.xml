@@ -19,5 +19,4 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center"
-          android:minHeight="@dimen/min_height_touch_target"
-          android:textAppearance="@style/LSCApp.TextAppearance.ListItem" />
+          android:minHeight="48dp" />

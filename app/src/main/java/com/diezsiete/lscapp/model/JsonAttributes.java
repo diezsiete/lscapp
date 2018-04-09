@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package com.lscapp.model;
+package com.diezsiete.lscapp.model;
 
 public interface JsonAttributes {
 
-    String ANSWER = "answer";
-    String END = "end";
+
     String ID = "id";
-    String MAX = "max";
-    String MIN = "min";
     String NAME = "name";
     String OPTIONS = "options";
+    String MEANING = "meaning";
+    String VIDEO = "video";
     String QUESTION = "question";
-    String QUIZZES = "quizzes";
-    String START = "start";
-    String STEP = "step";
+    String ANSWER = "answer";
     String THEME = "theme";
     String TYPE = "type";
     String SCORES = "scores";
     String SOLVED = "solved";
 
-    interface QuizType {
+    interface PracticeType {
 
         String SHOW_SIGN = "show-sign";
         String WHICH_ONE_VIDEOS = "which-one-videos";

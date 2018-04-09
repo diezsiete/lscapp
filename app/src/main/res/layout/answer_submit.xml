@@ -15,10 +15,10 @@
   ~ limitations under the License.
   -->
 
-<com.lscapp.widget.fab.CheckableFab
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@id/submitAnswer"
-        app:borderWidth="0dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+<com.diezsiete.lscapp.widget.fab.CheckableFab
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/submitAnswer"
+    app:borderWidth="0dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
