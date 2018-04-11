@@ -1,19 +1,24 @@
 package com.diezsiete.lscapp.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.diezsiete.lscapp.model.practice.DiscoverImagePractice;
 import com.diezsiete.lscapp.model.practice.Practice;
 import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.model.practice.TakePicturePractice;
 import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
 import com.diezsiete.lscapp.widget.practice.AbsPracticeView;
+import com.diezsiete.lscapp.widget.practice.DiscoverImagePracticeView;
 import com.diezsiete.lscapp.widget.practice.ShowSignPracticeView;
+import com.diezsiete.lscapp.widget.practice.TakePicturePracticeView;
 import com.diezsiete.lscapp.widget.practice.TranslateVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideosPracticeView;
@@ -91,6 +96,10 @@ public class PracticeAdapter extends BaseAdapter{
                 return new WhichOneVideoPracticeView(mContext, (WhichOneVideoPractice) practice);
             case TRANSLATE_VIDEO:
                 return new TranslateVideoPracticeView(mContext, (TranslateVideoPractice) practice);
+            case DISCOVER_IMAGE:
+                return new DiscoverImagePracticeView(mContext, (DiscoverImagePractice) practice);
+            case TAKE_PICTURE:
+                return new TakePicturePracticeView((Activity)mContext, (TakePicturePractice) practice);
 
         }
         throw new UnsupportedOperationException(

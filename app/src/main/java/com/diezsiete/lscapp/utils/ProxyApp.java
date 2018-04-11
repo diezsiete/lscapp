@@ -3,8 +3,10 @@ package com.diezsiete.lscapp.utils;
 import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.JsonAttributes;
 import com.diezsiete.lscapp.model.Level;
+import com.diezsiete.lscapp.model.practice.DiscoverImagePractice;
 import com.diezsiete.lscapp.model.practice.Practice;
 import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.model.practice.TakePicturePractice;
 import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
@@ -115,6 +117,17 @@ public class ProxyApp {
                     JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO)),
                     JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.OPTIONS)),
                     JsonHelper.jsonArrayToIntArray(json.getString(JsonAttributes.ANSWER))
+                );
+            case JsonAttributes.PracticeType.DISCOVER_IMAGE:
+                return new DiscoverImagePractice(
+                    json.getString(JsonAttributes.QUESTION),
+                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO)),
+                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.IMAGES)),
+                    json.getInt(JsonAttributes.ANSWER)
+                );
+            case JsonAttributes.PracticeType.TAKE_PICTURE:
+                return new TakePicturePractice(
+                    json.getString(JsonAttributes.QUESTION)
                 );
             default: {
                 throw new IllegalArgumentException("Practice type " + type + " is not supported");

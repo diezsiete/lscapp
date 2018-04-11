@@ -26,7 +26,7 @@ public interface JsonAttributes {
     String VIDEO = "video";
     String QUESTION = "question";
     String ANSWER = "answer";
-    String THEME = "theme";
+    String IMAGES = "images";
     String TYPE = "type";
     String SCORES = "scores";
     String SOLVED = "solved";
@@ -37,6 +37,7 @@ public interface JsonAttributes {
         String WHICH_ONE_VIDEOS = "which-one-videos";
         String WHICH_ONE_VIDEO  = "which-one-video";
         String TRANSLATE_VIDEO = "translate-video";
+        String TAKE_PICTURE = "take-picture";
         String DISCOVER_IMAGE = "discover-image";
         String PAIR_ELEMENTS = "pair-elements";
         String ANSWER_QUESTION = "answer-question";
