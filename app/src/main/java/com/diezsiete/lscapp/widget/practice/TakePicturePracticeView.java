@@ -19,6 +19,7 @@ package com.diezsiete.lscapp.widget.practice;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -45,15 +46,10 @@ public class TakePicturePracticeView extends AbsPracticeView<TakePicturePractice
     static {
         LAYOUT_PARAMS.gravity = Gravity.CENTER;
     }
-    private Activity mActivity;
 
-
-    public TakePicturePracticeView(Activity context, TakePicturePractice practice) {
+    public TakePicturePracticeView(Context context, TakePicturePractice practice) {
         super(context, practice);
-        mActivity = context;
-        Log.d("JOSE", mActivity == null ? "1.Activity null" : "1.Activity not null");
     }
-
 
 
     SignCameraHelper mCameraHelper;

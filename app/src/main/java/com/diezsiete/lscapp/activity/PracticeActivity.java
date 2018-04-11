@@ -81,18 +81,24 @@ public class PracticeActivity extends AppCompatActivity {
         }
         mPracticeFragment = PracticeFragment.newInstance(mLevelId);
     }
-    private  static final int REQUEST_CAMERA_RESULT = 106;
+
+    //TODO
+    private  static final int REQUEST_CAMERA_RESULT = 105;
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode){
-            case  REQUEST_CAMERA_RESULT:
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this, "Cannot run application because camera service permission have not been granted", Toast.LENGTH_SHORT).show();
+        // Called when you request permission to read and write to external storage
+        Log.d("JOSE", "onRequestPermissionsResult : " + requestCode);
+        switch (requestCode) {
+            case REQUEST_CAMERA_RESULT: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
+            }
         }
     }
 }

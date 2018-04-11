@@ -27,6 +27,7 @@
     <string name="imageview_description">
         Contiene la imagen capturada
     </string>
+    <string name="permission_denied">Permission denied</string>
 
     <!-- BORRAR -->
     <string name="format_wind_kmh">

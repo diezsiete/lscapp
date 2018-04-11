@@ -99,7 +99,7 @@ public class PracticeAdapter extends BaseAdapter{
             case DISCOVER_IMAGE:
                 return new DiscoverImagePracticeView(mContext, (DiscoverImagePractice) practice);
             case TAKE_PICTURE:
-                return new TakePicturePracticeView((Activity)mContext, (TakePicturePractice) practice);
+                return new TakePicturePracticeView(mContext, (TakePicturePractice) practice);
 
         }
         throw new UnsupportedOperationException(

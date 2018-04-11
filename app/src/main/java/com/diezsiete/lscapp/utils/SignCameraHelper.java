@@ -23,7 +23,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+
 import android.support.v4.app.ActivityCompat;
+
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -69,6 +71,7 @@ public class SignCameraHelper {
     private CameraCaptureSession mCameraCaptureSessions;
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
+    private File mFile;
 
     private int mInt = 0;
 
@@ -208,48 +211,17 @@ public class SignCameraHelper {
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             // Orientation
             int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-            Log.d("JOSE", "ROTATION  : " + ORIENTATIONS.get(rotation));
+
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/pic"+mInt+".jpg");
+            mFile = new File(Environment.getExternalStorageDirectory()+"/pic"+mInt+".jpg");
             mInt++;
-            ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
-                @Override
-                public void onImageAvailable(ImageReader reader) {
-                    Image image = null;
-                    try {
-                        image = reader.acquireLatestImage();
-                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-                        byte[] bytes = new byte[buffer.capacity()];
-                        buffer.get(bytes);
-                        save(bytes);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (image != null) {
-                            image.close();
-                        }
-                    }
-                }
-                private void save(byte[] bytes) throws IOException {
-                    OutputStream output = null;
-                    try {
-                        output = new FileOutputStream(file);
-                        output.write(bytes);
-                    } finally {
-                        if (null != output) {
-                            output.close();
-                        }
-                    }
-                }
-            };
+
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(mActivity, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Saved:" + mFile, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };
@@ -298,7 +270,7 @@ public class SignCameraHelper {
         return true;
     }
 
-    TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
+    private TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
@@ -334,6 +306,39 @@ public class SignCameraHelper {
         public void onError(@NonNull CameraDevice camera, int error) {
             mCameraDevice.close();
             mCameraDevice = null;
+        }
+    };
+
+    private ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            Image image = null;
+            try {
+                image = reader.acquireLatestImage();
+                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                byte[] bytes = new byte[buffer.capacity()];
+                buffer.get(bytes);
+                save(bytes);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (image != null) {
+                    image.close();
+                }
+            }
+        }
+        private void save(byte[] bytes) throws IOException {
+            OutputStream output = null;
+            try {
+                output = new FileOutputStream(mFile);
+                output.write(bytes);
+            } finally {
+                if (null != output) {
+                    output.close();
+                }
+            }
         }
     };
 
