@@ -93,7 +93,7 @@ public class PracticeFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(List<Practice> data) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mLoadingIndicator.setVisibility(View.GONE);
             if (data != null) {
                 showDataView();
                 getPracticeAdapter().setData(data);
@@ -108,14 +108,14 @@ public class PracticeFragment extends Fragment {
      * Hace la View de informacion visible y esconde el mensaje de error
      */
     private void showDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.GONE);
         mPracticeView.setVisibility(View.VISIBLE);
     }
     /**
      * Esconde la View de informacion y muestra el mensaje de error
      */
     private void showErrorMessage() {
-        mPracticeView.setVisibility(View.INVISIBLE);
+        mPracticeView.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 }

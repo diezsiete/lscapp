@@ -40,7 +40,7 @@ public class WhichOneVideosPracticeView extends AbsPracticeView<WhichOneVideosPr
     }
 
     @Override
-    protected View createQuizContentView() {
+    protected View createPracticeContentView() {
         mAnswerView = new GridView(getContext());
         mAnswerView.setSelector(R.drawable.selector_button);
         mAnswerView.setNumColumns(2);

@@ -5,4 +5,10 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="touch_effect">#9ccc</color>
+
+    <color name="wordSelectorToken">#CCCCCC</color>
+
+    <color name="debugYellow">#f1de0c</color>
+    <color name="debugGreen">#32f10c</color>
+    <color name="debugBlue">#0cf1d6</color>
 </resources>

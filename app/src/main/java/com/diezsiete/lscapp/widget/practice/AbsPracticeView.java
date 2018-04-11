@@ -124,7 +124,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
     }
 
     private View getInitializedContentView() {
-        View quizContentView = createQuizContentView();
+        View quizContentView = createPracticeContentView();
         quizContentView.setId(R.id.practice_content);
         quizContentView.setSaveEnabled(true);
         quizContentView.setPadding(mSpacingDouble, mSpacingDouble, mSpacingDouble, mSpacingDouble);
@@ -172,7 +172,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
      *
      * @return the created view to solve the quiz.
      */
-    protected abstract View createQuizContentView();
+    protected abstract View createPracticeContentView();
 
     /**
      * Implementations must make sure that the answer provided is evaluated and correctly rated.

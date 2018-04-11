@@ -5,6 +5,7 @@ import com.diezsiete.lscapp.model.JsonAttributes;
 import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.practice.Practice;
 import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
 
@@ -107,6 +108,13 @@ public class ProxyApp {
                     JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO)),
                     JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.OPTIONS)),
                     json.getInt(JsonAttributes.ANSWER)
+                );
+            case JsonAttributes.PracticeType.TRANSLATE_VIDEO:
+                return new TranslateVideoPractice(
+                    json.getString(JsonAttributes.QUESTION),
+                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO)),
+                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.OPTIONS)),
+                    JsonHelper.jsonArrayToIntArray(json.getString(JsonAttributes.ANSWER))
                 );
             default: {
                 throw new IllegalArgumentException("Practice type " + type + " is not supported");

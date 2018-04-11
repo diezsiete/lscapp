@@ -9,10 +9,12 @@ import android.widget.BaseAdapter;
 
 import com.diezsiete.lscapp.model.practice.Practice;
 import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
 import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
 import com.diezsiete.lscapp.widget.practice.AbsPracticeView;
 import com.diezsiete.lscapp.widget.practice.ShowSignPracticeView;
+import com.diezsiete.lscapp.widget.practice.TranslateVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideosPracticeView;
 
@@ -87,6 +89,8 @@ public class PracticeAdapter extends BaseAdapter{
                 return new WhichOneVideosPracticeView(mContext, (WhichOneVideosPractice) practice);
             case WHICH_ONE_VIDEO:
                 return new WhichOneVideoPracticeView(mContext, (WhichOneVideoPractice) practice);
+            case TRANSLATE_VIDEO:
+                return new TranslateVideoPracticeView(mContext, (TranslateVideoPractice) practice);
 
         }
         throw new UnsupportedOperationException(

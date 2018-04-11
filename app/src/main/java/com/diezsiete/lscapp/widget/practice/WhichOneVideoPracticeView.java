@@ -18,8 +18,6 @@ package com.diezsiete.lscapp.widget.practice;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,7 +48,7 @@ public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPrac
 
 
     @Override
-    protected View createQuizContentView() {
+    protected View createPracticeContentView() {
         final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(
                 R.layout.practice_which_one_video, this, false);
 

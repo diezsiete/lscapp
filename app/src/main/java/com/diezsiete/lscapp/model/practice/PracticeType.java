@@ -26,7 +26,8 @@ public enum PracticeType {
 
     SHOW_SIGN(JsonAttributes.PracticeType.SHOW_SIGN, ShowSignPractice.class),
     WHICH_ONE_VIDEOS(JsonAttributes.PracticeType.WHICH_ONE_VIDEOS, WhichOneVideosPractice.class),
-    WHICH_ONE_VIDEO(JsonAttributes.PracticeType.WHICH_ONE_VIDEO, WhichOneVideoPractice.class);
+    WHICH_ONE_VIDEO(JsonAttributes.PracticeType.WHICH_ONE_VIDEO, WhichOneVideoPractice.class),
+    TRANSLATE_VIDEO(JsonAttributes.PracticeType.TRANSLATE_VIDEO, TranslateVideoPractice.class);
 
     private final String mJsonName;
     private final Class<? extends Practice> mType;
