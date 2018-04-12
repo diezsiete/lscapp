@@ -12,14 +12,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterViewAnimator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.PracticeAdapter;
 import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.practice.Practice;
+import com.diezsiete.lscapp.rest.LSCAppClient;
 import com.diezsiete.lscapp.utils.ProxyApp;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PracticeFragment extends Fragment {
@@ -46,6 +56,8 @@ public class PracticeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         mLevelId = getArguments().getString(Level.TAG);
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
@@ -65,7 +77,13 @@ public class PracticeFragment extends Fragment {
         mPracticeView.setAdapter(getPracticeAdapter());
         //int position = mCategory.getFirstUnsolvedQuizPosition();
         //mPracticeView.setSelection(0);
+
         new FetchTask().execute();
+
+
+        //execute();
+
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -76,6 +94,29 @@ public class PracticeFragment extends Fragment {
         return mAdapter;
     }
 
+    private void execute() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://lscapp.pta.com.co")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit = builder.build();
+
+        LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
+        Call<List<Practice>> call = lscAppClient.getPractices(mLevelId);
+        call.enqueue(new Callback<List<Practice>>() {
+            @Override
+            public void onResponse(Call<List<Practice>> call, Response<List<Practice>> response) {
+                showDataView();
+                getPracticeAdapter().setData(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Practice>> call, Throwable t) {
+                showErrorMessage();
+                Toast.makeText(getContext(), "error :(", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     public class FetchTask extends AsyncTask<String, Void, List<Practice>> {
         @Override
@@ -105,10 +146,13 @@ public class PracticeFragment extends Fragment {
         }
     }
 
+
+
     /**
      * Hace la View de informacion visible y esconde el mensaje de error
      */
     private void showDataView() {
+        mLoadingIndicator.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.GONE);
         mPracticeView.setVisibility(View.VISIBLE);
     }
@@ -117,6 +161,7 @@ public class PracticeFragment extends Fragment {
      */
     private void showErrorMessage() {
         mPracticeView.setVisibility(View.GONE);
+        mLoadingIndicator.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 }

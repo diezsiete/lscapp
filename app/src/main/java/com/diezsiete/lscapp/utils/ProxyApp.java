@@ -127,7 +127,8 @@ public class ProxyApp {
                 );
             case JsonAttributes.PracticeType.TAKE_PICTURE:
                 return new TakePicturePractice(
-                    json.getString(JsonAttributes.QUESTION)
+                    json.getString(JsonAttributes.QUESTION),
+                    json.getString(JsonAttributes.ANSWER)
                 );
             default: {
                 throw new IllegalArgumentException("Practice type " + type + " is not supported");

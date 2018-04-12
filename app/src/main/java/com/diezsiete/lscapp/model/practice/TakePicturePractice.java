@@ -19,10 +19,12 @@ package com.diezsiete.lscapp.model.practice;
 public final class TakePicturePractice extends Practice {
 
     private String mQuestion;
+    private String mAnswer;
 
-    public TakePicturePractice(String question) {
+    public TakePicturePractice(String question, String answer) {
         super();
         mQuestion = question;
+        mAnswer = answer;
     }
 
     @Override
@@ -34,6 +36,8 @@ public final class TakePicturePractice extends Practice {
     public String getQuestion(){
         return mQuestion;
     }
+
+    public String getAnswer() { return mAnswer; }
 
 
 }
