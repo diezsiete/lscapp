@@ -168,6 +168,7 @@ public class SignVideoPlayer {
 
     public void release() {
         if (player != null) {
+            resources.clear();
             playbackPosition = player.getCurrentPosition();
             currentWindow = player.getCurrentWindowIndex();
             playWhenReady = player.getPlayWhenReady();

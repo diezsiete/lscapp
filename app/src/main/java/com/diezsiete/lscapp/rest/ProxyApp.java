@@ -42,6 +42,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProxyApp {
 
+    private static final String URL_BASE = "https://lscapp.pta.com.co";
+
+    /**
+     * TODO se podria usar un singleton?
+     * @return
+     */
+    private static Retrofit buildRetrofit() {
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create());
+        return builder.build();
+    }
+
     public void uploadPhoto(String answer, File file) {
         RequestBody answerPart = RequestBody.create(MultipartBody.FORM, answer);
 
@@ -49,9 +61,7 @@ public class ProxyApp {
 
         MultipartBody.Part formData = MultipartBody.Part.createFormData("photo", file.getName(), filePart);
 
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://lscapp.pta.com.co")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
+        Retrofit retrofit = buildRetrofit();
 
         LSCAppClient client = retrofit.create(LSCAppClient.class);
 
@@ -69,5 +79,28 @@ public class ProxyApp {
                 Log.e("JOSE Upload error:", t.getMessage());
             }
         });
+    }
+
+    public static void getDictionary(final LSCResponse<Concept[]> lscResponse) {
+        Retrofit retrofit = buildRetrofit();
+        LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
+        Call<Concept[]> call = lscAppClient.getDictionary();
+        call.enqueue(new Callback<Concept[]>() {
+            @Override
+            public void onResponse(Call<Concept[]> call, Response<Concept[]> response) {
+                lscResponse.onResponse(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Concept[]> call, Throwable t) {
+                t.printStackTrace();
+                lscResponse.onFailure();
+            }
+        });
+    }
+
+    public interface LSCResponse <T> {
+        void onResponse(T response);
+        void onFailure();
     }
 }

@@ -1,6 +1,7 @@
 package com.diezsiete.lscapp.rest;
 
 
+import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.practice.Practice;
 
 import java.util.List;
@@ -16,6 +17,10 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface LSCAppClient {
+
+    @GET("/dictionary")
+    Call<Concept[]> getDictionary();
+
 
     @GET("/practices/{levelId}")
     Call<List<Practice>> getPractices(@Path("levelId") String levelId);

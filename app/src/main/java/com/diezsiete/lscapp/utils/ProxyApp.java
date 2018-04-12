@@ -23,10 +23,8 @@ import java.util.List;
 /**
  * Encargado de retornar la información ya sea del servidor o localmente
  */
-
 public class ProxyApp {
 
-    private static final String URL_DICTIONARY = "/dictionary";
     private static final String URL_LEVELS = "/levels";
     private static final String URL_PRACTICES = "/practices";
 
@@ -54,20 +52,6 @@ public class ProxyApp {
         return json.getString(CONTENT);
     }
 
-
-    private static Concept[] getConceptsFromDictionaryJson(String dictionaryJsonString) throws JSONException {
-        JSONArray dictionaryArray = new JSONArray(dictionaryJsonString);
-
-        /* String array que tiene las palabras del diccionario */
-        Concept[] parsedDictionaryData = new Concept[dictionaryArray.length()];
-
-        for (int i = 0; i < dictionaryArray.length(); i++) {
-            JSONObject conceptJson = dictionaryArray.getJSONObject(i);
-            parsedDictionaryData[i] = new Concept(conceptJson);
-        }
-
-        return parsedDictionaryData;
-    }
 
     private static Level[] getLevelsFromJson(String jsonString) throws JSONException {
         JSONArray jsonArray = new JSONArray(jsonString);
@@ -136,10 +120,6 @@ public class ProxyApp {
         }
     }
 
-
-    public static Concept[] getDictionary() throws IOException, JSONException {
-        return getConceptsFromDictionaryJson(getRestJson(URL_DICTIONARY));
-    }
 
     public static Level[] getLevels() throws IOException, JSONException {
         return getLevelsFromJson(getRestJson(URL_LEVELS));

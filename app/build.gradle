@@ -33,11 +33,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.android.support:preference-v7:26.1.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
 
     compile 'com.google.android.exoplayer:exoplayer:2.6.1'
     compile 'org.apmem.tools:layouts:1.10@aar'
 
     // Retrofit & OkHttp
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 }
