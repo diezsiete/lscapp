@@ -40,6 +40,7 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
 
     private TextView mTextWord;
 
+    SignVideoPlayer mVideoPlayer;
 
     private static final LinearLayout.LayoutParams LAYOUT_PARAMS =
             new LinearLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT, 1);
@@ -66,11 +67,12 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
                 R.layout.practice_show_sign, this, false);
 
         if(!getPractice().isSolved()) {
-            SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
-            SignVideoPlayer videoPlayer = SignVideoPlayerHelper.create(getContext(), exoPlayerView);
+            SimpleExoPlayerView exoPlayerView = container.findViewById(R.id.video_view);
+            mVideoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
             for(String video : getPractice().getVideo())
-                videoPlayer.addExternalResource(video);
-            SignVideoPlayerHelper.initialize();
+                mVideoPlayer.addExternalResource(video);
+
+            mVideoPlayer.initialize();
 
             mTextWord = (TextView) container.findViewById(R.id.tv_show_sign);
             mTextWord.setText(getPractice().getMeaning());
@@ -92,6 +94,20 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
 
     @Override
     public void setUserInput(Bundle savedInput) {
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        Log.d("JOSE", "DETACHED");
+        mVideoPlayer.release();
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        Log.d("JOSE", "ATACHED");
+        mVideoPlayer.initialize();
+        super.onAttachedToWindow();
     }
 
 }

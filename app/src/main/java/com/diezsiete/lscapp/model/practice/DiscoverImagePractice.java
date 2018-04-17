@@ -17,20 +17,43 @@
 package com.diezsiete.lscapp.model.practice;
 
 
+
+import android.util.Log;
+
+import com.diezsiete.lscapp.model.Image;
+import com.diezsiete.lscapp.model.JsonAttributes;
+import com.diezsiete.lscapp.utils.JsonHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public final class DiscoverImagePractice extends Practice {
 
     private String mQuestion;
     private String[] mVideo;
     private int mAnswer;
-    private String[] mImages;
+    private Image[] mImages;
 
 
-    public DiscoverImagePractice(String question, String[] video, String[] images, int answer) {
-        super();
-        mQuestion = question;
-        mVideo = video;
-        mImages = images;
-        mAnswer = answer;
+
+
+    public DiscoverImagePractice(JSONObject json) throws JSONException {
+        mQuestion = json.getString(JsonAttributes.QUESTION);
+        mVideo = JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO));
+        mAnswer = json.getInt(JsonAttributes.ANSWER);
+
+        String[] images = JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.IMAGES));
+        mImages = new Image[images.length];
+
+        for(int i = 0; i < images.length; i++){
+            JSONObject imageJson = new JSONObject(images[i]);
+            Image image = new Image();
+            image.setWidth(imageJson.getInt("width"));
+            image.setHeight(imageJson.getInt("height"));
+            image.setUrl(imageJson.getString("url"));
+            mImages[i] = image;
+        }
+
     }
 
     @Override
@@ -44,7 +67,7 @@ public final class DiscoverImagePractice extends Practice {
         return mQuestion;
     }
 
-    public String[] getImages() {
+    public Image[] getImages() {
         return mImages;
     }
 

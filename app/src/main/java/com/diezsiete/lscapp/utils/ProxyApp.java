@@ -103,12 +103,7 @@ public class ProxyApp {
                     JsonHelper.jsonArrayToIntArray(json.getString(JsonAttributes.ANSWER))
                 );
             case JsonAttributes.PracticeType.DISCOVER_IMAGE:
-                return new DiscoverImagePractice(
-                    json.getString(JsonAttributes.QUESTION),
-                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.VIDEO)),
-                    JsonHelper.jsonArrayToStringArray(json.getString(JsonAttributes.IMAGES)),
-                    json.getInt(JsonAttributes.ANSWER)
-                );
+                return new DiscoverImagePractice(json);
             case JsonAttributes.PracticeType.TAKE_PICTURE:
                 return new TakePicturePractice(
                     json.getString(JsonAttributes.QUESTION),

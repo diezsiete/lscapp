@@ -97,14 +97,14 @@ public class TranslateVideoPracticeView extends AbsPracticeView<TranslateVideoPr
     @Override
     protected void onDetachedFromWindow() {
         mVideoPlayer.release();
-        //Log.d("lscapp", "DETACHED");
+        Log.d("JOSE", "DETACHED");
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
         mVideoPlayer.initialize();
-        //Log.d("lscapp", "ATTACHED");
+        Log.d("JOSE", "ATTACHED");
         super.onAttachedToWindow();
     }
 
