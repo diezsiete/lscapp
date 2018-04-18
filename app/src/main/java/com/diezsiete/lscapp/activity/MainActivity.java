@@ -1,5 +1,7 @@
 package com.diezsiete.lscapp.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -60,6 +62,16 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    private void signOut() {
+        //TODO: realiza logica de signout y lleva a login, pero por ahora lleva a register
+        startActivity(
+            new Intent(MainActivity.this, RegisterActivity.class)
+        );
+        /*startActivity(
+            new Intent(MainActivity.this, LoginActivity.class)
+        );*/
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -79,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_sign_out) {
-
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
