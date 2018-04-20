@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class ProxyApp {
 
-    private static final String URL_LEVELS = "/levels";
     private static final String URL_PRACTICES = "/practices";
 
     private static String getRestJson(String url) throws IOException, JSONException {
@@ -53,15 +52,7 @@ public class ProxyApp {
     }
 
 
-    private static Level[] getLevelsFromJson(String jsonString) throws JSONException {
-        JSONArray jsonArray = new JSONArray(jsonString);
-        Level[] parsedData = new Level[jsonArray.length()];
 
-        for (int i = 0; i < jsonArray.length(); i++)
-            parsedData[i] = new Level(jsonArray.getJSONObject(i));
-
-        return parsedData;
-    }
 
     private static List<Practice> getPracticesFromJson(String jsonString) throws JSONException {
         List<Practice> practices = new ArrayList<>();
@@ -115,10 +106,6 @@ public class ProxyApp {
         }
     }
 
-
-    public static Level[] getLevels() throws IOException, JSONException {
-        return getLevelsFromJson(getRestJson(URL_LEVELS));
-    }
 
     public static List<Practice> getPractices(String levelId) throws IOException, JSONException {
         return getPracticesFromJson(getRestJson(URL_PRACTICES + "/" + levelId));

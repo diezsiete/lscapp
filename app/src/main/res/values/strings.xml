@@ -46,7 +46,7 @@
     <string name="register">Registrarse</string>
     <string name="error_password_mismatch">Contraseñas no concuerdan</string>
 
-    <string name="rest_base_url">http://18.208.61.61</string>
+    <string name="rest_base_url">http://18.208.61.61:12345</string>
 
     <!-- BORRAR -->
     <string name="format_wind_kmh">

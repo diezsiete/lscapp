@@ -1,8 +1,12 @@
 package com.diezsiete.lscapp.rest;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.diezsiete.lscapp.LscApp;
+import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.JsonAttributes;
 import com.diezsiete.lscapp.model.Level;
@@ -41,17 +45,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ProxyApp {
-
-    private static final String URL_BASE = "https://lscapp.pta.com.co";
-
     /**
      * TODO se podria usar un singleton?
      * @return
      */
     private static Retrofit buildRetrofit() {
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(URL_BASE)
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(LscApp.getContext().getResources().getString(R.string.rest_base_url))
                 .addConverterFactory(GsonConverterFactory.create());
         return builder.build();
+    }
+
+    private static LSCAppClient getLSCAppClient() {
+        return buildRetrofit().create(LSCAppClient.class);
     }
 
     public void uploadPhoto(String answer, File file) {
@@ -97,6 +102,87 @@ public class ProxyApp {
                 lscResponse.onFailure();
             }
         });
+    }
+
+    public static void getLevels(final LSCResponse<Level[]> lscResponse) {
+        Retrofit retrofit = buildRetrofit();
+        LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
+        Call<Level[]> call = lscAppClient.getLevels();
+        call.enqueue(new Callback<Level[]>() {
+            @Override
+            public void onResponse(Call<Level[]> call, Response<Level[]> response) {
+                lscResponse.onResponse(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Level[]> call, Throwable t) {
+                t.printStackTrace();
+                lscResponse.onFailure();
+            }
+        });
+    }
+
+    public static void getPractices(String levelId) {
+        Retrofit retrofit = buildRetrofit();
+        LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
+        Call<Level> call = lscAppClient.getLevel(levelId);
+        call.enqueue(new Callback<Level>() {
+            @Override
+            public void onResponse(Call<Level> call, Response<Level> response) {
+                final Level level = response.body();
+                Log.d("JOSE", "getPractices level.title : " + level.getTitle());
+                for(String practiceId : level.getPractices()){
+                    Log.d("JOSE", "getPractices practiceId : " + practiceId);
+                    getPractice(practiceId, new LSCResponse<Practice>() {
+                        @Override
+                        public void onResponse(Practice response) {
+
+                        }
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Level> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public static void getLevel(String levelId, final LSCResponse<Level> lscResponse) {
+        getLSCAppClient().getLevel(levelId).enqueue(new Callback<Level>() {
+            @Override
+            public void onResponse(Call<Level> call, Response<Level> response) {
+                lscResponse.onResponse(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Level> call, Throwable t) {
+                t.printStackTrace();
+                lscResponse.onFailure();
+            }
+        });
+    }
+
+
+    public static void getPractice(String practiceId, final LSCResponse<Practice> lscResponse) {
+        getLSCAppClient().getPractice(practiceId).enqueue(new Callback<Practice>() {
+            @Override
+            public void onResponse(Call<Practice> call, Response<Practice> response) {
+                lscResponse.onResponse(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Practice> call, Throwable t) {
+                t.printStackTrace();
+                lscResponse.onFailure();
+            }
+        });
+
     }
 
     public interface LSCResponse <T> {

@@ -24,4 +24,28 @@ public abstract class Practice {
     public abstract PracticeType getType();
 
     public abstract String getQuestion();
+
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Practice)) {
+            return false;
+        }
+
+        Practice practice = (Practice) o;
+
+        if (mSolved != practice.mSolved) {
+            return false;
+        }else if (!mQuizType.equals(practice.mQuizType)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public int getId() {
+        return getQuestion().hashCode();
+    }
 }

@@ -74,11 +74,15 @@ public class PracticeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mPracticeView = (AdapterViewAnimator) view.findViewById(R.id.practice_view);
-        mPracticeView.setAdapter(getPracticeAdapter());
+        //mPracticeView.setAdapter(getPracticeAdapter());
         //int position = mCategory.getFirstUnsolvedQuizPosition();
         //mPracticeView.setSelection(0);
 
-        new FetchTask().execute();
+        mPracticeView.setVisibility(View.GONE);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+
+        //new FetchTask().execute();
+
 
 
         //execute();
@@ -139,11 +143,26 @@ public class PracticeFragment extends Fragment {
             if (data != null) {
                 showDataView();
                 getPracticeAdapter().setData(data);
+                mPracticeView.setAdapter(getPracticeAdapter());
                 //mPracticeView.setSelection(0);
             } else {
                 showErrorMessage();
             }
         }
+    }
+
+    private void loadPracticesIds() {
+        com.diezsiete.lscapp.rest.ProxyApp.getLevel(mLevelId, new com.diezsiete.lscapp.rest.ProxyApp.LSCResponse<Level>() {
+            @Override
+            public void onResponse(Level response) {
+
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
     }
 
 
