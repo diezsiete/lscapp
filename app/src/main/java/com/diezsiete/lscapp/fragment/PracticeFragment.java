@@ -18,6 +18,7 @@ import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.PracticeAdapter;
 import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.practice.Practice;
+import com.diezsiete.lscapp.model.practice.Practice2;
 import com.diezsiete.lscapp.rest.LSCAppClient;
 import com.diezsiete.lscapp.utils.ProxyApp;
 import com.google.gson.Gson;
@@ -83,7 +84,7 @@ public class PracticeFragment extends Fragment {
 
         //new FetchTask().execute();
 
-
+        //loadPractices();
 
         //execute();
 
@@ -151,19 +152,6 @@ public class PracticeFragment extends Fragment {
         }
     }
 
-    private void loadPracticesIds() {
-        com.diezsiete.lscapp.rest.ProxyApp.getLevel(mLevelId, new com.diezsiete.lscapp.rest.ProxyApp.LSCResponse<Level>() {
-            @Override
-            public void onResponse(Level response) {
-
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
-    }
 
 
 
