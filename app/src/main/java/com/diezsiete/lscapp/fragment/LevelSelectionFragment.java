@@ -95,7 +95,6 @@ public class LevelSelectionFragment extends Fragment {
     private void showDataView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mErrorReloadButton.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
     /**

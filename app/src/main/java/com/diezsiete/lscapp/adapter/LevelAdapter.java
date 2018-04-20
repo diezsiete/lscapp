@@ -96,7 +96,7 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
 
         ImageView levelImageView = holder.itemView.findViewById(R.id.level_image);
         Picasso.with(mContext).load(level.getImage())
-                .resize(200, 200)
+                .resize(300, 300)
                 .into(levelImageView);
     }
 

@@ -5,7 +5,6 @@ import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.User;
 import com.diezsiete.lscapp.model.practice.Practice;
-import com.diezsiete.lscapp.model.practice.Practice2;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public interface LSCAppClient {
     Call<Level> getLevel(@Path("levelId") String levelId);
 
     @GET("/practice/{practiceId}")
-    Call<Practice2> getPractice(@Path("practiceId") String practiceId);
+    Call<Practice> getPractice(@Path("practiceId") String practiceId);
 
     @GET("/dictionary")
     Call<Concept[]> getDictionary();

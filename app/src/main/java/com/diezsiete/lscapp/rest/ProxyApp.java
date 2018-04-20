@@ -12,7 +12,6 @@ import com.diezsiete.lscapp.model.JsonAttributes;
 import com.diezsiete.lscapp.model.Level;
 import com.diezsiete.lscapp.model.practice.DiscoverImagePractice;
 import com.diezsiete.lscapp.model.practice.Practice;
-import com.diezsiete.lscapp.model.practice.Practice2;
 import com.diezsiete.lscapp.model.practice.ShowSignPractice;
 import com.diezsiete.lscapp.model.practice.TakePicturePractice;
 import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
@@ -123,7 +122,7 @@ public class ProxyApp {
         });
     }
 
-    public static void getPractices(final String levelId, final LSCResponse<Practice2[]> lscResponse) {
+    public static void getPractices(String levelId) {
         Retrofit retrofit = buildRetrofit();
         LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
         Call<Level> call = lscAppClient.getLevel(levelId);
@@ -131,19 +130,13 @@ public class ProxyApp {
             @Override
             public void onResponse(Call<Level> call, Response<Level> response) {
                 final Level level = response.body();
-                final List<Practice2> practices = new ArrayList<>();
-                final String lastPracticeId = level.getPractices()[level.getPractices().length-1];
+                Log.d("JOSE", "getPractices level.title : " + level.getTitle());
                 for(String practiceId : level.getPractices()){
-                    getPractice(practiceId, new LSCResponse<Practice2>() {
+                    Log.d("JOSE", "getPractices practiceId : " + practiceId);
+                    getPractice(practiceId, new LSCResponse<Practice>() {
                         @Override
-                        public void onResponse(Practice2 response) {
-                            Log.d("JOSE", "getPractices practiceId : " + response.getPracticeId());
-                            practices.add(response);
-                            if(response.getPracticeId().equals(lastPracticeId)) {
-                                Practice2[] arr = new Practice2[practices.size()];
-                                arr = practices.toArray(arr);
-                                lscResponse.onResponse(arr);
-                            }
+                        public void onResponse(Practice response) {
+
                         }
                         @Override
                         public void onFailure() {
@@ -176,15 +169,15 @@ public class ProxyApp {
     }
 
 
-    public static void getPractice(String practiceId, final LSCResponse<Practice2> lscResponse) {
-        getLSCAppClient().getPractice(practiceId).enqueue(new Callback<Practice2>() {
+    public static void getPractice(String practiceId, final LSCResponse<Practice> lscResponse) {
+        getLSCAppClient().getPractice(practiceId).enqueue(new Callback<Practice>() {
             @Override
-            public void onResponse(Call<Practice2> call, Response<Practice2> response) {
+            public void onResponse(Call<Practice> call, Response<Practice> response) {
                 lscResponse.onResponse(response.body());
             }
 
             @Override
-            public void onFailure(Call<Practice2> call, Throwable t) {
+            public void onFailure(Call<Practice> call, Throwable t) {
                 t.printStackTrace();
                 lscResponse.onFailure();
             }
