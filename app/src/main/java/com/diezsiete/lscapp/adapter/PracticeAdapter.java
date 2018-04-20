@@ -55,34 +55,27 @@ public class PracticeAdapter extends BaseAdapter{
     }
 
     @Override
-    public long getItemId(int position) {
-        return mData.get(position).getId();
+    public long getItemId(int i) {
+        return 0;
     }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-
 
     @Override
     public View getView(int i, View convertView, ViewGroup parent) {
-        Log.d("JOSE", "PracticeAdapter.getView i = " + i);
         final Practice practice = getItem(i);
-        if (convertView instanceof AbsPracticeView) {
-            Log.d("JOSE", "PracticeAdapter.getView instanceof AbsPracticeView");
+        //TODO
+        /*if (convertView instanceof AbsPracticeView) {
             if (((AbsPracticeView) convertView).getPractice().equals(practice)) {
                 return convertView;
             }
-        }
+        }*/
+
         convertView = getViewInternal(practice);
         return convertView;
     }
 
     public void setData(List<Practice> data) {
         mData = data;
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
 

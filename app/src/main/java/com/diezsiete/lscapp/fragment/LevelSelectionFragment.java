@@ -1,23 +1,29 @@
 package com.diezsiete.lscapp.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.activity.PracticeActivity;
 import com.diezsiete.lscapp.adapter.LevelAdapter;
+import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.Level;
-import com.diezsiete.lscapp.rest.ProxyApp;
+import com.diezsiete.lscapp.utils.ProxyApp;
 
 /**
  *
@@ -29,7 +35,6 @@ public class LevelSelectionFragment extends Fragment {
 
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
-    private FloatingActionButton mErrorReloadButton;
 
     public LevelSelectionFragment() {
         // Required empty public constructor
@@ -54,15 +59,6 @@ public class LevelSelectionFragment extends Fragment {
 
         mErrorMessageDisplay = view.findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
-        mErrorReloadButton = view.findViewById(R.id.error_reload_button);
-
-        mErrorReloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadLevelsData();
-            }
-        });
-
         return view;
     }
 
@@ -70,9 +66,16 @@ public class LevelSelectionFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.lessons);
         setUpLessonGrid(mRecyclerView);
-        loadLevelsData();
+        loadData();
         super.onViewCreated(view, savedInstanceState);
     }
+
+    private void loadData() {
+        showDataView();
+        new FetchTask().execute();
+    }
+
+
 
     private void setUpLessonGrid(final RecyclerView levelsView) {
         //final int spacing = getContext().getResources().getDimensionPixelSize(R.dimen.spacing_nano);
@@ -93,7 +96,6 @@ public class LevelSelectionFragment extends Fragment {
      * Hace la View de informacion visible y esconde el mensaje de error
      */
     private void showDataView() {
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -101,10 +103,8 @@ public class LevelSelectionFragment extends Fragment {
      * Esconde la View de informacion y muestra el mensaje de error
      */
     private void showErrorMessage() {
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
-        mErrorReloadButton.setVisibility(View.VISIBLE);
     }
 
     private void startPracticeActivity(Activity activity, Level level) {
@@ -113,20 +113,31 @@ public class LevelSelectionFragment extends Fragment {
     }
 
 
-    private void loadLevelsData() {
-        showDataView();
-        mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        ProxyApp.getLevels(new ProxyApp.LSCResponse<Level[]>(){
-            @Override
-            public void onResponse(Level[] response) {
-                showDataView();
-                mAdapter.setData(response);
+    public class FetchTask extends AsyncTask<String, Void, Level[]> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+        @Override
+        protected Level[] doInBackground(String... params) {
+            try {
+                return ProxyApp.getLevels();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
-            @Override
-            public void onFailure() {
+        }
+        @Override
+        protected void onPostExecute(Level[] data) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (data != null) {
+                showDataView();
+                mAdapter.setData(data);
+            } else {
                 showErrorMessage();
             }
-        });
+        }
     }
 }

@@ -16,12 +16,8 @@
 package com.diezsiete.lscapp.model.practice;
 
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.Arrays;
 
 public final class ShowSignPractice extends Practice {
 
@@ -49,30 +45,6 @@ public final class ShowSignPractice extends Practice {
 
     public String[] getVideo() {
         return mVideo;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        Log.d("JOSE", "ShowSignPractice.equals");
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ShowSignPractice)) {
-            return false;
-        }
-
-        ShowSignPractice practice = (ShowSignPractice) o;
-
-        if (!mMeaning.equals(practice.getMeaning())) {
-            return false;
-        }
-        else if (!Arrays.equals(getVideo(), practice.getVideo())) {
-            Log.d("JOSE", "Arrays dont equal");
-            return false;
-        }
-
-        return true;
     }
 
 }

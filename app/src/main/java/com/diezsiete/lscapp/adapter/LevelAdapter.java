@@ -39,7 +39,6 @@ import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.databinding.ItemLevelBinding;
 import com.diezsiete.lscapp.model.Concept;
 import com.diezsiete.lscapp.model.Level;
-import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
@@ -47,8 +46,6 @@ import java.util.List;
 public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> {
 
     private Level[] mData;
-
-    private Context mContext;
 
     private final Activity mActivity;
     private final Resources mResources;
@@ -58,6 +55,8 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
     private static final String ICON_CATEGORY = "icon_category_";
 
     //private final LayoutInflater mLayoutInflater;
+
+
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -74,9 +73,9 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
+        Context context = parent.getContext();
         return new ViewHolder((ItemLevelBinding) DataBindingUtil
-                .inflate(LayoutInflater.from(mContext), R.layout.item_level, parent, false));
+                .inflate(LayoutInflater.from(context), R.layout.item_level, parent, false));
     }
 
     @Override
@@ -93,11 +92,6 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
                 mOnItemClickListener.onClick(level);
             }
         });
-
-        ImageView levelImageView = holder.itemView.findViewById(R.id.level_image);
-        Picasso.with(mContext).load(level.getImage())
-                .resize(300, 300)
-                .into(levelImageView);
     }
 
     @Override

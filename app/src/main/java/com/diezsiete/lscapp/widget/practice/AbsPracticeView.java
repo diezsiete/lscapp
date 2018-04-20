@@ -55,7 +55,7 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
     private boolean mAnswered;
     private CheckableFab mSubmitAnswer;
 
-    protected View mQuestionView;
+    protected TextView mQuestionView;
 
 
     /**
@@ -107,8 +107,9 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
      * Sets the behaviour for all question views.
      */
     protected void setUpQuestionView() {
-        mQuestionView = (View) mLayoutInflater.inflate(R.layout.question, this, false);
-        ((TextView) mQuestionView.findViewById(R.id.question)).setText(getPractice().getQuestion());
+        mQuestionView = (TextView) mLayoutInflater.inflate(R.layout.question, this, false);
+
+        mQuestionView.setText(getPractice().getQuestion());
     }
 
     public Q getPractice() {
