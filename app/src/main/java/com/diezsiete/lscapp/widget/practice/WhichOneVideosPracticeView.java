@@ -23,20 +23,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.VideoPracticeAdapter;
 
 
 @SuppressLint("ViewConstructor")
-public class WhichOneVideosPracticeView extends AbsPracticeView<WhichOneVideosPractice> {
+public class WhichOneVideosPracticeView extends AbsPracticeView<Practice> {
 
     private static final String KEY_ANSWER = "ANSWER";
     private int mAnswered = -1;
     private GridView mAnswerView;
 
-    public WhichOneVideosPracticeView(Context context, WhichOneVideosPractice practice) {
+    public WhichOneVideosPracticeView(Context context, Practice practice) {
         super(context, practice);
+    }
+
+    @Override
+    protected void setUpQuestionView() {
+        mQuestionView.setText(getPractice().getWords()[0]);
     }
 
     @Override
@@ -44,8 +49,7 @@ public class WhichOneVideosPracticeView extends AbsPracticeView<WhichOneVideosPr
         mAnswerView = new GridView(getContext());
         mAnswerView.setSelector(R.drawable.selector_button);
         mAnswerView.setNumColumns(2);
-        mAnswerView.setAdapter(new VideoPracticeAdapter(getPractice().getOptions(),
-                R.layout.video_answer));
+        mAnswerView.setAdapter(new VideoPracticeAdapter(getPractice().getVideos(), R.layout.video_answer));
         mAnswerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

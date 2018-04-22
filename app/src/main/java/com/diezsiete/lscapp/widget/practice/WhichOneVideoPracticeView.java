@@ -26,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.diezsiete.lscapp.adapter.PracticeOptionsTextAdapter;
-import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.widget.SignVideoPlayer;
@@ -34,7 +34,7 @@ import com.diezsiete.lscapp.widget.SignVideoPlayer;
 
 
 @SuppressLint("ViewConstructor")
-public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPractice> {
+public class WhichOneVideoPracticeView extends AbsPracticeView<Practice> {
 
     private static final String KEY_ANSWER = "ANSWER";
     private int mAnswered = -1;
@@ -42,8 +42,13 @@ public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPrac
 
     private SignVideoPlayer videoPlayer;
 
-    public WhichOneVideoPracticeView(Context context, WhichOneVideoPractice practice) {
+    public WhichOneVideoPracticeView(Context context, Practice practice) {
         super(context, practice);
+    }
+
+    @Override
+    protected void setUpQuestionView() {
+        mQuestionView.setText(R.string.practice_which_one_video_question);
     }
 
 
@@ -55,8 +60,7 @@ public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPrac
         mAnswerView = new GridView(getContext());
         mAnswerView.setSelector(R.drawable.selector_button);
         mAnswerView.setNumColumns(2);
-        mAnswerView.setAdapter(new PracticeOptionsTextAdapter(getPractice().getOptions(),
-                R.layout.practice_item_answer));
+        mAnswerView.setAdapter(new PracticeOptionsTextAdapter(getPractice().getWords(), R.layout.practice_item_answer));
         mAnswerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,12 +69,10 @@ public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPrac
             }
         });
 
-
-        SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
-
+        /*SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
         videoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
-        for(String video : getPractice().getVideo())
-            videoPlayer.addExternalResource(video);
+        for(String video : getPractice().getVideos())
+            videoPlayer.addExternalResource(video);*/
 
 
         container.addView(mAnswerView);
@@ -102,15 +104,13 @@ public class WhichOneVideoPracticeView extends AbsPracticeView<WhichOneVideoPrac
 
     @Override
     protected void onDetachedFromWindow() {
-        videoPlayer.release();
-        Log.d("lscapp", "DETACHED");
+        //videoPlayer.release();
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        videoPlayer.initialize();
-        Log.d("lscapp", "ATTACHED");
+        //videoPlayer.initialize();
         super.onAttachedToWindow();
     }
 }

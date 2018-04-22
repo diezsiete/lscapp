@@ -29,14 +29,11 @@ import android.widget.LinearLayout;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.ImageGridAdapter;
-import com.diezsiete.lscapp.model.Image;
-import com.diezsiete.lscapp.model.practice.DiscoverImagePractice;
-import com.diezsiete.lscapp.model.practice.TakePicturePractice;
-import com.squareup.picasso.Picasso;
+import com.diezsiete.lscapp.data.db.model.Practice;
 
 
 @SuppressLint("ViewConstructor")
-public class DiscoverImagePracticeView extends AbsPracticeView<DiscoverImagePractice> {
+public class DiscoverImagePracticeView extends AbsPracticeView<Practice> {
 
     private static final LinearLayout.LayoutParams LAYOUT_PARAMS =
             new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
@@ -47,8 +44,13 @@ public class DiscoverImagePracticeView extends AbsPracticeView<DiscoverImagePrac
 
     ImageGridAdapter mAdapter;
     RecyclerView mGridView;
-    public DiscoverImagePracticeView(Context context, DiscoverImagePractice practice) {
+    public DiscoverImagePracticeView(Context context, Practice practice) {
         super(context, practice);
+    }
+
+    @Override
+    protected void setUpQuestionView() {
+        mQuestionView.setText(R.string.practice_discover_image_question);
     }
 
 
@@ -72,7 +74,7 @@ public class DiscoverImagePracticeView extends AbsPracticeView<DiscoverImagePrac
     }
 
     private void getImages() {
-        Image[] images = getPractice().getImages();
+        /*Image[] images = getPractice().getImages();
 
         for(Image image : images) {
             image.setWidth(150);
@@ -80,7 +82,7 @@ public class DiscoverImagePracticeView extends AbsPracticeView<DiscoverImagePrac
 
             mAdapter.addDrawable(image);
         }
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();*/
 
     }
 

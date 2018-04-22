@@ -1,71 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-
-
-    <AdapterViewFlipper
-        android:id="@+id/practice_view"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="0dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <ImageView android:id="@+id/success_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="PrivateResource"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/spacing_double"
+            android:contentDescription="@null"
+            android:padding="@dimen/spacing_double"
+            android:scaleType="centerInside"
+            android:alpha="0"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/tv_error_message_display"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/error_message"
-        android:textSize="20sp"
-        android:visibility="invisible" />
-
-    <ProgressBar
-        android:id="@+id/pb_loading_indicator"
-        android:layout_height="42dp"
-        android:layout_width="42dp"
-        android:layout_gravity="center"
-        android:visibility="invisible" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/progress_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?colorPrimary"
-        android:elevation="4dp"
-        tools:ignore="UnusedAttribute,PrivateResource">
-
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/progress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_marginStart="@dimen/spacing_double"
+            android:layout_marginEnd="@dimen/spacing_double"
+            android:progressTint="?android:colorAccent"
+            tools:ignore="UnusedAttribute" />
 
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_marginEnd="@dimen/spacing_double"
-                android:layout_marginRight="@dimen/spacing_double"
-                android:progressTint="?android:colorAccent"
-                tools:ignore="UnusedAttribute" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+        <AdapterViewFlipper
+            android:id="@+id/practice_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"/>
 
-                <TextView
-                    android:id="@+id/progress_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"/>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-</LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_error_message_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/error_message"
+            android:textSize="20sp"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            android:layout_height="42dp"
+            android:layout_width="42dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/practice_end_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/practice_end_button"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:alpha="0"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        />
+</RelativeLayout>

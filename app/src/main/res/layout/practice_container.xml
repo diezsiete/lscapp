@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/absPracticeViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/question_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/elevation_header"
+        android:gravity="center"
+        android:paddingTop="0dp"
+        android:paddingRight="@dimen/spacing_double"
+        android:paddingBottom="@dimen/spacing_double"
+        android:paddingLeft="@dimen/spacing_double"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="?android:attr/textColorPrimary"
+        tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
+        android:text="question" />
+
+
+    <Button
+        android:id="@+id/submitAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+
+
+</LinearLayout>

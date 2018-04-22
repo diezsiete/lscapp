@@ -31,8 +31,7 @@ import android.widget.TextView;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.PracticeOptionsTextAdapter;
-import com.diezsiete.lscapp.model.practice.ShowSignPractice;
-import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.utils.SignVideoPlayerHelper;
 import com.diezsiete.lscapp.widget.SignVideoPlayer;
 import com.diezsiete.lscapp.widget.WordSelector;
@@ -40,7 +39,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 
 @SuppressLint("ViewConstructor")
-public class TranslateVideoPracticeView extends AbsPracticeView<TranslateVideoPractice> {
+public class TranslateVideoPracticeView extends AbsPracticeView<Practice> {
 
     private TextView mTextWord;
     private SignVideoPlayer mVideoPlayer;
@@ -53,8 +52,13 @@ public class TranslateVideoPracticeView extends AbsPracticeView<TranslateVideoPr
     }
 
 
-    public TranslateVideoPracticeView(Context context, TranslateVideoPractice practice) {
+    public TranslateVideoPracticeView(Context context, Practice practice) {
         super(context, practice);
+    }
+
+    @Override
+    protected void setUpQuestionView() {
+        mQuestionView.setText(R.string.practice_translate_video_question);
     }
 
 
@@ -63,17 +67,17 @@ public class TranslateVideoPracticeView extends AbsPracticeView<TranslateVideoPr
         final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(
                 R.layout.practice_translate_video, this, false);
 
-        if(!getPractice().isSolved()) {
-            SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
-            mVideoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
-            for(String video : getPractice().getVideo())
-                mVideoPlayer.addExternalResource(video);
 
-        }
+        SimpleExoPlayerView exoPlayerView = (SimpleExoPlayerView) container.findViewById(R.id.video_view);
+        mVideoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
+        for(String video : getPractice().getVideos())
+            mVideoPlayer.addExternalResource(video);
+
+
 
         ViewGroup wordSelectorView = container.findViewById(R.id.word_selector);
         WordSelector wordSelector = new WordSelector(wordSelectorView);
-        wordSelector.setOptions(getPractice().getOptions());
+        //wordSelector.setOptions(getPractice().getOptions());
 
 
         return container;

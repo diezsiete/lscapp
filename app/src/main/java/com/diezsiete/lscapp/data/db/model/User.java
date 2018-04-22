@@ -1,4 +1,4 @@
-package com.diezsiete.lscapp.model;
+package com.diezsiete.lscapp.data.db.model;
 
 
 public class User {

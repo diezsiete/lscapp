@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.DictionaryAdapter;
-import com.diezsiete.lscapp.model.Concept;
+import com.diezsiete.lscapp.data.DataManager;
+import com.diezsiete.lscapp.data.DataManagerResponse;
+import com.diezsiete.lscapp.data.db.model.Word;
 import com.diezsiete.lscapp.widget.SignVideoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
@@ -97,15 +99,17 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
         showDictionaryDataView();
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        com.diezsiete.lscapp.rest.ProxyApp.getDictionary(new com.diezsiete.lscapp.rest.ProxyApp.LSCResponse<Concept[]>(){
+
+        DataManager.getWords(new DataManagerResponse<Word[]>(){
             @Override
-            public void onResponse(Concept[] response) {
+            public void onResponse(Word[] response) {
                 showDictionaryDataView();
                 mAdapter.setDictionaryData(response);
             }
             @Override
-            public void onFailure() {
+            public void onFailure(Throwable t) {
                 showErrorMessage();
+                t.printStackTrace();
             }
         });
     }
@@ -129,13 +133,13 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
 
 
     @Override
-    public void onListItemClick(final Concept concept) {
+    public void onListItemClick(final Word concept) {
         if(mPopUpView.getVisibility() == View.GONE) {
             mPlayer.addExternalResource(concept.getVideo());
             mPlayer.initialize();
 
             TransitionManager.beginDelayedTransition(mContainer);
-            mPopUpTextView.setText(concept.getMeaning());
+            mPopUpTextView.setText(concept.getWord());
             mPopUpView.setVisibility(View.VISIBLE);
         }
     }

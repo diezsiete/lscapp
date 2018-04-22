@@ -1,46 +1,42 @@
 package com.diezsiete.lscapp.fragment;
 
-import android.os.AsyncTask;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.AdapterViewAnimator;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.adapter.PracticeAdapter;
-import com.diezsiete.lscapp.model.Level;
-import com.diezsiete.lscapp.model.practice.Practice;
-import com.diezsiete.lscapp.rest.LSCAppClient;
-import com.diezsiete.lscapp.utils.ProxyApp;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.diezsiete.lscapp.data.DataManager;
+import com.diezsiete.lscapp.data.DataManagerResponse;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.diezsiete.lscapp.data.db.model.Level;
+import com.diezsiete.lscapp.data.db.model.Practice;
 
 
 public class PracticeFragment extends Fragment {
 
     private AdapterViewAnimator mPracticeView;
     private PracticeAdapter mAdapter;
-
+    private ProgressBar mProgressBar;
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
-
     private String mLevelId;
+
+    private Interpolator mInterpolator;
 
 
     public static PracticeFragment newInstance(String levelId) {
@@ -55,9 +51,8 @@ public class PracticeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mLevelId = getArguments().getString(Level.TAG);
+        mInterpolator = new FastOutSlowInInterpolator();
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -67,6 +62,7 @@ public class PracticeFragment extends Fragment {
 
         mErrorMessageDisplay = view.findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
+        mProgressBar = view.findViewById(R.id.progress);
 
         return view;
     }
@@ -74,15 +70,8 @@ public class PracticeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mPracticeView = (AdapterViewAnimator) view.findViewById(R.id.practice_view);
-        mPracticeView.setAdapter(getPracticeAdapter());
-        //int position = mCategory.getFirstUnsolvedQuizPosition();
-        //mPracticeView.setSelection(0);
 
-        new FetchTask().execute();
-
-
-        //execute();
-
+        getPracticeData();
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -94,59 +83,25 @@ public class PracticeFragment extends Fragment {
         return mAdapter;
     }
 
-    private void execute() {
+    private void getPracticeData() {
+        mPracticeView.setVisibility(View.GONE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://lscapp.pta.com.co")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
-
-        LSCAppClient lscAppClient = retrofit.create(LSCAppClient.class);
-        Call<List<Practice>> call = lscAppClient.getPractices(mLevelId);
-        call.enqueue(new Callback<List<Practice>>() {
+        DataManager.getPracticesByLevel(mLevelId, new DataManagerResponse<Practice[]>() {
             @Override
-            public void onResponse(Call<List<Practice>> call, Response<List<Practice>> response) {
+            public void onResponse(Practice[] response) {
+                getPracticeAdapter().setData(response);
+                mPracticeView.setAdapter(getPracticeAdapter());
+                mProgressBar.setMax(response.length);
                 showDataView();
-                getPracticeAdapter().setData(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Practice>> call, Throwable t) {
+            public void onFailure(Throwable t) {
                 showErrorMessage();
-                Toast.makeText(getContext(), "error :(", Toast.LENGTH_LONG).show();
             }
         });
     }
-
-    public class FetchTask extends AsyncTask<String, Void, List<Practice>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-        @Override
-        protected List<Practice> doInBackground(String... params) {
-            try {
-                return ProxyApp.getPractices(mLevelId);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        @Override
-        protected void onPostExecute(List<Practice> data) {
-            mLoadingIndicator.setVisibility(View.GONE);
-            if (data != null) {
-                showDataView();
-                getPracticeAdapter().setData(data);
-                //mPracticeView.setSelection(0);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-
-
 
     /**
      * Hace la View de informacion visible y esconde el mensaje de error
@@ -163,5 +118,64 @@ public class PracticeFragment extends Fragment {
         mPracticeView.setVisibility(View.GONE);
         mLoadingIndicator.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Displays the next page.
+     *
+     * @return <code>true</code> if there's another quiz to solve, else <code>false</code>.
+     */
+    public boolean showNextPage() {
+        if (null == mPracticeView) {
+            return false;
+        }
+        int nextItem = mPracticeView.getDisplayedChild() + 1;
+        setProgress(nextItem);
+        final int count = mPracticeView.getAdapter().getCount();
+        if (nextItem < count) {
+            mPracticeView.showNext();
+            return true;
+        }
+        return false;
+    }
+
+    private void setProgress(int currentPracticePosition) {
+        if (!isAdded()) {
+            return;
+        }
+        mProgressBar.setProgress(currentPracticePosition);
+    }
+
+    public void showSummary() {
+        mProgressBar.setVisibility(View.GONE);
+
+        ImageView mIcon = getView().findViewById(R.id.success_icon);
+        int resId = getResources().getIdentifier("ic_medal", "drawable", getContext().getPackageName());
+        mIcon.setImageResource(resId);
+        showSummaryAnimate(mIcon);
+
+        Button buttonEnd = getView().findViewById(R.id.practice_end_button);
+        showSummaryAnimate(buttonEnd);
+
+        final Activity practiceActivity = getActivity();
+        buttonEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavUtils.navigateUpFromSameTask(practiceActivity);
+            }
+        });
+
+        mPracticeView.setVisibility(View.GONE);
+    }
+
+    private void showSummaryAnimate(View view) {
+        view.setVisibility(View.VISIBLE);
+        ViewCompat.animate(view)
+                .scaleX(1)
+                .scaleY(1)
+                .alpha(1)
+                .setInterpolator(mInterpolator)
+                .setStartDelay(300)
+                .start();
     }
 }

@@ -4,13 +4,18 @@
 package com.diezsiete.lscapp.widget;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 
+import com.diezsiete.lscapp.R;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -47,8 +52,11 @@ public class SignVideoPlayer {
     private long playbackPosition = 0;
     private LinkedHashMap<Uri, Integer> resources;
     private ArrayList<onSingleTapUpListener> onSingleTapUpListeners;
+    private ComponentListener componentListener;
+    private ImageButton playButton;
+    private ImageButton pauseButton;
 
-    public boolean playWhenReady = true;
+    public boolean playWhenReadySignPlayer = true;
     public boolean onSingleTapUpPlayStop = false;
     public boolean loop = true;
 
@@ -61,10 +69,86 @@ public class SignVideoPlayer {
         this.playerView = playerView;
         resources = new LinkedHashMap<>();
 
+        pauseButton = playerView.findViewById(R.id.exo_play);
+        playButton = playerView.findViewById(R.id.exo_pause);
+
+
         TouchListener touchListener = new TouchListener();
         gestureDetector = new GestureDetector(context, touchListener);
 
         this.playerView.setOnTouchListener(new TouchListener());
+        playerView.setShowMultiWindowTimeBar(true);
+
+        forcePlaybackControlsVisible();
+    }
+
+    public SignVideoPlayer addExternalResource(String uri) {
+        resources.put(Uri.parse(uri), URI_EXTERNAL);
+        return this;
+    }
+
+    public SignVideoPlayer addLocalResource(int rawResourceId) {
+        resources.put(RawResourceDataSource.buildRawResourceUri(rawResourceId), URI_LOCAL_RAW);
+        return this;
+    }
+
+    public SignVideoPlayer addLolcalResourceAsset(String assetName) {
+        resources.put(Uri.parse("assets:///"+assetName), URI_LOCAL_ASSET);
+        return this;
+    }
+
+    public void initialize() {
+        player = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(context),
+                new DefaultTrackSelector(), new DefaultLoadControl());
+
+        player.setVolume(0f);
+        playerView.setPlayer(player);
+        player.setPlayWhenReady(playWhenReadySignPlayer);
+        player.seekTo(currentWindow, playbackPosition);
+        if(this.loop)
+            player.setRepeatMode(Player.REPEAT_MODE_ALL);
+
+
+        MediaSource mediaSource = buildMediaSource();
+
+        componentListener = new ComponentListener();
+        player.addListener(componentListener);
+
+        player.prepare(mediaSource, true, false);
+
+    }
+
+    @SuppressLint("InlinedApi")
+    public void hideSystemUi() {
+        if(playerView != null)
+            playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            );
+    }
+
+    public void release() {
+        if (player != null) {
+            playbackPosition = player.getCurrentPosition();
+            currentWindow = player.getCurrentWindowIndex();
+            playWhenReadySignPlayer = player.getPlayWhenReady();
+            player.removeListener(componentListener);
+            player.release();
+            player = null;
+        }
+    }
+
+    public boolean isNull() {
+        return player == null;
+    }
+
+    public void forcePlaybackControlsVisible() {
+        this.playerView.setControllerShowTimeoutMs(0);
+        this.playerView.setControllerHideOnTouch(false);
     }
 
     private ExtractorMediaSource buildExtractorExternal(Uri uri) {
@@ -131,69 +215,6 @@ public class SignVideoPlayer {
         return mediaSource;
     }
 
-    public SignVideoPlayer addExternalResource(String uri) {
-        resources.put(Uri.parse(uri), URI_EXTERNAL);
-        return this;
-    }
-
-    public SignVideoPlayer addLocalResource(int rawResourceId) {
-        resources.put(RawResourceDataSource.buildRawResourceUri(rawResourceId), URI_LOCAL_RAW);
-        return this;
-    }
-
-    public SignVideoPlayer addLolcalResourceAsset(String assetName) {
-        resources.put(Uri.parse("assets:///"+assetName), URI_LOCAL_ASSET);
-        return this;
-    }
-
-    public void initialize()
-    {
-        player = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(context),
-                new DefaultTrackSelector(), new DefaultLoadControl());
-
-        player.setVolume(0f);
-        playerView.setPlayer(player);
-        player.setPlayWhenReady(playWhenReady);
-        player.seekTo(currentWindow, playbackPosition);
-        if(this.loop)
-            player.setRepeatMode(Player.REPEAT_MODE_ALL);
-
-
-        MediaSource mediaSource = buildMediaSource();
-
-        player.prepare(mediaSource, true, false);
-
-    }
-
-    public void release() {
-        if (player != null) {
-            resources.clear();
-            playbackPosition = player.getCurrentPosition();
-            currentWindow = player.getCurrentWindowIndex();
-            playWhenReady = player.getPlayWhenReady();
-            player.release();
-            player = null;
-        }
-    }
-
-    public boolean isNull() {
-        return player == null;
-    }
-
-
-    @SuppressLint("InlinedApi")
-    public void hideSystemUi() {
-        if(playerView != null)
-            playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            );
-    }
-
     /**
      * https://stackoverflow.com/questions/41414974/exoplayer-hide-playbackcontrolview-onclick-not-ontouch
      */
@@ -209,13 +230,13 @@ public class SignVideoPlayer {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            playWhenReady = !playWhenReady;
+            playWhenReadySignPlayer = !playWhenReadySignPlayer;
             if(onSingleTapUpPlayStop)
-                player.setPlayWhenReady(playWhenReady);
+                player.setPlayWhenReady(playWhenReadySignPlayer);
 
             if(onSingleTapUpListeners != null)
                 for(int i = 0; i < onSingleTapUpListeners.size(); i++)
-                    onSingleTapUpListeners.get(i).onSingleTapUp(playWhenReady);
+                    onSingleTapUpListeners.get(i).onSingleTapUp(playWhenReadySignPlayer);
 
             return true;
         }
@@ -225,5 +246,80 @@ public class SignVideoPlayer {
         if(onSingleTapUpListeners == null)
             onSingleTapUpListeners = new ArrayList<>();
         onSingleTapUpListeners.add(listener);
+    }
+
+    private class ComponentListener extends Player.DefaultEventListener {
+
+        @Override
+        public void onPlayerStateChanged(boolean playWhenReady,
+                                         int playbackState) {
+            String stateString;
+            playWhenReadySignPlayer = playWhenReady;
+            switch (playbackState) {
+                case Player.STATE_IDLE:
+                    stateString = "ExoPlayer.STATE_IDLE      -";
+                    break;
+                case Player.STATE_BUFFERING:
+                    stateString = "ExoPlayer.STATE_BUFFERING -";
+                    break;
+                case Player.STATE_READY:
+                    stateString = "ExoPlayer.STATE_READY     -";
+                    buttonAnimation(playWhenReady);
+                    break;
+                case Player.STATE_ENDED:
+                    stateString = "ExoPlayer.STATE_ENDED     -";
+                    break;
+                default:
+                    stateString = "UNKNOWN_STATE             -";
+                    break;
+            }
+            Log.d(TAG, "changed state to " + stateString
+                    + " playWhenReady: " + playWhenReady);
+        }
+    }
+
+
+    private void buttonAnimation(final boolean playWhenReady) {
+        final View button = playWhenReady ? playButton : pauseButton;
+
+        final int shortAnimTime = this.context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        button.setVisibility(View.VISIBLE);
+        button.animate().setDuration(shortAnimTime).alpha(1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                button.setVisibility(View.VISIBLE);
+
+                if(playWhenReady) {
+                    button.animate().setDuration(shortAnimTime).alpha(0).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            button.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }
+        });
+
+        if(playWhenReady){
+            pauseButton.setVisibility(View.VISIBLE);
+            pauseButton.animate().setDuration(shortAnimTime).alpha(0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    pauseButton.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+
+        /*mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });*/
     }
 }

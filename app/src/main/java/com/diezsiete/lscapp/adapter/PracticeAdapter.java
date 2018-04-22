@@ -8,13 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.diezsiete.lscapp.model.practice.DiscoverImagePractice;
-import com.diezsiete.lscapp.model.practice.Practice;
-import com.diezsiete.lscapp.model.practice.ShowSignPractice;
-import com.diezsiete.lscapp.model.practice.TakePicturePractice;
-import com.diezsiete.lscapp.model.practice.TranslateVideoPractice;
-import com.diezsiete.lscapp.model.practice.WhichOneVideoPractice;
-import com.diezsiete.lscapp.model.practice.WhichOneVideosPractice;
+
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.widget.practice.AbsPracticeView;
 import com.diezsiete.lscapp.widget.practice.DiscoverImagePracticeView;
 import com.diezsiete.lscapp.widget.practice.ShowSignPracticeView;
@@ -23,14 +18,14 @@ import com.diezsiete.lscapp.widget.practice.TranslateVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideoPracticeView;
 import com.diezsiete.lscapp.widget.practice.WhichOneVideosPracticeView;
 
-import java.util.List;
+
 
 
 public class PracticeAdapter extends BaseAdapter{
 
     private final Context mContext;
     private final String mLevelId;
-    private List<Practice> mData;
+    private Practice[] mData;
 
     public PracticeAdapter(Context context, String levelId) {
         mContext = context;
@@ -41,22 +36,22 @@ public class PracticeAdapter extends BaseAdapter{
     public int getCount() {
         if(mData == null)
             return 0;
-        return mData.size();
+        return mData.length;
     }
 
     @Override
     public int getViewTypeCount() {
-        return mData == null ? 0 : mData.size();
+        return mData == null ? 0 : mData.length;
     }
 
     @Override
     public Practice getItem(int position) {
-        return mData.get(position);
+        return mData[position];
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return mData[i].getId();
     }
 
     @Override
@@ -73,9 +68,9 @@ public class PracticeAdapter extends BaseAdapter{
         return convertView;
     }
 
-    public void setData(List<Practice> data) {
+    public void setData(Practice[] data) {
         mData = data;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
 
@@ -88,18 +83,18 @@ public class PracticeAdapter extends BaseAdapter{
 
     private AbsPracticeView createViewFor(Practice practice) {
         switch (practice.getType()) {
-            case SHOW_SIGN:
-                return new ShowSignPracticeView(mContext, (ShowSignPractice) practice);
-            case WHICH_ONE_VIDEOS:
-                return new WhichOneVideosPracticeView(mContext, (WhichOneVideosPractice) practice);
-            case WHICH_ONE_VIDEO:
-                return new WhichOneVideoPracticeView(mContext, (WhichOneVideoPractice) practice);
-            case TRANSLATE_VIDEO:
-                return new TranslateVideoPracticeView(mContext, (TranslateVideoPractice) practice);
-            case DISCOVER_IMAGE:
-                return new DiscoverImagePracticeView(mContext, (DiscoverImagePractice) practice);
-            case TAKE_PICTURE:
-                return new TakePicturePracticeView(mContext, (TakePicturePractice) practice);
+            case "show-sign":
+                return new ShowSignPracticeView(mContext, practice);
+            case "which-one-videos":
+                return new WhichOneVideosPracticeView(mContext, practice);
+            case "which-one-video":
+                return new WhichOneVideoPracticeView(mContext, practice);
+            case "translate-video":
+                return new TranslateVideoPracticeView(mContext, practice);
+            case "discover-image":
+                return new DiscoverImagePracticeView(mContext, practice);
+            case "take-picture":
+                return new TakePicturePracticeView(mContext, practice);
 
         }
         throw new UnsupportedOperationException(

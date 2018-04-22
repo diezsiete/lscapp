@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.model.Image;
+
 import com.diezsiete.lscapp.utils.ImagePlaceHolderDrawableHelper;
 import com.diezsiete.lscapp.widget.DynamicHeightImageView;
 import com.squareup.picasso.Picasso;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ImageGridAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
-    private List<Image> imageModels = new ArrayList<>();
+    private List<String> imageModels = new ArrayList<>();
     //Picasso p;
 
     public ImageGridAdapter(Context context) {
@@ -49,9 +49,9 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-
+        /*
         ImageGridViewHolder vh = (ImageGridViewHolder) viewHolder;
-        Image item = imageModels.get(position);
+        String item = imageModels.get(position);
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) vh.imageView.getLayoutParams();
         float ratio = item.getHeight() / item.getWidth();
         rlp.height = (int) (rlp.width * ratio);
@@ -63,6 +63,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
                 .fit()
                 .centerCrop()
                 .into(vh.imageView);
+                */
     }
 
     @Override
@@ -71,10 +72,10 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
     }
 
 
-    public void addDrawable(Image imageModel) {
-        float ratio = (float) imageModel.getHeight() / (float) imageModel.getWidth();
-        imageModel.setRatio(ratio);
-        this.imageModels.add(imageModel);
+    public void addDrawable() {
+        //float ratio = (float) imageModel.getHeight() / (float) imageModel.getWidth();
+        //imageModel.setRatio(ratio);
+        //this.imageModels.add(imageModel);
     }
 
     public class ImageGridViewHolder extends ViewHolder {

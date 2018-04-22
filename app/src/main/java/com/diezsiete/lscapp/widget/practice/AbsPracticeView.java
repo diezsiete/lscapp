@@ -21,29 +21,21 @@ import android.content.Context;
 
 import android.os.Bundle;
 
-import android.support.v4.view.MarginLayoutParamsCompat;
 
-import android.view.Gravity;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.diezsiete.lscapp.model.Level;
-import com.diezsiete.lscapp.model.practice.Practice;
+import com.diezsiete.lscapp.activity.PracticeActivity;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.widget.fab.CheckableFab;
-
-
-
 
 
 public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
-
-
     private final Q mPractice;
 
     private static final int ANSWER_HIDE_DELAY = 500;
@@ -53,9 +45,11 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
 
 
     private boolean mAnswered;
-    private CheckableFab mSubmitAnswer;
+    private AppCompatButton mSubmitAnswer;
 
     protected TextView mQuestionView;
+
+    private LinearLayout mContainer;
 
 
     /**
@@ -69,101 +63,93 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
         mPractice = practice;
         mSpacingDouble = getResources().getDimensionPixelSize(R.dimen.spacing_double);
         mLayoutInflater = LayoutInflater.from(context);
-        mSubmitAnswer = getSubmitButton();
 
-        //setId(practice.getId());
-        setUpQuestionView();
-        LinearLayout container = createContainerLayout(context);
-        View quizContentView = getInitializedContentView();
-        addContentView(container, quizContentView);
-        addOnLayoutChangeListener(new OnLayoutChangeListener() {
+        setId(practice.getId());
+
+        mContainer = (LinearLayout) mLayoutInflater.inflate(R.layout.practice_container, this, false);
+
+        mSubmitAnswer = mContainer.findViewById(R.id.submitAnswer);
+        mSubmitAnswer.setOnClickListener(new OnClickListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                                       int oldLeft,
-                                       int oldTop, int oldRight, int oldBottom) {
-                removeOnLayoutChangeListener(this);
-                addFloatingActionButton();
+            public void onClick(View v) {
+                submitAnswer(v);
+                mSubmitAnswer.setEnabled(false);
             }
         });
-    }
 
-    private CheckableFab getSubmitButton() {
-        if (null == mSubmitAnswer) {
-            mSubmitAnswer = (CheckableFab) getLayoutInflater()
-                    .inflate(R.layout.answer_submit, this, false);
-            mSubmitAnswer.hide();
-            mSubmitAnswer.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submitAnswer(v);
-                    mSubmitAnswer.setEnabled(false);
-                }
-            });
-        }
-        return mSubmitAnswer;
+        mQuestionView = mContainer.findViewById(R.id.question_view);
+        setUpQuestionView();
+
+        View quizContentView = createPracticeContentView();
+        quizContentView.setId(R.id.practice_content);
+        mContainer.addView(quizContentView, 1);
+
+        addView(mContainer);
+
     }
 
     /**
      * Sets the behaviour for all question views.
      */
-    protected void setUpQuestionView() {
-        mQuestionView = (TextView) mLayoutInflater.inflate(R.layout.question, this, false);
-
-        mQuestionView.setText(getPractice().getQuestion());
-    }
+    abstract protected void setUpQuestionView();
 
     public Q getPractice() {
         return mPractice;
     }
 
-    private LinearLayout createContainerLayout(Context context) {
-        LinearLayout container = new LinearLayout(context);
-        container.setId(R.id.absPracticeViewContainer);
-        container.setOrientation(LinearLayout.VERTICAL);
-        return container;
-    }
-
-    private View getInitializedContentView() {
-        View quizContentView = createPracticeContentView();
-        quizContentView.setId(R.id.practice_content);
-        quizContentView.setSaveEnabled(true);
-        quizContentView.setPadding(mSpacingDouble, mSpacingDouble, mSpacingDouble, mSpacingDouble);
-
-        if (quizContentView instanceof ViewGroup) {
-            ((ViewGroup) quizContentView).setClipToPadding(false);
-        }
-        quizContentView.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.min_height_question));
-        return quizContentView;
-    }
-
-
-    protected void addContentView(LinearLayout container, View quizContentView) {
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT);
-        container.addView(mQuestionView, layoutParams);
-        container.addView(quizContentView, layoutParams);
-        addView(container, layoutParams);
-    }
-
-
-    private void addFloatingActionButton() {
-        final int fabSize = getResources().getDimensionPixelSize(R.dimen.size_fab);
-        int bottomOfQuestionView = findViewById(R.id.question_view).getBottom();
-        final LayoutParams fabLayoutParams = new LayoutParams(fabSize, fabSize,
-                Gravity.END | Gravity.TOP);
-        final int halfAFab = fabSize / 2;
-        //TODO : Arreglar esta forma de posicionar el boton (+750)
-        //orig : bottomOfQuestionView - halfAFab
-        fabLayoutParams.setMargins(0, // left
-                750, //top
-                0, // right
-                mSpacingDouble); // bottom
-        MarginLayoutParamsCompat.setMarginEnd(fabLayoutParams, mSpacingDouble);
-        addView(mSubmitAnswer, fabLayoutParams);
-    }
 
     protected LayoutInflater getLayoutInflater() {
         return mLayoutInflater;
+    }
+
+    protected boolean isAnswered() {
+        return mAnswered;
+    }
+
+    /**
+     * Sets the quiz to answered or unanswered.
+     *
+     * @param answered <code>true</code> if an answer was selected, else <code>false</code>.
+     */
+    protected void allowAnswer(final boolean answered) {
+        if (null != mSubmitAnswer) {
+            if (answered) {
+                mSubmitAnswer.setVisibility(VISIBLE);
+            } else {
+                mSubmitAnswer.setVisibility(INVISIBLE);
+            }
+            mAnswered = answered;
+        }
+    }
+
+    /**
+     * Sets the quiz to answered if it not already has been answered.
+     * Otherwise does nothing.
+     */
+    protected void allowAnswer() {
+        if (!isAnswered()) {
+            allowAnswer(true);
+        }
+    }
+
+    /**
+     * Allows children to submit an answer via code.
+     */
+    protected void submitAnswer() {
+        submitAnswer(findViewById(R.id.submitAnswer));
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    private void submitAnswer(final View v) {
+        final boolean answerCorrect = isAnswerCorrect();
+        //mPractice.setSolved(true);
+        moveViewOffScreen(answerCorrect);
+    }
+
+    private void moveViewOffScreen(final boolean answerCorrect) {
+        if (getContext() instanceof PracticeActivity) {
+            ((PracticeActivity) getContext()).proceed();
+        }
     }
 
     /**
@@ -195,49 +181,4 @@ public abstract class AbsPracticeView<Q extends Practice> extends FrameLayout {
      * @param savedInput The input that the user made in a prior instance of this view.
      */
     public abstract void setUserInput(Bundle savedInput);
-
-
-
-    protected boolean isAnswered() {
-        return mAnswered;
-    }
-
-    /**
-     * Sets the quiz to answered or unanswered.
-     *
-     * @param answered <code>true</code> if an answer was selected, else <code>false</code>.
-     */
-    protected void allowAnswer(final boolean answered) {
-        if (null != mSubmitAnswer) {
-            if (answered) {
-                mSubmitAnswer.show();
-            } else {
-                mSubmitAnswer.hide();
-            }
-            mAnswered = answered;
-        }
-    }
-
-    /**
-     * Sets the quiz to answered if it not already has been answered.
-     * Otherwise does nothing.
-     */
-    protected void allowAnswer() {
-        if (!isAnswered()) {
-            allowAnswer(true);
-        }
-    }
-
-    /**
-     * Allows children to submit an answer via code.
-     */
-    protected void submitAnswer() {
-        submitAnswer(findViewById(R.id.submitAnswer));
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    private void submitAnswer(final View v) {
-        final boolean answerCorrect = isAnswerCorrect();
-        mPractice.setSolved(true);
-    }
 }

@@ -14,47 +14,46 @@
   ~ limitations under the License.
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:minHeight="@dimen/min_height_question"
+    android:id="@+id/practice_content"
+    >
 
     <FrameLayout
-        android:id="@+id/fl_1"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/darker_gray"
-        android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:id="@+id/frameLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:controller_layout_id="@layout/exoplayer_custom_playback_control"
-            app:use_controller="false">
-
-        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
-
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:controller_layout_id="@layout/signplayer_custom_playback_control"
+            app:use_controller="true" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_show_sign"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/category_item"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Palabra"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fl_1"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="2dp">
+        <TextView
+            android:id="@+id/tv_show_sign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:padding="20dp"
+            />
+    </android.support.v7.widget.CardView>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

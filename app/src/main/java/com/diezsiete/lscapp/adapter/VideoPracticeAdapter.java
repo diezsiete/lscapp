@@ -36,7 +36,7 @@ import com.diezsiete.lscapp.widget.SignVideoPlayer;
  */
 public class VideoPracticeAdapter extends BaseAdapter {
 
-    private final String[][] mOptions;
+    private final String[] mOptions;
     private final int mLayoutId;
 
 
@@ -48,7 +48,7 @@ public class VideoPracticeAdapter extends BaseAdapter {
      * @param options The options to add to the adapter.
      * @param layoutId Must consist of a single {@link TextView}.
      */
-    public VideoPracticeAdapter(String[][] options, @LayoutRes int layoutId) {
+    public VideoPracticeAdapter(String[] options, @LayoutRes int layoutId) {
         mOptions = options;
         mLayoutId = layoutId;
     }
@@ -61,7 +61,7 @@ public class VideoPracticeAdapter extends BaseAdapter {
     }
 
     @Override
-    public String[] getItem(int position) {
+    public String getItem(int position) {
         return mOptions[position];
     }
 
@@ -84,10 +84,10 @@ public class VideoPracticeAdapter extends BaseAdapter {
         }
         if(videoPlayers <= position){
             videoPlayers++;
-            SignVideoPlayer videoPlayer = createSignVideoPlayer(position, convertView, (AbsListView) parent);
+            /*SignVideoPlayer videoPlayer = createSignVideoPlayer(position, convertView, (AbsListView) parent);
             if(position + 1 == getCount()) {
                 SignVideoPlayerHelper.initialize();
-            }
+            }*/
         }
         return convertView;
     }
@@ -98,9 +98,8 @@ public class VideoPracticeAdapter extends BaseAdapter {
         SignVideoPlayer videoPlayer = SignVideoPlayerHelper.create(context, exoPlayerView);
 
 
-        String[] videoSrc = getItem(position);
-        for(String video : videoSrc)
-            videoPlayer.addExternalResource(video);
+        String videoSrc = getItem(position);
+        videoPlayer.addExternalResource(videoSrc);
         //Resources res = context.getResources();
         //int videoId = res.getIdentifier(videoName, "raw", context.getPackageName());
         //videoPlayer.addLocalResource(videoId);

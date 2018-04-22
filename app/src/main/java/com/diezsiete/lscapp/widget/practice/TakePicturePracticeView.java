@@ -31,13 +31,13 @@ import android.widget.LinearLayout;
 
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.model.practice.TakePicturePractice;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.utils.SignCameraHelper;
 
 
 
 @SuppressLint("ViewConstructor")
-public class TakePicturePracticeView extends AbsPracticeView<TakePicturePractice> {
+public class TakePicturePracticeView extends AbsPracticeView<Practice> {
 
     private static final String TAG = "TakePicturePracticeView";
 
@@ -47,8 +47,13 @@ public class TakePicturePracticeView extends AbsPracticeView<TakePicturePractice
         LAYOUT_PARAMS.gravity = Gravity.CENTER;
     }
 
-    public TakePicturePracticeView(Context context, TakePicturePractice practice) {
+    public TakePicturePracticeView(Context context, Practice practice) {
         super(context, practice);
+    }
+
+    @Override
+    protected void setUpQuestionView() {
+        mQuestionView.setText(R.string.practice_take_picture_question);
     }
 
 

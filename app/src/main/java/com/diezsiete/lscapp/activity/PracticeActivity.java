@@ -7,12 +7,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
@@ -20,7 +23,7 @@ import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.fragment.PracticeFragment;
-import com.diezsiete.lscapp.model.Level;
+import com.diezsiete.lscapp.data.db.model.Level;
 
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class PracticeActivity extends AppCompatActivity {
 
     public static Intent getStartIntent(Context context, Level level) {
         Intent starter = new Intent(context, PracticeActivity.class);
-        starter.putExtra(Level.TAG, level.getId());
+        starter.putExtra(Level.TAG, level.getLevelId());
         return starter;
     }
 
@@ -47,6 +50,23 @@ public class PracticeActivity extends AppCompatActivity {
         mLevelId = getIntent().getStringExtra(Level.TAG);
 
         populate(mLevelId);
+
+        ActionBar actionBar = this.getSupportActionBar();
+        // Set the action bar back button to look like an up button
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        // When the home button is pressed, take the user back to the VisualizerActivity
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("NewApi")
@@ -80,6 +100,22 @@ public class PracticeActivity extends AppCompatActivity {
             return;
         }
         mPracticeFragment = PracticeFragment.newInstance(mLevelId);
+    }
+
+    /**
+     * Proceeds the quiz to it's next state.
+     */
+    public void proceed() {
+        submitAnswer();
+    }
+
+
+    private void submitAnswer() {
+        if (!mPracticeFragment.showNextPage()) {
+            mPracticeFragment.showSummary();
+            //setResultSolved();
+            return;
+        }
     }
 
     //TODO

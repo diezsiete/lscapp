@@ -1,4 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- <string name="rest_base_url">http://18.208.61.61:12345</string> -->
+    <string name="rest_base_url">https://lscapp.pta.com.co</string>
+
     <string name="app_name">LSC App</string>
     <string name="title_activity_main">MainActivity</string>
 
@@ -30,6 +33,7 @@
     <string name="permission_denied">Permission denied</string>
 
     <!-- register and login -->
+    <string name="title_activity_login">Iniciar sesión</string>
     <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="prompt_password_confirm">Confirmar contraseña</string>
@@ -46,24 +50,13 @@
     <string name="register">Registrarse</string>
     <string name="error_password_mismatch">Contraseñas no concuerdan</string>
 
-    <string name="rest_base_url">http://18.208.61.61</string>
 
-    <!-- BORRAR -->
-    <string name="format_wind_kmh">
-        <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g>
-    </string>
-    <string name="format_temperature_celsius">
-        <xliff:g id="temp">%1.0f</xliff:g>\u00B0C
-    </string>
-    <!-- For labelling today's forecast [CHAR LIMIT=15] -->
-    <string name="today">Today</string>
-    <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
-    <string name="tomorrow">Tomorrow</string>
-    <string name="go">GO</string>
-    <string name="emojify_me">Emojify Me!</string>
+    <!-- Practices -->
+    <string name="practice_end_button">Continuar</string>
+    <string name="practice_which_one_video_question">¿Qué describe la seña?</string>
+    <string name="practice_discover_image_question">Observa la seña</string>
+    <string name="practice_take_picture_question">Realiza la seña con la mano y tomale una foto</string>
+    <string name="practice_translate_video_question">¿Qué describe la seña?</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">Iniciar sesión</string>
 
 </resources>

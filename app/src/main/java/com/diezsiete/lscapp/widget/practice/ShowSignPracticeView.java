@@ -28,7 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.diezsiete.lscapp.model.practice.ShowSignPractice;
+import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.utils.SignVideoPlayerHelper;
 import com.diezsiete.lscapp.widget.SignVideoPlayer;
@@ -36,11 +36,11 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 
 @SuppressLint("ViewConstructor")
-public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
+public class ShowSignPracticeView extends AbsPracticeView<Practice> {
 
     private TextView mTextWord;
 
-    SignVideoPlayer mVideoPlayer;
+    //SignVideoPlayer mVideoPlayer;
 
     private static final LinearLayout.LayoutParams LAYOUT_PARAMS =
             new LinearLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT, 1);
@@ -50,14 +50,12 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
     }
 
 
-    public ShowSignPracticeView(Context context, ShowSignPractice practice) {
+    public ShowSignPracticeView(Context context, Practice practice) {
         super(context, practice);
     }
 
     @Override
     protected void setUpQuestionView() {
-        super.setUpQuestionView();
-        mQuestionView.setText("");
         mQuestionView.setVisibility(View.GONE);
     }
 
@@ -66,17 +64,16 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
         final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(
                 R.layout.practice_show_sign, this, false);
 
-        if(!getPractice().isSolved()) {
-            SimpleExoPlayerView exoPlayerView = container.findViewById(R.id.video_view);
-            mVideoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
-            for(String video : getPractice().getVideo())
-                mVideoPlayer.addExternalResource(video);
 
-            mVideoPlayer.initialize();
+        /*SimpleExoPlayerView exoPlayerView = container.findViewById(R.id.video_view);
+        mVideoPlayer = new SignVideoPlayer(getContext(), exoPlayerView);
+        for(String video : getPractice().getVideos()) {
+            mVideoPlayer.addExternalResource(video);
+        }*/
 
-            mTextWord = (TextView) container.findViewById(R.id.tv_show_sign);
-            mTextWord.setText(getPractice().getMeaning());
-        }
+        mTextWord = (TextView) container.findViewById(R.id.tv_show_sign);
+        mTextWord.setText(getPractice().getWords()[0]);
+
         allowAnswer();
         return container;
     }
@@ -98,15 +95,13 @@ public class ShowSignPracticeView extends AbsPracticeView<ShowSignPractice> {
 
     @Override
     protected void onDetachedFromWindow() {
-        Log.d("JOSE", "DETACHED");
-        mVideoPlayer.release();
+        //mVideoPlayer.release();
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        Log.d("JOSE", "ATACHED");
-        mVideoPlayer.initialize();
+        //mVideoPlayer.initialize();
         super.onAttachedToWindow();
     }
 

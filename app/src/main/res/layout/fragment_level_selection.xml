@@ -15,7 +15,7 @@
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:transitionGroup="false"
         app:spanCount="2" tools:ignore="UnusedAttribute" />
 

@@ -2,14 +2,8 @@ package com.diezsiete.lscapp.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,16 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.model.User;
-import com.diezsiete.lscapp.rest.LSCAppClient;
+import com.diezsiete.lscapp.data.DataManager;
+import com.diezsiete.lscapp.data.DataManagerResponse;
+import com.diezsiete.lscapp.data.db.model.User;
 
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -195,47 +183,31 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void executeRegister(String email, String password, String passwordConfirm) {
-        User user = new User(email, password, passwordConfirm);
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(getString(R.string.rest_base_url))
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
-
-        LSCAppClient client = retrofit.create(LSCAppClient.class);
-        Call<User> call = client.createAccount(user);
-        call.enqueue(new Callback<User>() {
+        DataManager.createUser(email, password, passwordConfirm, new DataManagerResponse<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, "Yeah user id : " + response.body().getProfileId(), Toast.LENGTH_SHORT).show();
-                }else{
-                    switch(response.code()){
-                        case 404:
-                            try {
-                                Toast.makeText(RegisterActivity.this, "Error 404 : " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                Toast.makeText(RegisterActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case 500:
-                            Toast.makeText(RegisterActivity.this, "Error 500", Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(RegisterActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                showProgress(false);
-                //finish();
+            public void onResponse(User response) {
+                Toast.makeText(RegisterActivity.this, "Yeah user id : " + response.getProfileId(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
-                showProgress(false);
+            public void onFailure(Throwable t) {
+                /*
+                switch(response.code()){
+                    case 404:
+                        try {
+                            Toast.makeText(RegisterActivity.this, "Error 404 : " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            Toast.makeText(RegisterActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 500:
+                        Toast.makeText(RegisterActivity.this, "Error 500", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(RegisterActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
+                }*/
             }
         });
-
     }
 
 }
