@@ -135,6 +135,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
     @Override
     public void onListItemClick(final Word concept) {
         if(mPopUpView.getVisibility() == View.GONE) {
+            mPlayer.clearResources();
             mPlayer.addExternalResource(concept.getVideo());
             mPlayer.initialize();
 

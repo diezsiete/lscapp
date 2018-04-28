@@ -14,6 +14,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.diezsiete.lscapp.R;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -54,7 +55,11 @@ public class SignVideoPlayer {
     private ArrayList<onSingleTapUpListener> onSingleTapUpListeners;
     private ComponentListener componentListener;
     private ImageButton playButton;
-    private ImageButton pauseButton;
+    private ProgressBar progressBar;
+
+    private boolean stateBuffering = false;
+    private final int animTime;
+
 
     public boolean playWhenReadySignPlayer = true;
     public boolean onSingleTapUpPlayStop = false;
@@ -69,9 +74,9 @@ public class SignVideoPlayer {
         this.playerView = playerView;
         resources = new LinkedHashMap<>();
 
-        pauseButton = playerView.findViewById(R.id.exo_play);
-        playButton = playerView.findViewById(R.id.exo_pause);
 
+        playButton = playerView.findViewById(R.id.exo_play);
+        progressBar = playerView.findViewById(R.id.signplayer_pb);
 
         TouchListener touchListener = new TouchListener();
         gestureDetector = new GestureDetector(context, touchListener);
@@ -79,6 +84,7 @@ public class SignVideoPlayer {
         this.playerView.setOnTouchListener(new TouchListener());
         playerView.setShowMultiWindowTimeBar(true);
 
+        animTime = this.context.getResources().getInteger(android.R.integer.config_shortAnimTime);
         forcePlaybackControlsVisible();
     }
 
@@ -97,6 +103,10 @@ public class SignVideoPlayer {
         return this;
     }
 
+    public void clearResources() {
+        resources.clear();
+    }
+
     public void initialize() {
         player = ExoPlayerFactory.newSimpleInstance(
                 new DefaultRenderersFactory(context),
@@ -109,6 +119,7 @@ public class SignVideoPlayer {
         if(this.loop)
             player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
+        progressBar.setVisibility(View.VISIBLE);
 
         MediaSource mediaSource = buildMediaSource();
 
@@ -116,7 +127,6 @@ public class SignVideoPlayer {
         player.addListener(componentListener);
 
         player.prepare(mediaSource, true, false);
-
     }
 
     @SuppressLint("InlinedApi")
@@ -207,9 +217,9 @@ public class SignVideoPlayer {
         }
 
         MediaSource mediaSource = null;
-        if(extractors.size() > 1)
+        if(extractors.size() > 1) {
             mediaSource = new ConcatenatingMediaSource(extractors.toArray(new ExtractorMediaSource[extractors.size()]));
-        else
+        }else
             mediaSource = extractors.get(0);
 
         return mediaSource;
@@ -261,10 +271,15 @@ public class SignVideoPlayer {
                     break;
                 case Player.STATE_BUFFERING:
                     stateString = "ExoPlayer.STATE_BUFFERING -";
+                    stateBuffering = true;
                     break;
                 case Player.STATE_READY:
                     stateString = "ExoPlayer.STATE_READY     -";
-                    buttonAnimation(playWhenReady);
+                    if(stateBuffering && playWhenReady) {
+                        stateBuffering = false;
+                        progressBar.setVisibility(View.GONE);
+                    }else
+                        buttonAnimation(playWhenReady);
                     break;
                 case Player.STATE_ENDED:
                     stateString = "ExoPlayer.STATE_ENDED     -";
@@ -273,25 +288,22 @@ public class SignVideoPlayer {
                     stateString = "UNKNOWN_STATE             -";
                     break;
             }
-            Log.d(TAG, "changed state to " + stateString
-                    + " playWhenReady: " + playWhenReady);
+            Log.d(TAG, "changed state to " + stateString + " playWhenReady: " + playWhenReady);
         }
     }
 
 
     private void buttonAnimation(final boolean playWhenReady) {
-        final View button = playWhenReady ? playButton : pauseButton;
-
-        final int shortAnimTime = this.context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+        final View button = playButton;
 
         button.setVisibility(View.VISIBLE);
-        button.animate().setDuration(shortAnimTime).alpha(1).setListener(new AnimatorListenerAdapter() {
+        button.animate().setDuration(animTime).alpha(1).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 button.setVisibility(View.VISIBLE);
 
                 if(playWhenReady) {
-                    button.animate().setDuration(shortAnimTime).alpha(0).setListener(new AnimatorListenerAdapter() {
+                    button.animate().setDuration(animTime).alpha(0).setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             button.setVisibility(View.GONE);
@@ -300,26 +312,5 @@ public class SignVideoPlayer {
                 }
             }
         });
-
-        if(playWhenReady){
-            pauseButton.setVisibility(View.VISIBLE);
-            pauseButton.animate().setDuration(shortAnimTime).alpha(0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    pauseButton.setVisibility(View.GONE);
-                }
-            });
-        }
-
-
-
-        /*mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });*/
     }
 }

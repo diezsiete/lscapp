@@ -1,5 +1,6 @@
 package com.diezsiete.lscapp.fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.util.Log;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterViewAnimator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +41,7 @@ public class PracticeFragment extends Fragment {
 
     private Interpolator mInterpolator;
 
+    private ObjectAnimator mProgressBarAnimator;
 
     public static PracticeFragment newInstance(String levelId) {
         Bundle args = new Bundle();
@@ -51,7 +55,9 @@ public class PracticeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mLevelId = getArguments().getString(Level.TAG);
-        mInterpolator = new FastOutSlowInInterpolator();
+        mInterpolator = new AccelerateInterpolator();
+
+
         super.onCreate(savedInstanceState);
     }
 
@@ -64,12 +70,19 @@ public class PracticeFragment extends Fragment {
         mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
         mProgressBar = view.findViewById(R.id.progress);
 
+        mProgressBarAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 0);
+        mProgressBarAnimator.setDuration(600);
+        mProgressBarAnimator.setInterpolator(mInterpolator);
+
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mPracticeView = (AdapterViewAnimator) view.findViewById(R.id.practice_view);
+
+        mPracticeView.setInAnimation(getActivity(), R.animator.practice_right_in);
+        mPracticeView.setOutAnimation(getActivity(), R.animator.practice_left_out);
 
         getPracticeData();
 
@@ -92,10 +105,9 @@ public class PracticeFragment extends Fragment {
             public void onResponse(Practice[] response) {
                 getPracticeAdapter().setData(response);
                 mPracticeView.setAdapter(getPracticeAdapter());
-                mProgressBar.setMax(response.length);
+                mProgressBar.setMax(100);
                 showDataView();
             }
-
             @Override
             public void onFailure(Throwable t) {
                 showErrorMessage();
@@ -143,7 +155,15 @@ public class PracticeFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        mProgressBar.setProgress(currentPracticePosition);
+        int progressBarPos = currentPracticePosition * 100 / getPracticeAdapter().getCount();
+        /*
+        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", mProgressBar.getProgress(), progressBarPos);
+        progressAnimator.setDuration(600);
+        progressAnimator.setInterpolator(new AccelerateInterpolator());
+        progressAnimator.start();*/
+
+        mProgressBarAnimator.setIntValues(mProgressBar.getProgress(), progressBarPos);
+        mProgressBarAnimator.start();
     }
 
     public void showSummary() {

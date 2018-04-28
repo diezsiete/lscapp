@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -65,6 +66,9 @@
         android:text="@string/practice_end_button"
         android:visibility="gone"
         android:layout_alignParentBottom="true"
+        android:padding="@dimen/spacing_double"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="#FFFFFF"
         android:alpha="0"
         android:scaleX="0.7"
         android:scaleY="0.7"
