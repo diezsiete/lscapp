@@ -100,7 +100,7 @@ public class PracticeFragment extends Fragment {
         mPracticeView.setVisibility(View.GONE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        DataManager.getPracticesByLevel(mLevelId, new DataManagerResponse<Practice[]>() {
+        /*DataManager.getPracticesByLevel(mLevelId, new DataManagerResponse<Practice[]>() {
             @Override
             public void onResponse(Practice[] response) {
                 getPracticeAdapter().setData(response);
@@ -112,7 +112,7 @@ public class PracticeFragment extends Fragment {
             public void onFailure(Throwable t) {
                 showErrorMessage();
             }
-        });
+        });*/
     }
 
     /**
@@ -156,11 +156,6 @@ public class PracticeFragment extends Fragment {
             return;
         }
         int progressBarPos = currentPracticePosition * 100 / getPracticeAdapter().getCount();
-        /*
-        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", mProgressBar.getProgress(), progressBarPos);
-        progressAnimator.setDuration(600);
-        progressAnimator.setInterpolator(new AccelerateInterpolator());
-        progressAnimator.start();*/
 
         mProgressBarAnimator.setIntValues(mProgressBar.getProgress(), progressBarPos);
         mProgressBarAnimator.start();

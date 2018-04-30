@@ -100,7 +100,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
 
-        DataManager.getWords(new DataManagerResponse<Word[]>(){
+        /*DataManager.getWords(new DataManagerResponse<Word[]>(){
             @Override
             public void onResponse(Word[] response) {
                 showDictionaryDataView();
@@ -111,7 +111,7 @@ public class DictionaryFragment extends Fragment implements DictionaryAdapter.Li
                 showErrorMessage();
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 
     /**

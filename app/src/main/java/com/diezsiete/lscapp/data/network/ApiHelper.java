@@ -15,6 +15,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -25,11 +28,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class ApiHelper {
 
-    private static Api api;
+    private Api api;
 
-    private static Api buildApi() {
+    @Inject
+    ApiHelper(){
+
+    }
+
+    private Api buildApi() {
         if(api == null) {
             Retrofit.Builder builder = new Retrofit.Builder().baseUrl(App.getContext().getResources().getString(R.string.rest_base_url))
                     .addConverterFactory(GsonConverterFactory.create());
@@ -38,7 +47,7 @@ public class ApiHelper {
         return api;
     }
 
-    private static <T> Callback<T> createDefaultResponse(final DataManagerResponse<T> callback) {
+    private <T> Callback<T> createDefaultResponse(final DataManagerResponse<T> callback) {
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
@@ -63,19 +72,19 @@ public class ApiHelper {
     }
 
 
-    public static void getLevels(final DataManagerResponse<Level[]> callback) {
+    public void getLevels(final DataManagerResponse<Level[]> callback) {
         buildApi().getLevels().enqueue(createDefaultResponse(callback));
     }
 
-    public static void getLevel(String levelId, final DataManagerResponse<Level> callback) {
+    public void getLevel(String levelId, final DataManagerResponse<Level> callback) {
         buildApi().getLevel(levelId).enqueue(createDefaultResponse(callback));
     }
 
-    public static void getPractice(String practiceId, final DataManagerResponse<Practice> callback) {
+    public void getPractice(String practiceId, final DataManagerResponse<Practice> callback) {
         buildApi().getPractice(practiceId).enqueue(createDefaultResponse(callback));
     }
 
-    public static void getPracticesByLevel(String levelId, final DataManagerResponse<Practice[]> callback) {
+    public void getPracticesByLevel(String levelId, final DataManagerResponse<Practice[]> callback) {
         getLevel(levelId, new DataManagerResponse<Level>() {
             @Override
             public void onResponse(final Level level) {
@@ -111,11 +120,11 @@ public class ApiHelper {
     }
 
 
-    public static void getWords(final DataManagerResponse<Word[]> callback) {
+    public void getWords(final DataManagerResponse<Word[]> callback) {
         buildApi().getWords().enqueue(createDefaultResponse(callback));
     }
 
-    public static void cntk(String tag, File file, final DataManagerResponse<Boolean> callback) {
+    public void cntk(String tag, File file, final DataManagerResponse<Boolean> callback) {
         RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), file);
 
         MultipartBody.Part formData = MultipartBody.Part.createFormData("photo", file.getName(), filePart);
@@ -133,7 +142,7 @@ public class ApiHelper {
         });
     }
 
-    public static void createUser(User user, final DataManagerResponse<User> callback) {
+    public void createUser(User user, final DataManagerResponse<User> callback) {
         buildApi().createUser(user).enqueue(createDefaultResponse(callback));
     }
 

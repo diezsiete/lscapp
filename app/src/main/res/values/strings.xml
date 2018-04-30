@@ -32,12 +32,19 @@
     </string>
     <string name="permission_denied">Permission denied</string>
 
+    <!--App Message-->
+    <string name="api_retry_error">Please retry!</string>
+    <string name="api_default_error">Something wrong happened!</string>
+    <string name="some_error">Un error ha ocurrido!</string>
+    <string name="connection_error">Internet connection lost!</string>
+
     <!-- register and login -->
     <string name="title_activity_login">Iniciar sesión</string>
     <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="prompt_password_confirm">Confirmar contraseña</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Iniciar sesión</string>
+    <string name="action_register">Registrarse</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">Este correo es incorrecto</string>
     <string name="error_invalid_password">Contraseña incorrecta</string>

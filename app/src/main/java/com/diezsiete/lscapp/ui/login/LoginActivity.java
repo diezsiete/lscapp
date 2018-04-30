@@ -1,8 +1,10 @@
-package com.diezsiete.lscapp.activity;
+package com.diezsiete.lscapp.ui.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,13 +35,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.ui.base.BaseActivity;
+import com.diezsiete.lscapp.ui.register.RegisterActivity;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends BaseActivity implements LoginContract.MvpView, LoaderCallbacks<Cursor> {
+
+    @Inject
+    LoginContract.Presenter<LoginContract.MvpView> mPresenter;
+
+
+
+    @Override
+    public void openRegisterActivity() {
+        startActivity(RegisterActivity.getStartIntent(this));
+        finish();
+    }
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -61,13 +81,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+
     private View mProgressView;
     private View mLoginFormView;
 
+    public static Intent getStartIntent(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        return intent;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    protected void setUp() {
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -94,6 +118,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        getActivityComponent().inject(this);
+        mPresenter.onAttach(this);
+
+        setUnBinder(ButterKnife.bind(this));
+
+        setUp();
+    }
+
+    @OnClick(R.id.register_button)
+    void onRegisterClick() {
+        mPresenter.onRegisterClick();
     }
 
     private void populateAutoComplete() {
@@ -279,6 +322,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public void openMainActivity() {
+
     }
 
 
