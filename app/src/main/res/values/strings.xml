@@ -32,7 +32,7 @@
     </string>
     <string name="permission_denied">Permission denied</string>
 
-    <!--App Message-->
+    <!--LSCApp Message-->
     <string name="api_retry_error">Please retry!</string>
     <string name="api_default_error">Something wrong happened!</string>
     <string name="some_error">Un error ha ocurrido!</string>
@@ -58,6 +58,8 @@
     <string name="error_password_mismatch">Contraseñas no concuerdan</string>
 
 
+    <!-- Lessons -->
+    <string name="lessons">Lecciones</string>
     <!-- Practices -->
     <string name="practice_end_button">Continuar</string>
     <string name="practice_which_one_video_question">¿Qué describe la seña?</string>

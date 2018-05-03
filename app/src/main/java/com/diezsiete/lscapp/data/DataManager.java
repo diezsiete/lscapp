@@ -1,6 +1,7 @@
 package com.diezsiete.lscapp.data;
 
 import com.diezsiete.lscapp.data.db.DbHelper;
+import com.diezsiete.lscapp.data.db.model.Lesson;
 import com.diezsiete.lscapp.data.db.model.Level;
 import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.data.db.model.User;
@@ -22,12 +23,14 @@ import javax.inject.Singleton;
 public class DataManager {
 
     private ApiHelper mApiHelper;
+    private PreferencesHelper mPreferencesHelper;
 
     @Inject
     DataManager(DbHelper dbHelper,
                 PreferencesHelper preferencesHelper,
                 ApiHelper apiHelper) {
         mApiHelper = apiHelper;
+        mPreferencesHelper = preferencesHelper;
     }
 
     private <T> DataManagerResponse<T> createDefaultResponse(final DataManagerResponse<T> callback) {
@@ -47,8 +50,22 @@ public class DataManager {
         mApiHelper.getLevels(createDefaultResponse(callback));
     }
 
+    public void getLessonsByLevelId(String levelId, final DataManagerResponse<Lesson[]> callback) {
+        mApiHelper.getLessonsByLevelId(levelId, createDefaultResponse(callback));
+    }
+
+    /**
+     *
+     * @param levelId
+     * @param callback
+     * @deprecated
+     */
     public void getPracticesByLevel(String levelId, final DataManagerResponse<Practice[]> callback) {
         mApiHelper.getPracticesByLevel(levelId, createDefaultResponse(callback));
+    }
+
+    public void getPracticesByLessonId(String lessonId, final DataManagerResponse<Practice[]> callback) {
+        mApiHelper.getPracticesByLessonId(lessonId, createDefaultResponse(callback));
     }
 
     public void getWords(final DataManagerResponse<Word[]> callback) {
@@ -68,5 +85,23 @@ public class DataManager {
         //mPreferencesHelper.setAccessToken(accessToken);
         //mApiHelper.getApiHeader().getProtectedApiHeader().setAccessToken(accessToken);
     }
+
+    public void setCurrentLevel(Level level) {
+        mPreferencesHelper.setCurrentLevelId(level.getLevelId());
+    }
+
+    public void getCurrentLevel(DataManagerResponse<Level> callback) {
+        String levelId = mPreferencesHelper.getCurrentLevelId();
+        mApiHelper.getLevel(levelId, createDefaultResponse(callback));
+    }
+
+    public void setCurrentLesson(Lesson lesson) {
+        mPreferencesHelper.setCurrentLessonId(lesson.getLessonId());
+    }
+
+    public String getCurrentLessonId() {
+        return mPreferencesHelper.getCurrentLessonId();
+    }
+
 
 }

@@ -28,4 +28,8 @@ public interface BaseContract {
 
         void setUserAsLoggedOut();
     }
+
+    interface SubMvpView extends MvpView {
+
+    }
 }

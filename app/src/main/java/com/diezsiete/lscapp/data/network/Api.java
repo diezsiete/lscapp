@@ -1,6 +1,7 @@
 package com.diezsiete.lscapp.data.network;
 
 
+import com.diezsiete.lscapp.data.db.model.Lesson;
 import com.diezsiete.lscapp.data.db.model.Level;
 import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.data.db.model.User;
@@ -32,8 +33,21 @@ public interface Api {
     @GET("/level/{levelId}")
     Call<Level> getLevel(@Path("levelId") String levelId);
 
+    @GET("/lesson/{levelId}")
+    Call<Lesson[]> getLessonsByLevelId(@Path("levelId") String levelId);
+
+    @GET("/practice/{lessonId}")
+    Call<Practice[]> getPractiesByLessonId(@Path("lessonId") String lessonId);
+
+    /**
+     *
+     * @param practiceId
+     * @return
+     * @deprecated
+     */
     @GET("/practice/{practiceId}")
     Call<Practice> getPractice(@Path("practiceId") String practiceId);
+
 
     @GET("/word")
     Call<Word[]> getWords();

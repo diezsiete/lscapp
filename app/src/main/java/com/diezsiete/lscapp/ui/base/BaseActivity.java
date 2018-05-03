@@ -7,18 +7,17 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.diezsiete.lscapp.App;
+import com.diezsiete.lscapp.LSCApp;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.di.component.ActivityComponent;
 import com.diezsiete.lscapp.di.component.DaggerActivityComponent;
 import com.diezsiete.lscapp.di.module.ActivityModule;
 import com.diezsiete.lscapp.utils.CommonUtils;
-import com.diezsiete.lscapp.ui.login.LoginActivity;
+import com.diezsiete.lscapp.ui.activity.LoginActivity;
 
 import butterknife.Unbinder;
 
@@ -35,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
         super.onCreate(savedInstanceState);
         mActivityComponent = DaggerActivityComponent.builder()
                 .activityModule(new ActivityModule(this))
-                .appComponent(((App) getApplication()).getComponent())
+                .lSCAppComponent(((LSCApp) getApplication()).getComponent())
                 .build();
 
     }

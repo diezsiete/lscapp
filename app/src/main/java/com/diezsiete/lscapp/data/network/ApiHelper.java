@@ -3,9 +3,10 @@ package com.diezsiete.lscapp.data.network;
 
 import android.util.Log;
 
-import com.diezsiete.lscapp.App;
+import com.diezsiete.lscapp.LSCApp;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.data.DataManagerResponse;
+import com.diezsiete.lscapp.data.db.model.Lesson;
 import com.diezsiete.lscapp.data.db.model.Level;
 import com.diezsiete.lscapp.data.db.model.Practice;
 import com.diezsiete.lscapp.data.db.model.User;
@@ -40,7 +41,7 @@ public class ApiHelper {
 
     private Api buildApi() {
         if(api == null) {
-            Retrofit.Builder builder = new Retrofit.Builder().baseUrl(App.getContext().getResources().getString(R.string.rest_base_url))
+            Retrofit.Builder builder = new Retrofit.Builder().baseUrl(LSCApp.getContext().getResources().getString(R.string.rest_base_url))
                     .addConverterFactory(GsonConverterFactory.create());
             api = builder.build().create(Api.class);
         }
@@ -84,6 +85,12 @@ public class ApiHelper {
         buildApi().getPractice(practiceId).enqueue(createDefaultResponse(callback));
     }
 
+    /**
+     *
+     * @param levelId
+     * @param callback
+     * @deprecated
+     */
     public void getPracticesByLevel(String levelId, final DataManagerResponse<Practice[]> callback) {
         getLevel(levelId, new DataManagerResponse<Level>() {
             @Override
@@ -119,10 +126,19 @@ public class ApiHelper {
         });
     }
 
+    public void getPracticesByLessonId(String lessonId, final DataManagerResponse<Practice[]> callback) {
+        buildApi().getPractiesByLessonId(lessonId).enqueue(createDefaultResponse(callback));
+    }
+
+    public void getLessonsByLevelId(String levelId, final DataManagerResponse<Lesson[]> callback) {
+        buildApi().getLessonsByLevelId(levelId).enqueue(createDefaultResponse(callback));
+    }
 
     public void getWords(final DataManagerResponse<Word[]> callback) {
         buildApi().getWords().enqueue(createDefaultResponse(callback));
     }
+
+
 
     public void cntk(String tag, File file, final DataManagerResponse<Boolean> callback) {
         RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), file);
@@ -145,5 +161,7 @@ public class ApiHelper {
     public void createUser(User user, final DataManagerResponse<User> callback) {
         buildApi().createUser(user).enqueue(createDefaultResponse(callback));
     }
+
+
 
 }
