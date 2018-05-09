@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/grid_view"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="10dp" />
+            android:layout_height="match_parent">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/grid_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="2.5dp"
+                    android:paddingRight="2.5dp"
+                    android:paddingTop="10dp"
+                    />
 
-</android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+</layout>

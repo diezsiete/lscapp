@@ -1,43 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/absPracticeViewContainer"
+    <data>
+        <variable name="practiceWithData" type="com.diezsiete.lscapp.vo.PracticeWithData" />
+        <variable name="viewmodel" type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         >
 
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/question_view"
+        <LinearLayout
+            android:id="@+id/practice_view_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/elevation_header"
-            android:gravity="center"
-            android:paddingTop="0dp"
-            android:paddingRight="@dimen/spacing_double"
-            android:paddingBottom="@dimen/spacing_double"
-            android:paddingLeft="@dimen/spacing_double"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="?android:attr/textColorPrimary"
-            tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
-            android:text="question" />
-    </LinearLayout>
+            android:orientation="vertical"
+            >
 
-    <ImageButton
-        android:id="@+id/submitAnswer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_forward_white"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/spacing_double"
-        android:background="@color/colorPrimaryDark"
-        />
+            <TextView
+                android:id="@+id/question_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/elevation_header"
+                android:gravity="center"
+                android:paddingTop="0dp"
+                android:paddingRight="@dimen/spacing_double"
+                android:paddingBottom="@dimen/spacing_double"
+                android:paddingLeft="@dimen/spacing_double"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="?android:attr/textColorPrimary"
+                tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
+                android:text="@{practiceWithData.question}"
+                />
+        </LinearLayout>
 
-</RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/submitAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_forward_white"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/spacing_double"
+            android:background="@color/button_submit_answer_bg"
+            android:onClick="@{() -> viewmodel.setShowNext()}"
+            />
+
+
+    </RelativeLayout>
+</layout>

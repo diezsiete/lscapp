@@ -25,7 +25,7 @@
         android:name=".LSCApp"
         >
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,27 +35,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.LevelActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity" />
-        </activity>
-
-        <activity android:name=".ui.activity.LessonActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity" />
-        </activity>
-
-        <activity
-            android:name=".ui.activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity
-            android:name=".ui.activity.RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -15,4 +15,7 @@
 
     <color name="white">#ffffff</color>
     <color name="black_effective">#2a2a2a</color>
+
+    <!-- Practice -->
+    <color name="button_submit_answer_bg">@color/colorPrimaryDark</color>
 </resources>

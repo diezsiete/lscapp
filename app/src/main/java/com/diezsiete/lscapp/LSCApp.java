@@ -1,48 +1,37 @@
 package com.diezsiete.lscapp;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
 
-import com.diezsiete.lscapp.data.DataManager;
-import com.diezsiete.lscapp.di.component.LSCAppComponent;
-import com.diezsiete.lscapp.di.component.DaggerLSCAppComponent;
-import com.diezsiete.lscapp.di.module.LSCAppModule;
+
+import com.diezsiete.lscapp.di.AppInjector;
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import javax.inject.Inject;
 
-public class LSCApp extends Application {
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
+import okhttp3.OkHttpClient;
 
-    private static Context mContext;
-
-    protected LSCAppComponent applicationComponent;
-
+public class LSCApp extends Application implements HasActivityInjector {
 
     @Inject
-    DataManager dataManager;
-
-
-    public static LSCApp get(Context context) {
-        return (LSCApp) context.getApplicationContext();
-    }
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
 
-        applicationComponent = DaggerLSCAppComponent
-                .builder()
-                .lSCAppModule(new LSCAppModule(this))
-                .build();
-        applicationComponent.inject(this);
+        AppInjector.init(this);
+
+        Stetho.initializeWithDefaults(this);
     }
 
-    public LSCAppComponent getComponent(){
-        return applicationComponent;
-    }
-
-    public static Context getContext(){
-        return mContext;
+    @Override
+    public DispatchingAndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 }
