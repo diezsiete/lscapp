@@ -2,6 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="practice"
+            type="com.diezsiete.lscapp.vo.PracticeWithData" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,37 +17,29 @@
         android:id="@+id/practice_content"
         >
 
-        <FrameLayout
-            android:id="@+id/fl_1"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginBottom="8dp"
-            android:padding="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
 
-            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                android:id="@+id/video_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:controller_layout_id="@layout/exoplayer_custom_playback_control"
-                app:use_controller="false">
 
-            </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/video_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:controller_layout_id="@layout/signplayer_custom_playback_control"
+            app:use_controller="true"
+            app:practiceVideo="@{practice.getVideo()}"
+            />
 
-        </FrameLayout>
 
-        <GridView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/grid_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numColumns="1"
+            android:padding="@dimen/spacing_nano"
+            android:clipToPadding="false"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:transitionGroup="false"
+            app:spanCount="2" tools:ignore="UnusedAttribute"
             />
+
     </LinearLayout>
 
 </layout>

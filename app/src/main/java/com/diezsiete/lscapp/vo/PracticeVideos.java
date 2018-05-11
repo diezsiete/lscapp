@@ -31,8 +31,4 @@ public class PracticeVideos {
     @NonNull
     @ColumnInfo(name="practice_id")
     public String practiceId;
-
-    @Ignore
-    public List<PracticeVideosWord> videosWord;
-
 }

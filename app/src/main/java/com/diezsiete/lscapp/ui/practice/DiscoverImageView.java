@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.databinding.PracticeDiscoverImageBinding;
 import com.diezsiete.lscapp.databinding.PracticeShowSignBinding;
+import com.diezsiete.lscapp.vo.PracticeWithData;
 
 
 @SuppressLint("ViewConstructor")
@@ -24,6 +25,8 @@ public class DiscoverImageView extends PracticeView {
         PracticeDiscoverImageBinding binding = DataBindingUtil.inflate(
                 layoutInflater, R.layout.practice_discover_image, this, false);
 
+        PracticeWithData practice = practiceViewModel.getCurrentPracticeWithData();
+        binding.setPractice(practice);
 
         DiscoverImageGridAdapter adapter = new DiscoverImageGridAdapter(getContext());
 
@@ -33,31 +36,14 @@ public class DiscoverImageView extends PracticeView {
         gridView.setLayoutManager(sglm);
         gridView.setAdapter(adapter);
 
-        getImages();
-
-        return binding;
-    }
-
-    private void getImages() {
-        /*Image[] images = getPractice().getImages();
+        List<String> = practice.getImages();
         for(Image image : images) {
             image.setWidth(150);
             image.setHeight((int) (50 + Math.random() * 450));
             mAdapter.addDrawable(image);
         }
-        mAdapter.notifyDataSetChanged();*/
+        mAdapter.notifyDataSetChanged();
 
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        //mVideoPlayer.release();
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        //mVideoPlayer.initialize();
-        super.onAttachedToWindow();
+        return binding;
     }
 }

@@ -8,7 +8,7 @@ import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.FragmentDictionaryBinding;
 import com.diezsiete.lscapp.di.Injectable;
 import com.diezsiete.lscapp.util.AutoClearedValue;
-import com.diezsiete.lscapp.util.SignVideoManager;
+import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;

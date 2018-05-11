@@ -30,9 +30,8 @@ public class MainActivityViewModel extends ViewModel {
 
 
     public void goToLevel(String levelId){
-        if (Objects.equals(this.goToLevel.getValue(), levelId))
-            return;
-        this.goToLevel.setValue(levelId);
+        if(levelId != null && !levelId.isEmpty())
+            this.goToLevel.setValue(levelId);
     }
 
     public LiveData<String> goToLevel() {

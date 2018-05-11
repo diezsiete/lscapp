@@ -58,7 +58,7 @@ public class WordListAdapter extends DataBoundListAdapter<Word, ItemWordBinding>
     }
 
     @Override
-    protected void bind(ItemWordBinding binding, Word item) {
+    protected void bind(ItemWordBinding binding, Word item, int position) {
         binding.setWord(item);
     }
 

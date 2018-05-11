@@ -41,7 +41,7 @@ public abstract class BoundPracticeCode {
     }
 
     private PracticeWithData instanceByCode(PracticeWithData oldPracticeWithData){
-        switch (oldPracticeWithData.practice.code){
+        switch (oldPracticeWithData.entity.code){
             case "show-sign" :
                 return new ShowSign(oldPracticeWithData);
             case "which-one-video" :

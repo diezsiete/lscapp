@@ -7,6 +7,6 @@ public class WhichOneVideo extends PracticeWithData {
     }
 
     public String getQuestion() {
-        return "WhichOneVideo Question";
+        return "¿Qué describe la seña?";
     }
 }

@@ -1,17 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fl_video_answer_view"
-    android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:padding="5dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="java.util.List"/>
+        <variable
+            name="option"
+            type="List&lt;String&gt;" />
+        <variable
+            name="position"
+            type="int" />
+    </data>
+    <FrameLayout
+        android:id="@+id/video_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_double"
+        android:background="@drawable/selector_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_answer_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:controller_layout_id="@layout/exoplayer_custom_playback_control"
-        app:use_controller="false">
+        app:use_controller="false"
+        android:paddingTop="@dimen/spacing_double"
+        app:practiceVideo="@{option}"
+        app:position="@{position}"
+        />
 
-    </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+    </FrameLayout>
 
-</FrameLayout>
+</layout>
 

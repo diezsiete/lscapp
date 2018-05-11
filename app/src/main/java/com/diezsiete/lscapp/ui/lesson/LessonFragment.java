@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.diezsiete.lscapp.R;
@@ -24,6 +23,7 @@ import com.diezsiete.lscapp.ui.level.LessonViewModel;
 import com.diezsiete.lscapp.ui.practice.PracticeAdapter;
 import com.diezsiete.lscapp.ui.practice.PracticeViewModel;
 import com.diezsiete.lscapp.util.AutoClearedValue;
+import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 
 import javax.inject.Inject;
 
@@ -44,6 +44,8 @@ public class LessonFragment extends Fragment implements Injectable {
 
     private Interpolator mInterpolator;
     private ObjectAnimator mProgressBarAnimator;
+
+    public SignVideoManager videoManager;
 
     @Nullable
     @Override
@@ -83,10 +85,12 @@ public class LessonFragment extends Fragment implements Injectable {
         this.adapter = new AutoClearedValue<>(this, adapter);
 
 
-
-
         lessonViewModel.getLessonNoProgress().observe(this, lesson -> {
             binding.get().setLesson(lesson);
+        });
+
+        practiceViewModel.answerMessage().observe(this, answerMessage -> {
+            binding.get().setAnswerMessage(answerMessage);
         });
 
         practiceViewModel.showNext().observe(this, result -> {
@@ -94,10 +98,10 @@ public class LessonFragment extends Fragment implements Injectable {
         });
 
         practiceViewModel.goToLevel().observe(this, result -> {
-            if(result != null && !result.isEmpty())
-                mainActivityViewModel.goToLevel(result);
+            mainActivityViewModel.goToLevel(result);
         });
 
+        videoManager = new SignVideoManager(this.getContext(), getLifecycle());
         initAnimations();
     }
 

@@ -16,6 +16,9 @@ public interface PracticeDao extends BaseDao<Practice>{
     @Query("DELETE FROM practice")
     void deleteAll();
 
+    @Query("DELETE FROM practice where lesson_id = :lessonId")
+    void deleteByLessonId(String lessonId);
+
     @Query("SELECT * FROM practice WHERE lesson_id = :lessonId ORDER BY id ASC")
     LiveData<List<Practice>> loadPracticesByLessonId(String lessonId);
 
@@ -25,5 +28,9 @@ public interface PracticeDao extends BaseDao<Practice>{
     @Transaction
     @Query("SELECT * FROM practice WHERE lesson_id = :lessonId ORDER BY id ASC")
     LiveData<List<PracticeWithData>> loadPracticesWithDataByLessonId(String lessonId);
+
+    @Transaction
+    @Query("SELECT * FROM practice WHERE practice_id = :practiceId")
+    LiveData<PracticeWithData> loadPracticeWithData(String practiceId);
 
 }

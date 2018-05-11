@@ -5,7 +5,12 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
+
+import com.diezsiete.lscapp.db.LSCAppTypeConverters;
+
+import java.util.List;
 
 @Entity(tableName = "practice_words",
         foreignKeys = {
@@ -19,12 +24,14 @@ import android.support.annotation.NonNull;
             @Index(value="practice_id", name = "practice_word_id")
         }
 )
+@TypeConverters(LSCAppTypeConverters.class)
 public class PracticeWords {
     @PrimaryKey(autoGenerate = true)
     public int id;
     @NonNull
     @ColumnInfo(name="practice_id")
     public String practiceId;
-    public String words;
+
+    public List<String> words;
 
 }

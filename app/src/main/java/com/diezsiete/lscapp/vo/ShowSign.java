@@ -13,6 +13,6 @@ public class ShowSign extends PracticeWithData {
     }
 
     public String getWord() {
-        return words.get(0).words;
+        return words.get(0).words.get(0);
     }
 }

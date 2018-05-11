@@ -58,7 +58,7 @@ public class LessonListAdapter extends DataBoundListAdapter<Lesson, ItemLessonBi
     }
 
     @Override
-    protected void bind(ItemLessonBinding binding, Lesson item) {
+    protected void bind(ItemLessonBinding binding, Lesson item, int position) {
         binding.setLesson(item);
     }
 

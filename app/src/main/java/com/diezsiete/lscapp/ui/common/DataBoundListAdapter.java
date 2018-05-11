@@ -37,13 +37,13 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
         extends RecyclerView.Adapter<DataBoundViewHolder<V>> {
 
     @Nullable
-    private List<T> items;
+    protected List<T> items;
     // each time data is set, we update this variable so that if DiffUtil calculation returns
     // after repetitive updates, we can ignore the old calculation
     private int dataVersion = 0;
 
     @Override
-    public final DataBoundViewHolder<V> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DataBoundViewHolder<V> onCreateViewHolder(ViewGroup parent, int viewType) {
         V binding = createBinding(parent);
         return new DataBoundViewHolder<>(binding);
     }
@@ -51,9 +51,9 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
     protected abstract V createBinding(ViewGroup parent);
 
     @Override
-    public final void onBindViewHolder(DataBoundViewHolder<V> holder, int position) {
+    public void onBindViewHolder(DataBoundViewHolder<V> holder, int position) {
         //noinspection ConstantConditions
-        bind(holder.binding, items.get(position));
+        bind(holder.binding, items.get(position), position);
         holder.binding.executePendingBindings();
     }
 
@@ -118,7 +118,7 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
         }
     }
 
-    protected abstract void bind(V binding, T item);
+    protected abstract void bind(V binding, T item, int position);
 
     protected abstract boolean areItemsTheSame(T oldItem, T newItem);
 

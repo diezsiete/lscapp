@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View" />
+        <import type="com.diezsiete.lscapp.vo.AnswerMessage" />
+        <variable
+            name="answerMessage"
+            type="com.diezsiete.lscapp.vo.AnswerMessage" />
+        <variable
+            name="viewmodel"
+            type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
+    </data>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPopUpBackgroud"
+        android:visibility="@{answerMessage != null ? View.VISIBLE : View.INVISIBLE}"
+        >
+
+        <ImageButton
+            android:id="@+id/show_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/button_submit_answer_bg"
+            android:onClick="@{() -> viewmodel.setShowNext()}"
+            android:padding="@dimen/spacing_double"
+            android:src="@drawable/ic_arrow_forward_white"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@{answerMessage.status == AnswerMessage.SUCCESS ? @android:color/holo_green_light : @android:color/holo_red_light}"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_double"
+
+            app:layout_constraintBottom_toTopOf="@+id/show_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{answerMessage.status == AnswerMessage.SUCCESS ? @string/practice_success_message : @string/practice_warning_message}" />
+
+            <TextView
+                android:id="@+id/answer_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"Respuesta : " + answerMessage.answer}' />
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

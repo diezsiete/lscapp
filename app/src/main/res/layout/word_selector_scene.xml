@@ -13,11 +13,22 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
--->
+
 <org.apmem.tools.layouts.FlowLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/container"
+    android:background="@color/colorAccent"
     >
 </org.apmem.tools.layouts.FlowLayout>
+-->
+
+<com.diezsiete.lscapp.ui.widget.wordselector.WordSelectorLayout
+    xmlns:f="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/container"
+    f:debugDraw="false"
+    />

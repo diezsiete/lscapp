@@ -7,7 +7,10 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
+
+import com.diezsiete.lscapp.db.LSCAppTypeConverters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
             @Index(value="lesson_id", name = "practice_lesson_id")
         }
 )
+@TypeConverters(LSCAppTypeConverters.class)
 public class Practice {
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -34,9 +38,13 @@ public class Practice {
     @ColumnInfo(name="lesson_id")
     public String lessonId;
     public String code;
-    public boolean completed = false;
+    public List<String> images;
+    public List<Integer> answer;
+    @ColumnInfo(name="answer_user")
+    public List<Integer> answerUser;
     @ColumnInfo(name="answer_correct")
     public boolean answerCorrect = false;
+    public boolean completed = false;
 
     @Ignore
     public List<PracticeWords> words;

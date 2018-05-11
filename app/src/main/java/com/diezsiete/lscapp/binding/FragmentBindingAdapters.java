@@ -18,11 +18,13 @@ package com.diezsiete.lscapp.binding;
 
 import android.animation.ObjectAnimator;
 import android.databinding.BindingAdapter;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -30,8 +32,12 @@ import android.widget.ProgressBar;
 
 //import com.bumptech.glide.Glide;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
+import com.diezsiete.lscapp.ui.lesson.LessonFragment;
+import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -39,6 +45,8 @@ import javax.inject.Inject;
  * Binding adapters that work with a fragment instance.
  */
 public class FragmentBindingAdapters {
+    private final static String TAG = "FragmentBindingAdapter";
+
     final Fragment fragment;
 
 
@@ -67,10 +75,28 @@ public class FragmentBindingAdapters {
     public void bindVideo(SimpleExoPlayerView playerView, String url) {
         Log.d("JOSE", "bindVideo : " + url);
         if(url != null) {
-            ((DictionaryFragment) fragment).videoManager.setPlayer(playerView).addExternalResource(url).play();
+            ((DictionaryFragment) fragment).videoManager.getSignVideo()
+                    .setPlayer(playerView)
+                    .clearResources()
+                    .addExternalResource(url)
+                    .prepare()
+                    .play();
         }else{
-            ((DictionaryFragment) fragment).videoManager.stop();
+            ((DictionaryFragment) fragment).videoManager.getSignVideo().stop();
         }
+    }
+
+
+    @BindingAdapter(value={"practiceVideo", "position"}, requireAll = false)
+    public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position) {
+        Log.d("JOSE", TAG + " bindPracticeVideo position[" + position + "]" );
+        SignVideoManager videoManager = ((LessonFragment) fragment).videoManager;
+        videoManager.getSignVideo(position)
+                .setPlayer(playerView)
+                .clearResources()
+                .addExternalResources(urls)
+                .prepare()
+                .play();
     }
 
     @BindingAdapter("progressAnimation")
@@ -111,5 +137,12 @@ public class FragmentBindingAdapters {
     @BindingAdapter("visibleGone")
     public static void showHide(View view, boolean show) {
         view.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @BindingAdapter("buttonEnable")
+    public static void buttonDisable(ImageButton button, boolean enable) {
+        button.setEnabled(enable);
+        button.setClickable(enable);
+        button.setAlpha(enable ? 1f : 0.5f);
     }
 }

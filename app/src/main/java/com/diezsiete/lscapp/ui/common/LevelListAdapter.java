@@ -56,7 +56,7 @@ public class LevelListAdapter extends DataBoundListAdapter<Level, ItemLevelBindi
     }
 
     @Override
-    protected void bind(ItemLevelBinding binding, Level item) {
+    protected void bind(ItemLevelBinding binding, Level item, int position) {
         binding.setLevel(item);
     }
 

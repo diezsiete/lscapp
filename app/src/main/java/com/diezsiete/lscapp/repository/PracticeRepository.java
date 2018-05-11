@@ -15,9 +15,12 @@ import com.diezsiete.lscapp.db.PracticeVideosDao;
 import com.diezsiete.lscapp.db.PracticeVideosWordDao;
 import com.diezsiete.lscapp.db.PracticeWordsDao;
 import com.diezsiete.lscapp.util.RateLimiter;
+import com.diezsiete.lscapp.vo.Lesson;
 import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeVideos;
+import com.diezsiete.lscapp.vo.PracticeVideosData;
 import com.diezsiete.lscapp.vo.PracticeVideosWord;
+import com.diezsiete.lscapp.vo.PracticeVideosWordData;
 import com.diezsiete.lscapp.vo.PracticeWithData;
 import com.diezsiete.lscapp.vo.PracticeWords;
 import com.diezsiete.lscapp.vo.Resource;
@@ -27,6 +30,7 @@ import com.diezsiete.lscapp.vo.WhichOneVideos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -63,18 +67,18 @@ public class PracticeRepository {
         db.beginTransaction();
         try {
             for (PracticeWithData practiceWithData : practices) {
-                Practice practice = practiceWithData.practice;
+                Practice practice = practiceWithData.entity;
                 practice.lessonId = lessonId;
                 practiceDao.insert(practice);
                 practiceWordsDao.deleteAllByPracticeId(practice.practiceId);
                 for(PracticeWords practiceWords  : practiceWithData.words)
                     practiceWordsDao.insert(practiceWords);
 
-                for(PracticeVideos practiceVideos : practiceWithData.videos){
-                    long id = practiceVideosDao.insert(practiceVideos);
-                    for(PracticeVideosWord practiceVideosWord : practiceVideos.videosWord){
-                        practiceVideosWord.practiceVideosId = id;
-                        practiceVideosWordDao.insert(practiceVideosWord);
+                for(PracticeVideosData practiceVideos : practiceWithData.videos){
+                    long id = practiceVideosDao.insert(practiceVideos.entity);
+                    for(PracticeVideosWordData practiceVideosWord : practiceVideos.videosWord){
+                        practiceVideosWord.entity.practiceVideosId = id;
+                        practiceVideosWordDao.insert(practiceVideosWord.entity);
                     }
                 }
             }
@@ -139,7 +143,7 @@ public class PracticeRepository {
     }
 
     private PracticeWithData instanceByCode(PracticeWithData oldPracticeWithData){
-        switch (oldPracticeWithData.practice.code){
+        switch (oldPracticeWithData.entity.code){
             case "show-sign" :
                 return new ShowSign(oldPracticeWithData);
             case "which-one-video" :
@@ -153,6 +157,21 @@ public class PracticeRepository {
 
     public LiveData<List<String>> getPracticesCodes(List<Integer> ids) {
         return practiceDao.getPracticesCodes(ids);
+    }
+
+    public LiveData<PracticeWithData> getPracticeWithData(String practiceId) {
+        return practiceDao.loadPracticeWithData(practiceId);
+    }
+
+    public void updatePractice(Practice practice) {
+        appExecutors.diskIO().execute(() -> practiceDao.update(practice));
+    }
+
+    public void deletePracticesByLessonId(String lessonId, Runnable runnable) {
+        appExecutors.diskIO().execute(() -> {
+            //practiceDao.deleteByLessonId(lessonId);
+            appExecutors.mainThread().execute(runnable);
+        });
     }
 
 

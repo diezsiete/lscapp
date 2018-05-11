@@ -46,7 +46,8 @@
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
             android:background="@color/button_submit_answer_bg"
-            android:onClick="@{() -> viewmodel.setShowNext()}"
+            android:onClick="@{() -> viewmodel.saveAnswer()}"
+            app:buttonEnable="@{practiceWithData.enableSave}"
             />
 
 
