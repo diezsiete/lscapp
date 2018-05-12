@@ -91,8 +91,8 @@ public class PracticeAdapter extends BaseAdapter {
                 return new TranslateVideoView(fragment);
             case "discover-image":
                 return new DiscoverImageView(fragment);
-            case "take-picture":
-                return new TakePictureView(fragment);
+            case "take-sign":
+                return new TakeSignView(fragment);
 
         }
         throw new UnsupportedOperationException(

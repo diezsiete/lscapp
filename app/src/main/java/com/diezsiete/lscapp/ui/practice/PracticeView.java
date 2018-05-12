@@ -35,12 +35,12 @@ public abstract class PracticeView extends FrameLayout{
 
         dataBindingComponent = new FragmentDataBindingComponent(fragment);
         practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
-
         layoutInflater = LayoutInflater.from(fragment.getContext());
+
         PracticeContainerBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.practice_container, this, true);
         binding.setViewmodel(practiceViewModel);
 
-        binding.practiceViewContainer.addView(createPracticeContentView().getRoot(), 1);
+        binding.practiceViewContainer.addView(createPracticeContentView().getRoot());
 
         practiceViewModel.getCurrentPractice().observe(fragment, practiceWithData -> {
             if(practiceWithData != null)

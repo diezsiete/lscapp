@@ -1,49 +1,78 @@
 package com.diezsiete.lscapp.ui.practice;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.AdapterViewFlipper;
+import android.widget.FrameLayout;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.PracticeDiscoverImageBinding;
-import com.diezsiete.lscapp.databinding.PracticeShowSignBinding;
-import com.diezsiete.lscapp.vo.PracticeWithData;
+
+import javax.inject.Inject;
 
 
 @SuppressLint("ViewConstructor")
-public class DiscoverImageView extends PracticeView {
+public class DiscoverImageView extends FrameLayout {
+    protected PracticeViewModel practiceViewModel;
 
+    protected DataBindingComponent dataBindingComponent;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    protected LayoutInflater layoutInflater;
+
+    PracticeDiscoverImageBinding binding;
+
+    private int position = 0;
 
     public DiscoverImageView(Fragment fragment) {
-        super(fragment);
+        super(fragment.getContext());
+
+        dataBindingComponent = new FragmentDataBindingComponent(fragment);
+        practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
+
+        layoutInflater = LayoutInflater.from(fragment.getContext());
+        binding = DataBindingUtil.inflate(
+                layoutInflater, R.layout.practice_discover_image, this, true);
+
+
+        AdapterViewFlipper flipper = binding.discoverImageFlipper;
+
+        DiscoverImageAdapter adapter = new DiscoverImageAdapter(fragment);
+        flipper.setAdapter(adapter);
+        flipper.setInAnimation(fragment.getContext(), R.animator.practice_right_in);
+        flipper.setOutAnimation(fragment.getContext(), R.animator.practice_left_out);
+
+        binding.setDiscoverImageView(this);
+        binding.setTextId(R.string.practice_discover_image_order);
+        binding.setPosition(position);
+
+        practiceViewModel.getCurrentPractice().observe(fragment, practiceWithData -> {
+            if(practiceWithData != null)
+                binding.setPractice(practiceWithData);
+        });
+        practiceViewModel.startNewPractice();
     }
 
-    protected ViewDataBinding createPracticeContentView() {
-        PracticeDiscoverImageBinding binding = DataBindingUtil.inflate(
-                layoutInflater, R.layout.practice_discover_image, this, false);
 
-        PracticeWithData practice = practiceViewModel.getCurrentPracticeWithData();
-        binding.setPractice(practice);
-
-        DiscoverImageGridAdapter adapter = new DiscoverImageGridAdapter(getContext());
-
-        RecyclerView gridView = binding.gridView;
-        gridView.setHasFixedSize(true);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        gridView.setLayoutManager(sglm);
-        gridView.setAdapter(adapter);
-
-        List<String> = practice.getImages();
-        for(Image image : images) {
-            image.setWidth(150);
-            image.setHeight((int) (50 + Math.random() * 450));
-            mAdapter.addDrawable(image);
+    public void onClickSubmitAnswer() {
+        if(position == 0){
+            position++;
+            binding.setTextId(R.string.practice_discover_image_question);
+            binding.discoverImageFlipper.showNext();
+            binding.setPosition(position);
+        }else{
+            practiceViewModel.saveAnswer();
         }
-        mAdapter.notifyDataSetChanged();
-
-        return binding;
     }
+
+
 }

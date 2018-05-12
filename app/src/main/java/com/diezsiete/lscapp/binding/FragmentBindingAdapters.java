@@ -90,13 +90,15 @@ public class FragmentBindingAdapters {
     @BindingAdapter(value={"practiceVideo", "position"}, requireAll = false)
     public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position) {
         Log.d("JOSE", TAG + " bindPracticeVideo position[" + position + "]" );
-        SignVideoManager videoManager = ((LessonFragment) fragment).videoManager;
-        videoManager.getSignVideo(position)
-                .setPlayer(playerView)
-                .clearResources()
-                .addExternalResources(urls)
-                .prepare()
-                .play();
+        if(urls != null && urls.size() > 0) {
+            SignVideoManager videoManager = ((LessonFragment) fragment).videoManager;
+            videoManager.getSignVideo(position)
+                    .setPlayer(playerView)
+                    .clearResources()
+                    .addExternalResources(urls)
+                    .prepare()
+                    .play();
+        }
     }
 
     @BindingAdapter("progressAnimation")

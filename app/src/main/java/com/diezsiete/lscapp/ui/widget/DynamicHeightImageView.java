@@ -1,4 +1,4 @@
-package com.diezsiete.lscapp.ui.common;
+package com.diezsiete.lscapp.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

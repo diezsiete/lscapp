@@ -22,7 +22,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PracticeWithDataDeserializer implements JsonDeserializer {
+public class
+PracticeWithDataDeserializer implements JsonDeserializer {
 
     private List<List<String>> deserializeArrayOfArrays(JsonObject jsonObject, String memberName) {
         JsonArray array = jsonObject.getAsJsonArray(memberName);

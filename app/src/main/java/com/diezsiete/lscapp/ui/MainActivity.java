@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-
         mDrawer = findViewById(R.id.drawer_layout);
 
 

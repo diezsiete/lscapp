@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.diezsiete.lscapp.AppExecutors;
 import com.diezsiete.lscapp.LSCApp;
@@ -28,6 +29,7 @@ import com.diezsiete.lscapp.vo.ShowSign;
 import com.diezsiete.lscapp.vo.WhichOneVideo;
 import com.diezsiete.lscapp.vo.WhichOneVideos;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -35,6 +37,16 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class PracticeRepository {
@@ -169,8 +181,31 @@ public class PracticeRepository {
 
     public void deletePracticesByLessonId(String lessonId, Runnable runnable) {
         appExecutors.diskIO().execute(() -> {
-            //practiceDao.deleteByLessonId(lessonId);
+            practiceDao.deleteByLessonId(lessonId);
             appExecutors.mainThread().execute(runnable);
+        });
+    }
+
+
+    public void postCntk(String answer, File file) {
+        RequestBody answerPart = RequestBody.create(MultipartBody.FORM, answer);
+
+        RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), file);
+
+        MultipartBody.Part formData = MultipartBody.Part.createFormData("file", file.getName(), filePart);
+
+        Call<ResponseBody> call = webservice.uploadPhoto(answerPart, formData);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("JOSE", "success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("JOSE Upload error:", t.getMessage());
+            }
         });
     }
 

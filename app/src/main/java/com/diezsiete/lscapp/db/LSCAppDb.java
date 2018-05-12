@@ -21,7 +21,7 @@ import com.diezsiete.lscapp.vo.Word;
         PracticeVideosWord.class,
         Word.class
     },
-    version = 28,
+    version = 29,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {

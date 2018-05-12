@@ -64,10 +64,12 @@
     <!-- Practices -->
     <string name="practice_end_button">Continuar</string>
     <string name="practice_which_one_video_question">¿Qué describe la seña?</string>
-    <string name="practice_discover_image_question">Observa la seña</string>
+    <string name="practice_discover_image_order">Observa la seña</string>
+    <string name="practice_discover_image_question">¿A que imágen hace referencia?</string>
     <string name="practice_take_picture_question">Realiza la seña con la mano y tomale una foto</string>
     <string name="practice_translate_video_question">¿Qué describe la seña?</string>
     <string name="practice_warning_message">Fallaste</string>
     <string name="practice_success_message">Acertaste</string>
+    <string name="practice_take_picture_button">Tomar foto</string>
 
 </resources>

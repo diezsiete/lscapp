@@ -1,4 +1,4 @@
-package com.diezsiete.lscapp.util;
+package com.diezsiete.lscapp.ui.widget;
 
 
 import android.Manifest;
@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SignCameraHelper {
+    private CameraEvents mCameraEventListener;
     private static final String TAG = "SignCameraHelper";
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -79,7 +80,7 @@ public class SignCameraHelper {
     private Size imageDimension;
 
 
-    public SignCameraHelper(Activity activity, TextureView textureView, View button) {
+    public SignCameraHelper(Activity activity, TextureView textureView, View button, CameraEvents cameraEvents) {
         mActivity = activity;
         mTextureView = textureView;
         mTakePictureButton = button;
@@ -92,6 +93,8 @@ public class SignCameraHelper {
                 takePicture();
             }
         });
+
+        mCameraEventListener = cameraEvents;
     }
 
     public void start() {
@@ -215,6 +218,8 @@ public class SignCameraHelper {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             mFile = new File(Environment.getExternalStorageDirectory()+"/pic"+mInt+".jpg");
             mInt++;
+
+            mCameraEventListener.onPhotoTaken(mFile);
 
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
@@ -342,5 +347,9 @@ public class SignCameraHelper {
         }
     };
 
+
+    public interface CameraEvents {
+        public void onPhotoTaken(File file);
+    }
 
 }

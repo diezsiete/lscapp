@@ -12,12 +12,15 @@ import com.diezsiete.lscapp.db.LSCAppTypeConverters;
 
 import java.util.List;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @Entity(tableName = "practice_words",
         foreignKeys = {
                 @ForeignKey(
                         entity = Practice.class,
                         parentColumns = "practice_id",
-                        childColumns = "practice_id"
+                        childColumns = "practice_id",
+                        onDelete = CASCADE
                 )
         },
         indices = {

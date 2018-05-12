@@ -16,6 +16,7 @@ import com.diezsiete.lscapp.vo.PracticeWithData;
 import com.diezsiete.lscapp.vo.Resource;
 import com.diezsiete.lscapp.vo.Status;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,6 +207,10 @@ public class PracticeViewModel extends ViewModel {
     public void setAnswerUser(List<Integer> answerUser) {
         getCurrentPracticeWithData().entity.answerUser = answerUser;
         practiceRepository.updatePractice(getCurrentPracticeWithData().entity);
+    }
+
+    public void postCntk(File file){
+        practiceRepository.postCntk(getCurrentPracticeWithData().getWord(), file);
     }
 
 }

@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 import com.diezsiete.lscapp.R;
 
+import com.diezsiete.lscapp.ui.widget.DynamicHeightImageView;
 import com.diezsiete.lscapp.utils.ImagePlaceHolderDrawableHelper;
-import com.diezsiete.lscapp.ui.common.DynamicHeightImageView;
+import com.diezsiete.lscapp.vo.Image;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,17 +27,13 @@ import java.util.List;
 public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
-    private List<String> imageModels = new ArrayList<>();
+    private List<Image> imageModels = new ArrayList<>();
+    private final ClickCallback clickCallback;
 
 
-    public DiscoverImageGridAdapter(Context context) {
+    public DiscoverImageGridAdapter(Context context, ClickCallback clickCallback) {
         mContext = context;
-       /* Picasso p = new Builder(mContext)
-                .memoryCache(new LruCache(24000))
-                .build();
-        p.setIndicatorsEnabled(true);
-        p.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(p);*/
+        this.clickCallback = clickCallback;
     }
 
     @Override
@@ -46,26 +43,34 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
         holder.imageView = (DynamicHeightImageView) itemView.findViewById(R.id.dynamic_height_image_view);
         holder.positionTextView = (TextView) itemView.findViewById(R.id.item_position_view);
         itemView.setTag(holder);
+
+        itemView.setOnFocusChangeListener((view, hasFocus) -> {
+            if(hasFocus) {
+                final int adapterPostion = holder.getAdapterPosition();
+                if (adapterPostion != RecyclerView.NO_POSITION) {
+                    clickCallback.onClick(adapterPostion);
+                }
+            }
+        });
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        /*
         ImageGridViewHolder vh = (ImageGridViewHolder) viewHolder;
-        String item = imageModels.get(position);
+        Image item = imageModels.get(position);
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) vh.imageView.getLayoutParams();
-        float ratio = item.getHeight() / item.getWidth();
+        float ratio = item.height / item.width;
         rlp.height = (int) (rlp.width * ratio);
         vh.imageView.setLayoutParams(rlp);
         vh.positionTextView.setText("pos: " + position);
-        vh.imageView.setRatio(item.getRatio());
-        Picasso.with(mContext).load(item.getUrl()).placeholder(
+        vh.imageView.setRatio(item.ratio);
+        Picasso.with(mContext).load(item.url).placeholder(
             ImagePlaceHolderDrawableHelper.getBackgroundDrawable(position))
                 .fit()
                 .centerCrop()
                 .into(vh.imageView);
-                */
     }
 
     @Override
@@ -74,10 +79,10 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
     }
 
 
-    public void addDrawable() {
-        //float ratio = (float) imageModel.getHeight() / (float) imageModel.getWidth();
-        //imageModel.setRatio(ratio);
-        //this.imageModels.add(imageModel);
+    public void addDrawable(Image imageModel) {
+        float ratio = (float) imageModel.height / (float) imageModel.width;
+        imageModel.ratio = ratio;
+        this.imageModels.add(imageModel);
     }
 
     public class ImageGridViewHolder extends ViewHolder {
@@ -86,5 +91,9 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
         public ImageGridViewHolder(View itemView) {
             super(itemView);
         }
+    }
+
+    public interface ClickCallback {
+        void onClick(Integer optionIndex);
     }
 }

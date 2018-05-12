@@ -5,28 +5,29 @@ import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v4.app.Fragment;
-import android.view.TextureView;
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.databinding.PracticeShowSignBinding;
-import com.diezsiete.lscapp.databinding.PracticeTakePictureBinding;
-import com.diezsiete.lscapp.util.SignCameraHelper;
+import com.diezsiete.lscapp.databinding.PracticeTakeSignBinding;
+import com.diezsiete.lscapp.ui.widget.SignCameraHelper;
 
 
 @SuppressLint("ViewConstructor")
-public class TakePictureView extends PracticeView {
+public class TakeSignView extends PracticeView {
 
     SignCameraHelper cameraHelper;
 
-    public TakePictureView(Fragment fragment) {
+    public TakeSignView(Fragment fragment) {
         super(fragment);
     }
 
     protected ViewDataBinding createPracticeContentView() {
-        PracticeTakePictureBinding binding = DataBindingUtil.inflate(
-                layoutInflater, R.layout.practice_take_picture, this, false);
+        PracticeTakeSignBinding binding = DataBindingUtil.inflate(
+                layoutInflater, R.layout.practice_take_sign, this, false);
 
-        cameraHelper = new SignCameraHelper((Activity) getContext(), binding.texture, binding.btnTakepicture);
+        cameraHelper = new SignCameraHelper(
+                (Activity) getContext(), binding.texture, binding.btnTakepicture, foto -> {
+                    practiceViewModel.postCntk(foto);
+        });
 
         return binding;
     }

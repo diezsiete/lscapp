@@ -114,7 +114,10 @@ public class PracticeWithData  {
         return enable;
     }
 
-    public List<String> getImages() {
-        return entity.images;
+    public List<Image> getImages() {
+        List<Image> images = new ArrayList<>();
+        for(String url : entity.images)
+            images.add(new Image(url));
+        return images;
     }
 }

@@ -1,0 +1,29 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="practice"
+            type="com.diezsiete.lscapp.vo.PracticeWithData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:minHeight="@dimen/min_height_question"
+        android:id="@+id/practice_content"
+        >
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/video_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:controller_layout_id="@layout/signplayer_custom_playback_control"
+            app:use_controller="true"
+            app:practiceVideo="@{practice.getVideo()}"
+            />
+    </LinearLayout>
+</layout>
