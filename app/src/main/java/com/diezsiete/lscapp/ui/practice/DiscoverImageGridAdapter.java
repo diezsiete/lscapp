@@ -15,7 +15,7 @@ import com.diezsiete.lscapp.R;
 
 import com.diezsiete.lscapp.ui.widget.DynamicHeightImageView;
 import com.diezsiete.lscapp.utils.ImagePlaceHolderDrawableHelper;
-import com.diezsiete.lscapp.vo.Image;
+import com.diezsiete.lscapp.vo.Picture;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
-    private List<Image> imageModels = new ArrayList<>();
+    private List<Picture> pictureModels = new ArrayList<>();
     private final ClickCallback clickCallback;
 
 
@@ -38,7 +38,7 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        View itemView = LayoutInflater.from(mContext).inflate(R.layout.image_grid_resizable_grid_item, null);
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_image_grid, null);
         ImageGridViewHolder holder = new ImageGridViewHolder(itemView);
         holder.imageView = (DynamicHeightImageView) itemView.findViewById(R.id.dynamic_height_image_view);
         holder.positionTextView = (TextView) itemView.findViewById(R.id.item_position_view);
@@ -59,12 +59,12 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         ImageGridViewHolder vh = (ImageGridViewHolder) viewHolder;
-        Image item = imageModels.get(position);
+        Picture item = pictureModels.get(position);
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) vh.imageView.getLayoutParams();
         float ratio = item.height / item.width;
         rlp.height = (int) (rlp.width * ratio);
         vh.imageView.setLayoutParams(rlp);
-        vh.positionTextView.setText("pos: " + position);
+        //vh.positionTextView.setText("pos: " + position);
         vh.imageView.setRatio(item.ratio);
         Picasso.with(mContext).load(item.url).placeholder(
             ImagePlaceHolderDrawableHelper.getBackgroundDrawable(position))
@@ -75,14 +75,14 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return imageModels.size();
+        return pictureModels.size();
     }
 
 
-    public void addDrawable(Image imageModel) {
-        float ratio = (float) imageModel.height / (float) imageModel.width;
-        imageModel.ratio = ratio;
-        this.imageModels.add(imageModel);
+    public void addDrawable(Picture pictureModel) {
+        float ratio = (float) pictureModel.height / (float) pictureModel.width;
+        pictureModel.ratio = ratio;
+        this.pictureModels.add(pictureModel);
     }
 
     public class ImageGridViewHolder extends ViewHolder {

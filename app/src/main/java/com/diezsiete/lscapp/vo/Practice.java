@@ -24,7 +24,6 @@ import java.util.List;
             )
         },
         indices = {
-            @Index(value= "practice_id", unique = true),
             @Index(value="lesson_id", name = "practice_lesson_id")
         }
 )
@@ -32,13 +31,10 @@ import java.util.List;
 public class Practice {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    @NonNull
-    @ColumnInfo(name="practice_id")
-    public String practiceId;
     @ColumnInfo(name="lesson_id")
     public String lessonId;
     public String code;
-    public List<String> images;
+    public List<String> pictures;
     public List<Integer> answer;
     @ColumnInfo(name="answer_user")
     public List<Integer> answerUser;
@@ -51,9 +47,7 @@ public class Practice {
     @Ignore
     public List<PracticeVideos> videos;
 
-    public Practice(@NonNull String practiceId, String code) {
-        this.practiceId = practiceId;
+    public Practice(String code) {
         this.code = code;
     }
-
 }

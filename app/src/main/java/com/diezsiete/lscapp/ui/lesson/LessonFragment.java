@@ -87,6 +87,8 @@ public class LessonFragment extends Fragment implements Injectable {
 
         lessonViewModel.getLessonNoProgress().observe(this, lesson -> {
             binding.get().setLesson(lesson);
+            if(lesson != null)
+                mainActivityViewModel.setToolbarData(lesson.name, lesson.color, lesson.image);
         });
 
         practiceViewModel.answerMessage().observe(this, answerMessage -> {

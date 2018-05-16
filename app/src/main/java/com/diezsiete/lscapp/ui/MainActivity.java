@@ -1,9 +1,13 @@
 package com.diezsiete.lscapp.ui;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingComponent;
+import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,9 +23,12 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
+import com.diezsiete.lscapp.databinding.ActivityMainBinding;
 import com.diezsiete.lscapp.ui.common.NavigationController;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryViewModel;
 import com.diezsiete.lscapp.ui.level.LevelViewModel;
+import com.diezsiete.lscapp.viewmodel.UserViewModel;
 
 import javax.inject.Inject;
 
@@ -38,29 +45,31 @@ public class MainActivity extends AppCompatActivity
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
+
     DrawerLayout mDrawer;
 
     private MainActivityViewModel mainActivityViewModel;
     private DictionaryViewModel dictionaryViewModel;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main, dataBindingComponent);
 
         mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         dictionaryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DictionaryViewModel.class);
+        userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        mDrawer = binding.drawerLayout;
 
-        mDrawer = findViewById(R.id.drawer_layout);
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
         //menu item practicar seleccionado por default
@@ -75,16 +84,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (savedInstanceState == null) {
-            navigationController.navigateToLevelSelection();
-        }
-
         mainActivityViewModel.goToLevel().observe(this, levelId -> {
             if(levelId != null && !levelId.isEmpty())
                 navigationController.navigateToLevel(levelId);
         });
         dictionaryViewModel.getWords().observe(this, words -> {
 
+        });
+
+        userViewModel.getUser().observe(this, user ->{
+            if(user == null){
+                getSupportActionBar().hide();
+                navigationController.navigateToLogin();
+            }else if(savedInstanceState == null) {
+                getSupportActionBar().show();
+                navigationController.navigateToLevelSelection();
+            }
+        });
+
+        mainActivityViewModel.getToolbarData().observe(this, toolbarData -> {
+            binding.setToolbarData(toolbarData);
+            if(toolbarData != null && !toolbarData.color.isEmpty()){
+                getWindow().setStatusBarColor(Color.parseColor(toolbarData.color));
+            }
         });
     }
 

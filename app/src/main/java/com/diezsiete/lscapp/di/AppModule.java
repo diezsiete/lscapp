@@ -20,7 +20,7 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 
-
+import com.diezsiete.lscapp.LSCApp;
 import com.diezsiete.lscapp.api.PracticeWithDataDeserializer;
 import com.diezsiete.lscapp.api.Webservice;
 import com.diezsiete.lscapp.db.LSCAppDb;
@@ -30,6 +30,7 @@ import com.diezsiete.lscapp.db.PracticeDao;
 import com.diezsiete.lscapp.db.PracticeVideosDao;
 import com.diezsiete.lscapp.db.PracticeVideosWordDao;
 import com.diezsiete.lscapp.db.PracticeWordsDao;
+import com.diezsiete.lscapp.db.UserDao;
 import com.diezsiete.lscapp.db.WordDao;
 import com.diezsiete.lscapp.util.AppConstants;
 import com.diezsiete.lscapp.util.LiveDataCallAdapterFactory;
@@ -101,5 +102,10 @@ class AppModule {
     @Singleton @Provides
     WordDao provideWordDao(LSCAppDb db){
         return db.wordDao();
+    }
+
+    @Singleton @Provides
+    UserDao provideUserDao(LSCAppDb db) {
+        return db.userDao();
     }
 }

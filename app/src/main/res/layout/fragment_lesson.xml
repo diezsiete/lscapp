@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/spacing_double"
                 android:contentDescription="@null"
-                android:padding="@dimen/spacing_double"
+                android:padding="@dimen/spacing_quadruple"
                 android:scaleType="centerInside"
                 android:alpha="0"
                 android:scaleX="0.7"
@@ -46,14 +46,42 @@
                 app:practiceEndVisible="@{lesson.progress}"
                 app:startDelay="@{0}"
                 />
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="¡Muy Bien!"
+                android:textSize="20sp"
+                android:layout_marginTop="@dimen/spacing_quadruple"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                app:practiceEndVisible="@{lesson.progress}"
+                app:startDelay="@{0}"
+                android:alpha="0"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Práctica terminada"
+                android:textSize="20sp"
+                android:layout_marginBottom="80dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:gravity="center"
+                app:practiceEndVisible="@{lesson.progress}"
+                app:startDelay="@{0}"
+                android:alpha="0"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                />
             <ProgressBar
                 android:id="@+id/progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_marginStart="@dimen/spacing_double"
-                android:layout_marginEnd="@dimen/spacing_double"
+                android:layout_marginStart="@dimen/spacing_single"
+                android:layout_marginEnd="@dimen/spacing_single"
+                android:layout_marginTop="@dimen/spacing_single"
                 android:progressTint="?android:colorAccent"
                 tools:ignore="UnusedAttribute"
                 android:max="100"
@@ -72,7 +100,9 @@
 
             <include layout="@layout/practice_answer_message"
                 bind:answerMessage="@{answerMessage}"
-                bind:viewmodel="@{viewmodel}" />
+                bind:viewmodel="@{viewmodel}"
+                bind:lesson="@{lesson}"
+                />
 
         </FrameLayout>
 
@@ -81,11 +111,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/practice_end_button"
-            android:visibility="gone"
+            android:textColor="@android:color/white"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="#FFFFFF"
+            android:background="@drawable/button_style"
+            android:backgroundTint="@{lesson.color}"
+            android:layout_margin="@dimen/spacing_single"
+            android:visibility="gone"
             android:alpha="0"
             android:scaleX="0.7"
             android:scaleY="0.7"
@@ -93,6 +125,7 @@
             app:startDelay="@{300}"
             android:onClick="@{() -> viewmodel.goToLevel(lesson.levelId)}"
             />
+
     </RelativeLayout>
 
 </layout>

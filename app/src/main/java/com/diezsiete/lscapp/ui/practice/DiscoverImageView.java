@@ -41,7 +41,7 @@ public class DiscoverImageView extends FrameLayout {
 
         layoutInflater = LayoutInflater.from(fragment.getContext());
         binding = DataBindingUtil.inflate(
-                layoutInflater, R.layout.practice_discover_image, this, true);
+                layoutInflater, R.layout.practice_discover_image, this, true, dataBindingComponent);
 
 
         AdapterViewFlipper flipper = binding.discoverImageFlipper;

@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.databinding.PracticeDiscoverImageImagesBinding;
-import com.diezsiete.lscapp.vo.Image;
+import com.diezsiete.lscapp.vo.Picture;
 import com.diezsiete.lscapp.vo.PracticeWithData;
 
 import java.util.ArrayList;
@@ -55,10 +55,10 @@ public class DiscoverImageImagesView extends FrameLayout {
         gridView.setLayoutManager(sglm);
         gridView.setAdapter(adapter);
 
-        for(Image image : practice.getImages()) {
-            image.width = 150;
-            image.height = (int) (50 + Math.random() * 450);
-            adapter.addDrawable(image);
+        for(Picture picture : practice.getPictures()) {
+            picture.width = 150;
+            picture.height = (int) (50 + Math.random() * 450);
+            adapter.addDrawable(picture);
         }
         adapter.notifyDataSetChanged();
     }

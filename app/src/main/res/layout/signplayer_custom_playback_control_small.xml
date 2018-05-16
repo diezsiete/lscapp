@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/signplayer_pb"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        android:layout_centerInParent="true"
+        />
+
+    <ImageButton android:id="@id/exo_play"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:background="#79000000"
+        style="@style/ExoMediaButton.Play"
+        />
+
+
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_progress"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        app:played_color="@color/colorAccent"
+        app:buffered_color="#00000000"
+        android:padding="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        app:bar_height="3dp"
+        app:scrubber_enabled_size="0dp"
+        android:layout_gravity="bottom"/>
+
+</FrameLayout>

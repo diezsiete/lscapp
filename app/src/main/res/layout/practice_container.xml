@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View" />
         <variable name="practiceWithData" type="com.diezsiete.lscapp.vo.PracticeWithData" />
         <variable name="viewmodel" type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
     </data>
@@ -24,16 +25,18 @@
                 android:id="@+id/question_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/elevation_header"
                 android:gravity="center"
-                android:paddingTop="0dp"
-                android:paddingRight="@dimen/spacing_double"
-                android:paddingBottom="@dimen/spacing_double"
-                android:paddingLeft="@dimen/spacing_double"
+                android:padding="@dimen/spacing_single"
+                android:layout_marginTop="@dimen/spacing_quadruple"
+                android:layout_marginStart="@dimen/spacing_single"
+                android:layout_marginEnd="@dimen/spacing_single"
+                android:layout_marginBottom="@dimen/spacing_single"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="?android:attr/textColorPrimary"
                 tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
                 android:text="@{practiceWithData.question}"
+                android:background="@color/practice_question"
+                android:visibility="@{practiceWithData.question == null ? View.INVISIBLE : View.VISIBLE}"
                 />
         </LinearLayout>
 
@@ -45,9 +48,11 @@
             android:src="@drawable/ic_arrow_forward_white"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
-            android:background="@color/button_submit_answer_bg"
+            android:background="@drawable/button_style"
+            android:backgroundTint="@{practiceWithData.lesson.color}"
             android:onClick="@{() -> viewmodel.saveAnswer()}"
             app:buttonEnable="@{practiceWithData.enableSave}"
+            android:layout_margin="@dimen/spacing_single"
             />
 
 

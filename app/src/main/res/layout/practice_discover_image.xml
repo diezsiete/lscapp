@@ -35,16 +35,17 @@
                 android:id="@+id/question_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/elevation_header"
                 android:gravity="center"
-                android:paddingTop="0dp"
-                android:paddingRight="@dimen/spacing_double"
-                android:paddingBottom="@dimen/spacing_double"
-                android:paddingLeft="@dimen/spacing_double"
+                android:padding="@dimen/spacing_single"
+                android:layout_marginTop="@dimen/spacing_quadruple"
+                android:layout_marginStart="@dimen/spacing_single"
+                android:layout_marginEnd="@dimen/spacing_single"
+                android:layout_marginBottom="@dimen/spacing_single"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="?android:attr/textColorPrimary"
                 tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
                 android:text="@{context.getString(textId)}"
+                android:background="@color/practice_question"
                 />
 
             <AdapterViewFlipper
@@ -57,6 +58,8 @@
         </LinearLayout>
 
 
+
+
         <ImageButton
             android:id="@+id/submitAnswer"
             android:layout_width="match_parent"
@@ -64,10 +67,13 @@
             android:src="@drawable/ic_arrow_forward_white"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
-            android:background="@color/button_submit_answer_bg"
+            android:background="@drawable/button_style"
+            android:backgroundTint="@{practice.lesson.color}"
             android:onClick="@{() -> discoverImageView.onClickSubmitAnswer()}"
             app:buttonEnable="@{position == 0 ? true : practice.enableSave}"
+            android:layout_margin="@dimen/spacing_single"
             />
+
 
 
     </RelativeLayout>

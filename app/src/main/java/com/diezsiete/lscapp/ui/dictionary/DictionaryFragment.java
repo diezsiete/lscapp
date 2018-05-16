@@ -7,6 +7,8 @@ import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.FragmentDictionaryBinding;
 import com.diezsiete.lscapp.di.Injectable;
+import com.diezsiete.lscapp.ui.MainActivity;
+import com.diezsiete.lscapp.ui.MainActivityViewModel;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 
@@ -38,6 +40,7 @@ public class DictionaryFragment extends Fragment implements Injectable {
     AutoClearedValue<FragmentDictionaryBinding> binding;
 
     private DictionaryViewModel dictionaryViewModel;
+    private MainActivityViewModel mainActivityViewModel;
 
     AutoClearedValue<WordListAdapter> adapter;
 
@@ -59,6 +62,7 @@ public class DictionaryFragment extends Fragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
 
         dictionaryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DictionaryViewModel.class);
+        mainActivityViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(MainActivityViewModel.class);
         binding.get().setViewmodel(dictionaryViewModel);
         dictionaryViewModel.getWord().observe(this, resource -> {
             binding.get().setWord(resource == null ? null : resource.data);
@@ -73,7 +77,7 @@ public class DictionaryFragment extends Fragment implements Injectable {
 
 
         videoManager = new SignVideoManager(this.getContext(), getLifecycle());
-        Log.d("JOSE", "SignVideoManagerCreated");
+        mainActivityViewModel.setToolbarTitle(getString(R.string.dictionary));
     }
 
     private void initLessonsList() {

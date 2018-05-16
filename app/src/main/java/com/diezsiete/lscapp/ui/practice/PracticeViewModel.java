@@ -3,9 +3,12 @@ package com.diezsiete.lscapp.ui.practice;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
+import com.diezsiete.lscapp.api.ApiResponse;
 import com.diezsiete.lscapp.db.LSCAppTypeConverters;
 import com.diezsiete.lscapp.repository.LessonRepository;
 import com.diezsiete.lscapp.repository.PracticeRepository;
@@ -15,6 +18,7 @@ import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeWithData;
 import com.diezsiete.lscapp.vo.Resource;
 import com.diezsiete.lscapp.vo.Status;
+import com.diezsiete.lscapp.vo.TakeSignResponse;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,9 +32,11 @@ public class PracticeViewModel extends ViewModel {
     private final MediatorLiveData<List<String>> practicesCodesMediator = new MediatorLiveData<>();
     private final LiveData<Resource<List<PracticeWithData>>> practicesWithData;
     private final LiveData<PracticeWithData> practice;
-    private final MutableLiveData<String> currentPracticeId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> currentPracticeId = new MutableLiveData<>();
     private final MutableLiveData<String> lessonId = new MutableLiveData<>();
     private final MutableLiveData<String> goToLevel = new MutableLiveData<>();
+    //private final MediatorLiveData practiceMediator = new MediatorLiveData<>();
+
 
     private int currentPracticeIndex = 0;
 
@@ -108,7 +114,7 @@ public class PracticeViewModel extends ViewModel {
 
 
         practice = Transformations.switchMap(currentPracticeId, practiceId -> {
-            if (practiceId.isEmpty()) {
+            if (practiceId == null) {
                 return AbsentLiveData.create();
             }else {
                 return practiceRepository.getPracticeWithData(practiceId);
@@ -169,7 +175,7 @@ public class PracticeViewModel extends ViewModel {
     }
 
     public void startNewPractice(){
-        currentPracticeId.setValue(getCurrentPracticeWithData().entity.practiceId);
+        currentPracticeId.setValue(getCurrentPracticeWithData().entity.id);
     }
 
     public void setId(String lessonId) {
@@ -210,7 +216,18 @@ public class PracticeViewModel extends ViewModel {
     }
 
     public void postCntk(File file){
-        practiceRepository.postCntk(getCurrentPracticeWithData().getWord(), file);
+        /*practiceMediator.addSource(practice, new Observer<PracticeWithData>() {
+            @Override
+            public void onChanged(@Nullable PracticeWithData practiceWithData) {
+                int i = 0;
+                if(practiceWithData != null && practiceWithData.getAnswerUser() != 2){
+                    practiceMediator.removeSource(practice);
+                    saveAnswer();
+                }
+            }
+        });*/
+
+        practiceRepository.postCntk(practice.getValue(), getCurrentPracticeWithData().getWord(), file);
     }
 
 }

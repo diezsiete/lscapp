@@ -9,6 +9,7 @@ import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeVideos;
 import com.diezsiete.lscapp.vo.PracticeVideosWord;
 import com.diezsiete.lscapp.vo.PracticeWords;
+import com.diezsiete.lscapp.vo.User;
 import com.diezsiete.lscapp.vo.Word;
 
 @Database(
@@ -19,9 +20,10 @@ import com.diezsiete.lscapp.vo.Word;
         PracticeWords.class,
         PracticeVideos.class,
         PracticeVideosWord.class,
-        Word.class
+        Word.class,
+        User.class
     },
-    version = 29,
+    version = 36,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {
@@ -38,4 +40,6 @@ public abstract class LSCAppDb extends RoomDatabase {
     public abstract PracticeVideosWordDao practiceVideosWordDao();
 
     public abstract WordDao wordDao();
+
+    public abstract UserDao userDao();
 }

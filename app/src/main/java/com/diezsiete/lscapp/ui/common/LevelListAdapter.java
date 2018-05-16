@@ -46,12 +46,12 @@ public class LevelListAdapter extends DataBoundListAdapter<Level, ItemLevelBindi
         ItemLevelBinding binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.item_level,
                         parent, false, dataBindingComponent);
-        binding.getRoot().setOnClickListener(v -> {
+        binding.btnGotoLevel.setOnClickListener(v -> {
             Level level = binding.getLevel();
-            if (level != null && levelClickCallback != null) {
+            if (level != null)
                 levelClickCallback.onClick(level);
-            }
         });
+
         return binding;
     }
 

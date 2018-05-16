@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.PracticeContainerBinding;
+import com.diezsiete.lscapp.vo.Lesson;
 
 
 import javax.inject.Inject;
@@ -28,26 +29,30 @@ public abstract class PracticeView extends FrameLayout{
 
     protected LayoutInflater layoutInflater;
 
-
+    protected Fragment fragment;
 
     public PracticeView(Fragment fragment) {
         super(fragment.getContext());
+
+        this.fragment = fragment;
 
         dataBindingComponent = new FragmentDataBindingComponent(fragment);
         practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
         layoutInflater = LayoutInflater.from(fragment.getContext());
 
-        PracticeContainerBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.practice_container, this, true);
+        PracticeContainerBinding binding = DataBindingUtil.inflate(
+            layoutInflater, R.layout.practice_container, this, true, dataBindingComponent);
         binding.setViewmodel(practiceViewModel);
+
 
         binding.practiceViewContainer.addView(createPracticeContentView().getRoot());
 
         practiceViewModel.getCurrentPractice().observe(fragment, practiceWithData -> {
-            if(practiceWithData != null)
+            if(practiceWithData != null) {
                 binding.setPracticeWithData(practiceWithData);
+            }
         });
         practiceViewModel.startNewPractice();
-
     }
 
     protected abstract ViewDataBinding createPracticeContentView();

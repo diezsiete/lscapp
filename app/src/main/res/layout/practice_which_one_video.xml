@@ -21,8 +21,8 @@
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_view"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="@dimen/exoplayer_medium"
+            android:layout_height="@dimen/exoplayer_medium"
             app:controller_layout_id="@layout/signplayer_custom_playback_control"
             app:use_controller="true"
             app:practiceVideo="@{practice.getVideo()}"

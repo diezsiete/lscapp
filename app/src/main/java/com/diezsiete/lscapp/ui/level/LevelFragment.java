@@ -87,6 +87,8 @@ public class LevelFragment extends Fragment implements Injectable {
 
         levelViewModel.getLevel().observe(this, resource -> {
             binding.get().setLevel(resource == null ? null : resource.data);
+            if(resource != null && resource.data != null)
+                mainActivityViewModel.setToolbarData(resource.data.name, resource.data.color, resource.data.image);
             // this is only necessary because espresso cannot read data binding callbacks.
             binding.get().executePendingBindings();
         });
@@ -98,6 +100,7 @@ public class LevelFragment extends Fragment implements Injectable {
         adapter = new AutoClearedValue<>(this, rvAdapter);
 
         mainActivityViewModel.setShowBackButton(true);
+
 
         initLessonsList();
     }

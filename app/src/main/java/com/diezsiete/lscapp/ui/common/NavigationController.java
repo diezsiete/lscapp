@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentManager;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.ui.MainActivity;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
+import com.diezsiete.lscapp.ui.fragment.LoginFragment;
+import com.diezsiete.lscapp.ui.fragment.RegisterFragment;
 import com.diezsiete.lscapp.ui.lesson.LessonFragment;
 import com.diezsiete.lscapp.ui.level.LevelFragment;
 import com.diezsiete.lscapp.ui.level.LevelSelectionFragment;
@@ -68,6 +70,20 @@ public class NavigationController {
         DictionaryFragment dictionaryFragment = new DictionaryFragment();
         fragmentManager.beginTransaction()
                 .replace(containerId, dictionaryFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToLogin() {
+        LoginFragment loginFragment = new LoginFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, loginFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToRegister() {
+        RegisterFragment registerFragment = new RegisterFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, registerFragment)
                 .commitAllowingStateLoss();
     }
 }

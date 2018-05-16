@@ -18,6 +18,7 @@ package com.diezsiete.lscapp.binding;
 
 import android.databinding.DataBindingComponent;
 import android.support.v4.app.Fragment;
+import android.app.Activity;
 
 /**
  * A Data Binding Component implementation for fragments.
@@ -27,6 +28,10 @@ public class FragmentDataBindingComponent implements DataBindingComponent {
 
     public FragmentDataBindingComponent(Fragment fragment) {
         this.adapter = new FragmentBindingAdapters(fragment);
+    }
+
+    public FragmentDataBindingComponent(Activity activity){
+        this.adapter = new FragmentBindingAdapters(activity);
     }
 
     @Override

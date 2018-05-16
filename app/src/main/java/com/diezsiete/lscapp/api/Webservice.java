@@ -8,6 +8,7 @@ import com.diezsiete.lscapp.vo.Lesson;
 import com.diezsiete.lscapp.vo.Level;
 import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeWithData;
+import com.diezsiete.lscapp.vo.TakeSignResponse;
 import com.diezsiete.lscapp.vo.Word;
 
 import java.util.List;
@@ -40,9 +41,9 @@ public interface Webservice {
 
 
     @Multipart
-    @POST("/practices/upload")
-    Call<ResponseBody> uploadPhoto(
-        @Part("answer") RequestBody answer,
+    @POST("/cntk/{tag}")
+    Call<TakeSignResponse> uploadPhoto(
+        @Path("tag") String tag,
         @Part MultipartBody.Part photo
     );
 

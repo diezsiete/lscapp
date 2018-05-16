@@ -26,8 +26,10 @@ import com.diezsiete.lscapp.vo.PracticeWithData;
 import com.diezsiete.lscapp.vo.PracticeWords;
 import com.diezsiete.lscapp.vo.Resource;
 import com.diezsiete.lscapp.vo.ShowSign;
+import com.diezsiete.lscapp.vo.TakeSignResponse;
 import com.diezsiete.lscapp.vo.WhichOneVideo;
 import com.diezsiete.lscapp.vo.WhichOneVideos;
+import com.diezsiete.lscapp.vo.Word;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -81,21 +83,28 @@ public class PracticeRepository {
             for (PracticeWithData practiceWithData : practices) {
                 Practice practice = practiceWithData.entity;
                 practice.lessonId = lessonId;
-                practiceDao.insert(practice);
-                practiceWordsDao.deleteAllByPracticeId(practice.practiceId);
-                for(PracticeWords practiceWords  : practiceWithData.words)
+                long practiceId =practiceDao.insert(practice);
+                for(PracticeWords practiceWords  : practiceWithData.words) {
+                    practiceWords.practiceId = practiceId;
                     practiceWordsDao.insert(practiceWords);
+                }
 
                 for(PracticeVideosData practiceVideos : practiceWithData.videos){
+                    practiceVideos.entity.practiceId = practiceId;
                     long id = practiceVideosDao.insert(practiceVideos.entity);
                     for(PracticeVideosWordData practiceVideosWord : practiceVideos.videosWord){
+                        Log.d("JOSE", "PracticeRepository.updatePracticesFromCall Word : " + practiceVideosWord.entity.wordId);
                         practiceVideosWord.entity.practiceVideosId = id;
                         practiceVideosWordDao.insert(practiceVideosWord.entity);
                     }
                 }
             }
             db.setTransactionSuccessful();
-        }finally {
+        }
+        catch(Exception e){
+            Log.d("JOSE", e.getMessage());
+        }
+        finally {
             db.endTransaction();
         }
     }
@@ -171,12 +180,19 @@ public class PracticeRepository {
         return practiceDao.getPracticesCodes(ids);
     }
 
-    public LiveData<PracticeWithData> getPracticeWithData(String practiceId) {
+    public LiveData<PracticeWithData> getPracticeWithData(int practiceId) {
         return practiceDao.loadPracticeWithData(practiceId);
     }
 
     public void updatePractice(Practice practice) {
         appExecutors.diskIO().execute(() -> practiceDao.update(practice));
+    }
+
+    public void updatePractice(Practice practice, Runnable runnable) {
+        appExecutors.diskIO().execute(() -> {
+            practiceDao.update(practice);
+            appExecutors.mainThread().execute(runnable);
+        });
     }
 
     public void deletePracticesByLessonId(String lessonId, Runnable runnable) {
@@ -187,27 +203,27 @@ public class PracticeRepository {
     }
 
 
-    public void postCntk(String answer, File file) {
-        RequestBody answerPart = RequestBody.create(MultipartBody.FORM, answer);
+    public void postCntk(final PracticeWithData practice, String tag, File file) {
+        practice.setUserAnswer(2);
+        updatePractice(practice.entity);
 
         RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), file);
-
         MultipartBody.Part formData = MultipartBody.Part.createFormData("file", file.getName(), filePart);
-
-        Call<ResponseBody> call = webservice.uploadPhoto(answerPart, formData);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<TakeSignResponse> call = webservice.uploadPhoto(tag, formData);
+        call.enqueue(new Callback<TakeSignResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
-                Log.v("JOSE", "success");
+            public void onResponse(Call<TakeSignResponse> call, Response<TakeSignResponse> response) {
+                TakeSignResponse tsResponse = response.body();
+                practice.setUserAnswer(tsResponse.hit ? 1 : 0);
+                updatePractice(practice.entity);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<TakeSignResponse> call, Throwable t) {
                 Log.e("JOSE Upload error:", t.getMessage());
+                practice.setUserAnswer(3);
+                updatePractice(practice.entity);
             }
         });
     }
-
-
 }

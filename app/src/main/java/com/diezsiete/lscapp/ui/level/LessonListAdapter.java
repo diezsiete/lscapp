@@ -48,7 +48,7 @@ public class LessonListAdapter extends DataBoundListAdapter<Lesson, ItemLessonBi
         ItemLessonBinding binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.item_lesson,
                         parent, false, dataBindingComponent);
-        binding.getRoot().setOnClickListener(v -> {
+        binding.btnGotoLesson.setOnClickListener(v -> {
             Lesson lesson = binding.getLesson();
             if (lesson != null && lessonClickCallback != null) {
                 lessonClickCallback.onClick(lesson);

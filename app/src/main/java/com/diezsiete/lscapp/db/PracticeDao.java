@@ -30,7 +30,7 @@ public interface PracticeDao extends BaseDao<Practice>{
     LiveData<List<PracticeWithData>> loadPracticesWithDataByLessonId(String lessonId);
 
     @Transaction
-    @Query("SELECT * FROM practice WHERE practice_id = :practiceId")
-    LiveData<PracticeWithData> loadPracticeWithData(String practiceId);
+    @Query("SELECT * FROM practice WHERE id = :practiceId")
+    LiveData<PracticeWithData> loadPracticeWithData(int practiceId);
 
 }

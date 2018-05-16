@@ -18,7 +18,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         foreignKeys = {
                 @ForeignKey(
                         entity = Practice.class,
-                        parentColumns = "practice_id",
+                        parentColumns = "id",
                         childColumns = "practice_id",
                         onDelete = CASCADE
                 )
@@ -33,7 +33,7 @@ public class PracticeWords {
     public int id;
     @NonNull
     @ColumnInfo(name="practice_id")
-    public String practiceId;
+    public long practiceId;
 
     public List<String> words;
 

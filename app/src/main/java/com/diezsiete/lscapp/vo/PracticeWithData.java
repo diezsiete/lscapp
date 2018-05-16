@@ -1,11 +1,8 @@
 package com.diezsiete.lscapp.vo;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
-import android.arch.persistence.room.Transaction;
 import android.text.TextUtils;
 
 
@@ -17,11 +14,14 @@ public class PracticeWithData  {
     public Practice entity;
 
 
-    @Relation(parentColumn = "practice_id", entityColumn = "practice_id")
+    @Relation(parentColumn = "id", entityColumn = "practice_id")
     public List<PracticeWords> words;
 
-    @Relation(parentColumn = "practice_id", entityColumn = "practice_id", entity = PracticeVideos.class)
+    @Relation(parentColumn = "id", entityColumn = "practice_id", entity = PracticeVideos.class)
     public List<PracticeVideosData> videos;
+
+    @Relation(parentColumn = "lesson_id", entityColumn = "lesson_id")
+    public List<Lesson> lesson;
 
     /**
      * Obligatorio para Room
@@ -37,7 +37,7 @@ public class PracticeWithData  {
     }
 
     public String getQuestion() {
-        String question = "";
+        String question = null;
         switch (entity.code){
             case "which-one-video" :
             case "translate-video" :
@@ -45,6 +45,9 @@ public class PracticeWithData  {
                 break;
             case "which-one-videos" :
                 question = "\""+ TextUtils.join(" ", words.get(0).words) +"\"";
+                break;
+            case "take-sign" :
+                question = "Realiza la seña \"" + getWord() + "\" con la mano y tomale una foto";
                 break;
         }
         return question;
@@ -90,10 +93,13 @@ public class PracticeWithData  {
 
     public boolean validateAnswer() {
         boolean ok = true;
-        for(int i = 0; i < entity.answer.size(); i++){
-            if(entity.answerUser.size() < i || !entity.answerUser.get(i).equals(entity.answer.get(i)))
-                ok = false;
-        }
+        if(entity.code.equals("take-sign")){
+            ok = !(entity.answerUser.size() == 0 || entity.answerUser.get(0) == 0);
+        }else
+            for(int i = 0; i < entity.answer.size(); i++){
+                if(entity.answerUser.size() < i || !entity.answerUser.get(i).equals(entity.answer.get(i)))
+                    ok = false;
+            }
         entity.answerCorrect = ok;
         entity.completed = true;
         return ok;
@@ -111,13 +117,33 @@ public class PracticeWithData  {
         boolean enable = true;
         if(!entity.code.equals("show-sign"))
             enable = entity.answerUser.size() > 0;
+
+        if(entity.code.equals("take-sign") && enable)
+            enable = entity.answerUser.get(0) == 0 || entity.answerUser.get(0) == 1;
+
         return enable;
     }
 
-    public List<Image> getImages() {
-        List<Image> images = new ArrayList<>();
-        for(String url : entity.images)
-            images.add(new Image(url));
-        return images;
+    public List<Picture> getPictures() {
+        List<Picture> pictures = new ArrayList<>();
+        for(String url : entity.pictures)
+            pictures.add(new Picture(url));
+        return pictures;
+    }
+
+    public void setUserAnswer(int answer) {
+        List<Integer> answerUser = new ArrayList<>();
+        answerUser.add(answer);
+        entity.answerUser = answerUser;
+    }
+
+    public Integer getAnswerUser(){
+        if(entity.answerUser.size() > 0)
+            return entity.answerUser.get(0);
+        return null;
+    }
+
+    public Lesson getLesson(){
+        return lesson.get(0);
     }
 }

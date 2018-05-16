@@ -9,6 +9,7 @@ import com.diezsiete.lscapp.ui.level.LessonViewModel;
 import com.diezsiete.lscapp.ui.level.LevelViewModel;
 import com.diezsiete.lscapp.ui.practice.PracticeViewModel;
 import com.diezsiete.lscapp.viewmodel.LSCAppViewModelFactory;
+import com.diezsiete.lscapp.viewmodel.UserViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -40,6 +41,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DictionaryViewModel.class)
     abstract ViewModel bindDictionaryViewModel(DictionaryViewModel dictionaryViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserViewModel.class)
+    abstract ViewModel bindUserViewModel(UserViewModel userViewModel);
 
 
     @Binds

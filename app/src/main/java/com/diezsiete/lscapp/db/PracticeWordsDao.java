@@ -15,8 +15,8 @@ public interface PracticeWordsDao extends BaseDao<PracticeWords> {
     void deleteAll();
 
     @Query("SELECT * FROM practice_words WHERE practice_id = :practiceId")
-    LiveData<PracticeWords> load(String practiceId);
+    LiveData<PracticeWords> load(int practiceId);
 
     @Query("DELETE FROM practice_words WHERE practice_id = :practiceId")
-    void deleteAllByPracticeId(String practiceId);
+    void deleteAllByPracticeId(int practiceId);
 }

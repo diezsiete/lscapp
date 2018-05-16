@@ -17,6 +17,8 @@
 package com.diezsiete.lscapp.di;
 
 import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
+import com.diezsiete.lscapp.ui.fragment.LoginFragment;
+import com.diezsiete.lscapp.ui.fragment.RegisterFragment;
 import com.diezsiete.lscapp.ui.lesson.LessonFragment;
 import com.diezsiete.lscapp.ui.level.LevelFragment;
 import com.diezsiete.lscapp.ui.level.LevelSelectionFragment;
@@ -37,4 +39,10 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract DictionaryFragment contributeDictionaryFragment();
+
+    @ContributesAndroidInjector
+    abstract LoginFragment contributeLoginFragment();
+
+    @ContributesAndroidInjector
+    abstract RegisterFragment contributeRegisterFragment();
 }

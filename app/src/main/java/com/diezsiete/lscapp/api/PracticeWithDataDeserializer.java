@@ -56,18 +56,16 @@ PracticeWithDataDeserializer implements JsonDeserializer {
     @Override
     public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final JsonObject jsonObject = json.getAsJsonObject();
-        String practiceId = jsonObject.get("practiceId").getAsString();
         String code = jsonObject.get("code").getAsString();
-        Practice practice = new Practice(practiceId, code);
+        Practice practice = new Practice(code);
         practice.answer = jsonElementToIntList(jsonObject.get("answer"));
-        practice.images = jsonElementToStringList(jsonObject.get("images"));
+        practice.pictures = jsonElementToStringList(jsonObject.get("pictures"));
 
         List<PracticeWords> practiceWords = new ArrayList<>();
 
         List<List<String>> wordsList = deserializeArrayOfArrays(jsonObject, "words");
         for(List<String> words : wordsList) {
             PracticeWords pw = new PracticeWords();
-            pw.practiceId = practiceId;
             pw.words = words;
             practiceWords.add(pw);
         }
@@ -76,7 +74,6 @@ PracticeWithDataDeserializer implements JsonDeserializer {
         for(List<String> words : deserializeArrayOfArrays(jsonObject, "videos")){
             PracticeVideosData practiceVideos = new PracticeVideosData();
             practiceVideos.entity = new PracticeVideos();
-            practiceVideos.entity.practiceId = practiceId;
 
             practiceVideos.videosWord = new ArrayList<>();
             for(String word : words){

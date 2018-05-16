@@ -15,14 +15,14 @@
   -->
 
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="?android:attr/colorPrimary">
+        android:color="@color/practice_item_sel">
     <item>
         <selector>
             <item android:state_pressed="true">
-                <color android:color="@color/colorPrimary" />
+                <color android:color="@color/practice_item_sel" />
             </item>
             <item>
-                <color android:color="@android:color/white" />
+                <color android:color="@color/practice_item_bg" />
             </item>
         </selector>
     </item>

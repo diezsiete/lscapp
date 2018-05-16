@@ -79,6 +79,8 @@ public class SignCameraHelper {
     private String cameraId;
     private Size imageDimension;
 
+    private int cameraListIndex = 0;
+
 
     public SignCameraHelper(Activity activity, TextureView textureView, View button, CameraEvents cameraEvents) {
         mActivity = activity;
@@ -125,12 +127,19 @@ public class SignCameraHelper {
         }
     }
 
+    private String getCameraId(CameraManager manager) throws CameraAccessException{
+        String[] cameraIds = manager.getCameraIdList();
+        if(cameraIds.length <= cameraListIndex)
+            cameraListIndex = 0;
+        return cameraIds[cameraListIndex];
+    }
+
     private void openCamera() {
         Log.d("JOSE", mActivity == null ? "Activity null" : "Activity not null");
         CameraManager manager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
         Log.e(TAG, "is camera open");
         try {
-            cameraId = manager.getCameraIdList()[1];
+            cameraId = getCameraId(manager);
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
@@ -219,14 +228,14 @@ public class SignCameraHelper {
             mFile = new File(Environment.getExternalStorageDirectory()+"/pic"+mInt+".jpg");
             mInt++;
 
-            mCameraEventListener.onPhotoTaken(mFile);
 
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(mActivity, "Saved:" + mFile, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mActivity, "Saved:" + mFile, Toast.LENGTH_SHORT).show();
+                    mCameraEventListener.onPhotoTaken(mFile);
                     createCameraPreview();
                 }
             };
@@ -347,6 +356,11 @@ public class SignCameraHelper {
         }
     };
 
+    public void rotate(){
+        stop();
+        cameraListIndex = cameraListIndex == 0 ? 1 : 0;
+        start();
+    }
 
     public interface CameraEvents {
         public void onPhotoTaken(File file);

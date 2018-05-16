@@ -11,23 +11,24 @@
     </data>
     <FrameLayout
         android:id="@+id/video_wrapper"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_double"
-        android:background="@drawable/selector_button"
+        android:background="@drawable/selector_button_white"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
         >
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_answer_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:controller_layout_id="@layout/exoplayer_custom_playback_control"
+        android:layout_width="@dimen/exoplayer_small"
+        android:layout_height="@dimen/exoplayer_small"
+        app:controller_layout_id="@layout/signplayer_custom_playback_control_small"
         app:use_controller="false"
-        android:paddingTop="@dimen/spacing_double"
+        android:paddingTop="@dimen/spacing_single"
+        android:paddingBottom="@dimen/spacing_single"
         app:practiceVideo="@{option}"
         app:position="@{position}"
+        android:layout_gravity="center"
         />
 
     </FrameLayout>

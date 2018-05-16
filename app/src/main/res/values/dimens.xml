@@ -7,8 +7,10 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="spacing_nano">2dp</dimen>
+    <dimen name="spacing_simple">4dp</dimen>
     <dimen name="spacing_single">8dp</dimen>
     <dimen name="spacing_double">16dp</dimen>
+    <dimen name="spacing_quadruple">32dp</dimen>
 
     <dimen name="elevation_header">4dp</dimen>
 
@@ -16,5 +18,11 @@
 
     <dimen name="size_fab">56dp</dimen>
 
-    <dimen name="level_selection_image_size">200dp</dimen>
+    <dimen name="toolbar_image_size">35dp</dimen>
+    <dimen name="level_selection_image_size">100dp</dimen>
+    <dimen name="lesson_selection_image_size">100dp</dimen>
+
+    <dimen name="exoplayer_full">250dp</dimen>
+    <dimen name="exoplayer_medium">190dp</dimen>
+    <dimen name="exoplayer_small">150dp</dimen>
 </resources>
