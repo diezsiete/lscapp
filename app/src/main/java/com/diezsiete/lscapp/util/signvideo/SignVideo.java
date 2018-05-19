@@ -34,9 +34,11 @@ public class SignVideo {
 
     private static final int URI_EXTERNAL = 1;
 
+    private String _url;
+
     private LinkedHashMap<Uri, Integer> resources;
 
-    private SimpleExoPlayer player;
+    public SimpleExoPlayer player;
     private Context context;
 
     private GestureDetector gestureDetector;
@@ -71,7 +73,9 @@ public class SignVideo {
         TouchListener touchListener = new TouchListener();
         gestureDetector = new GestureDetector(context, touchListener);
 
-        this.playerView.setOnTouchListener(new TouchListener());
+        this.playerView.setOnTouchListener(touchListener);
+        //playButton.setOnTouchListener(touchListener);
+
         playerView.setShowMultiWindowTimeBar(true);
         if(progressBar != null)
             progressBar.setVisibility(View.VISIBLE);
@@ -80,11 +84,12 @@ public class SignVideo {
     }
 
     private void addExternalUrl(String url) {
+        _url = url;
         int pos = url.lastIndexOf('/') + 1;
         Uri parsedUrl = Uri.parse(url.substring(0, pos) + Uri.encode(url.substring(pos)));
-        Log.d("JOSE", "parsed1 : " + parsedUrl.toString());
+        //Log.d("JOSE", "parsed1 : " + parsedUrl.toString());
         Uri parsedUrl2 = Uri.parse(url);
-        Log.d("JOSE", "parsed2 : " + parsedUrl2);
+        //Log.d("JOSE", "parsed2 : " + parsedUrl2);
         resources.put(parsedUrl, URI_EXTERNAL);
     }
 
@@ -118,6 +123,14 @@ public class SignVideo {
         }
     }
 
+    public void stopAndSeekTo(long positionMs) {
+        if(player != null) {
+            playWhenReadySignPlayer = false;
+            player.setPlayWhenReady(false);
+            player.seekTo(positionMs);
+        }
+    }
+
     public void play() {
         if(player != null) {
             playWhenReadySignPlayer = true;
@@ -130,7 +143,7 @@ public class SignVideo {
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(context),
                     new DefaultTrackSelector(), new DefaultLoadControl());
-            //player.setVolume(0f);
+            player.setVolume(0f);
             player.setPlayWhenReady(playWhenReadySignPlayer);
             player.seekTo(0, 0);
             player.setRepeatMode(Player.REPEAT_MODE_ALL);
@@ -205,11 +218,15 @@ public class SignVideo {
                     break;
                 case Player.STATE_READY:
                     stateString = "ExoPlayer.STATE_READY     -";
-                    if(stateBuffering && playWhenReady) {
+                    if(stateBuffering) {
                         stateBuffering = false;
                         progressBar.setVisibility(View.GONE);
-                    }else
+                    }else {
                         buttonAnimation(playWhenReady);
+                        if(onSingleTapUpListeners != null)
+                            for(int i = 0; i < onSingleTapUpListeners.size(); i++)
+                                onSingleTapUpListeners.get(i).onSingleTapUp(playWhenReadySignPlayer);
+                    }
                     break;
                 case Player.STATE_ENDED:
                     stateString = "ExoPlayer.STATE_ENDED     -";
@@ -229,7 +246,7 @@ public class SignVideo {
         button.animate().setDuration(animTime).alpha(1).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                button.setVisibility(View.VISIBLE);
+                /*button.setVisibility(View.VISIBLE);
 
                 if(playWhenReady) {
                     button.animate().setDuration(animTime).alpha(0).setListener(new AnimatorListenerAdapter() {
@@ -238,7 +255,7 @@ public class SignVideo {
                             button.setVisibility(View.GONE);
                         }
                     });
-                }
+                }*/
             }
         });
     }
@@ -265,11 +282,6 @@ public class SignVideo {
             playWhenReadySignPlayer = !playWhenReadySignPlayer;
             if(onSingleTapUpPlayStop)
                 player.setPlayWhenReady(playWhenReadySignPlayer);
-
-            if(onSingleTapUpListeners != null)
-                for(int i = 0; i < onSingleTapUpListeners.size(); i++)
-                    onSingleTapUpListeners.get(i).onSingleTapUp(playWhenReadySignPlayer);
-
             return true;
         }
     }

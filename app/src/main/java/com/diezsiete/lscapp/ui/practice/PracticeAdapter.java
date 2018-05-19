@@ -17,6 +17,7 @@ public class PracticeAdapter extends BaseAdapter {
     private Context context;
     private Fragment fragment;
     private List<String> types;
+    private int index = 0;
 
     public PracticeAdapter(Context context, Fragment f) {
         this.context = context;

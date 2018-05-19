@@ -34,7 +34,7 @@
     <string name="permission_denied">Permission denied</string>
 
     <!--LSCApp Message-->
-    <string name="api_retry_error">Please retry!</string>
+    <string name="api_retry_error">Reintentar</string>
     <string name="api_default_error">Something wrong happened!</string>
     <string name="some_error">Un error ha ocurrido!</string>
     <string name="connection_error">Internet connection lost!</string>
@@ -65,8 +65,8 @@
     <!-- Practices -->
     <string name="practice_end_button">Continuar</string>
     <string name="practice_which_one_video_question">¿Qué describe la seña?</string>
-    <string name="practice_discover_image_order">Observa la seña</string>
-    <string name="practice_discover_image_question">¿A que imágen hace referencia?</string>
+    <string name="practice_discover_image_question1">Observa la seña</string>
+    <string name="practice_discover_image_question2">¿A que imágen hace referencia?</string>
     <string name="practice_take_picture_question">Realiza la seña con la mano y tomale una foto</string>
     <string name="practice_translate_video_question">¿Qué describe la seña?</string>
     <string name="practice_warning_message">¡Fallaste!</string>

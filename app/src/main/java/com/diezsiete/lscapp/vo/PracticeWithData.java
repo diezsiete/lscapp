@@ -97,7 +97,7 @@ public class PracticeWithData  {
             ok = !(entity.answerUser.size() == 0 || entity.answerUser.get(0) == 0);
         }else
             for(int i = 0; i < entity.answer.size(); i++){
-                if(entity.answerUser.size() < i || !entity.answerUser.get(i).equals(entity.answer.get(i)))
+                if(entity.answerUser.size() <= i || !entity.answerUser.get(i).equals(entity.answer.get(i)))
                     ok = false;
             }
         entity.answerCorrect = ok;
@@ -143,7 +143,23 @@ public class PracticeWithData  {
         return null;
     }
 
+    public Integer getAnswer(){
+        return entity.answer.size() > 0 ? entity.answer.get(0) : null;
+    }
+
     public Lesson getLesson(){
         return lesson.get(0);
+    }
+
+    public int getId(){
+        return entity.id;
+    }
+
+    public boolean getCompleted(){
+        return entity.completed;
+    }
+
+    public boolean getAnswerCorrect(){
+        return entity.answerCorrect;
     }
 }

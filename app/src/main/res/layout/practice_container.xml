@@ -6,7 +6,8 @@
     <data>
         <import type="android.view.View" />
         <variable name="practiceWithData" type="com.diezsiete.lscapp.vo.PracticeWithData" />
-        <variable name="viewmodel" type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
+        <variable name="practiceView" type="com.diezsiete.lscapp.ui.practice.PracticeView" />
+        <variable name="question" type="String" />
     </data>
 
     <RelativeLayout
@@ -34,9 +35,9 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="?android:attr/textColorPrimary"
                 tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
-                android:text="@{practiceWithData.question}"
+                android:text="@{question}"
                 android:background="@color/practice_question"
-                android:visibility="@{practiceWithData.question == null ? View.INVISIBLE : View.VISIBLE}"
+                android:visibility="@{question == null ? View.INVISIBLE : View.VISIBLE}"
                 />
         </LinearLayout>
 
@@ -50,8 +51,8 @@
             android:padding="@dimen/spacing_double"
             android:background="@drawable/button_style"
             android:backgroundTint="@{practiceWithData.lesson.color}"
-            android:onClick="@{() -> viewmodel.saveAnswer()}"
-            app:buttonEnable="@{practiceWithData.enableSave}"
+            android:onClick="@{() -> practiceView.onClickSubmitAnswer()}"
+            app:buttonEnable="@{practiceView.enableSave(practiceWithData)}"
             android:layout_margin="@dimen/spacing_single"
             />
 

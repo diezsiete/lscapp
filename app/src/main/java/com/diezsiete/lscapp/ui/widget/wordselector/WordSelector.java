@@ -41,6 +41,8 @@ public class WordSelector {
 
     private WordSelection mListener;
 
+    private boolean userClick = false;
+
     private TextView createTokenPhantom(String text, ViewGroup viewGroup) {
         TextView tokenPhantom = (TextView) mInflater.inflate(R.layout.word_selector_token, viewGroup, false);
         if(mGroup.isDebugDraw()){
@@ -67,10 +69,12 @@ public class WordSelector {
         viewToken.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                userClick = true;
                 mGroup.setOnClickTokenActive(true);
                 modifyOptionsSel(view.getId());
                 addTokens();
                 TransitionManager.go(mScene1, mTransition);
+                userClick = false;
             }
         });
         return viewToken;
@@ -146,10 +150,12 @@ public class WordSelector {
     }
 
     private void callListener() {
-        List<Integer> arrayList = new ArrayList<>(mOptionsSel.size());
-        for (int i = 0, sparseSize = mOptionsSel.size(); i < sparseSize; i++)
-            arrayList.add(mOptionsSel.valueAt(i) - 1);
-        mListener.onSelection(arrayList);
+        if(userClick) {
+            List<Integer> arrayList = new ArrayList<>(mOptionsSel.size());
+            for (int i = 0, sparseSize = mOptionsSel.size(); i < sparseSize; i++)
+                arrayList.add(mOptionsSel.valueAt(i) - 1);
+            mListener.onSelection(arrayList);
+        }
     }
 
 
@@ -190,6 +196,8 @@ public class WordSelector {
     }
 
     public void setOptions(final List<String> options) {
+        mTokens.clear();
+        mTokensPhantom.clear();
         for(int i = 1; i <= options.size(); i++){
             mTokensPhantom.append(i, createTokenPhantom(options.get(i-1), mGroup));
             mTokens.append(i, createToken(options.get(i-1), i,  mGroup));

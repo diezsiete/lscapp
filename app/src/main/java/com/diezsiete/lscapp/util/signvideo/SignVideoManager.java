@@ -17,22 +17,60 @@ public class SignVideoManager implements LifecycleObserver {
     List<SignVideo> signVideos = new ArrayList<>();
     Context context;
 
+    private ArrayList<SignVideoManager.onSingleTapUpListener> onSingleTapUpListeners;
+
+    public boolean onlyOnePlaying = true;
+
+    public interface onSingleTapUpListener {
+        void onSingleTapUp(int position, boolean playing);
+    }
+
     public SignVideoManager(Context context, Lifecycle lifecycle) {
         lifecycle.addObserver(this);
         this.context = context;
     }
 
+    private void addSignVideo(final int position) {
+        SignVideo signVideo = new SignVideo(this.context);
+        signVideo.setOnSingleTapUp(new SignVideo.onSingleTapUpListener() {
+            @Override
+            public void onSingleTapUp(boolean playing) {
+                if(onlyOnePlaying && signVideos.size() > 1 && playing){
+                    for(int i = 0; i < signVideos.size(); i++){
+                        if(i != position)
+                            signVideos.get(i).stopAndSeekTo(0);
+                    }
+                }
+                if(onSingleTapUpListeners != null)
+                    for(int i = 0; i < onSingleTapUpListeners.size(); i++)
+                        onSingleTapUpListeners.get(i).onSingleTapUp(position, playing);
+            }
+        });
+        signVideos.add(signVideo);
+    }
 
     public SignVideo getSignVideo() {
         if(signVideos.size() < 1)
-            signVideos.add(new SignVideo(this.context));
+            addSignVideo(0);
         return signVideos.get(0);
     }
 
     public SignVideo getSignVideo(int position) {
         if(position >= signVideos.size())
-            signVideos.add(new SignVideo(this.context));
+            addSignVideo(position);
         return signVideos.get(position);
+    }
+
+    public void setOnSingleTapUp(onSingleTapUpListener listener) {
+        if(onSingleTapUpListeners == null)
+            onSingleTapUpListeners = new ArrayList<>();
+        onSingleTapUpListeners.add(listener);
+    }
+
+    public SignVideoManager unsetOnSingleTapUp() {
+        if(onSingleTapUpListeners != null)
+            onSingleTapUpListeners.clear();
+        return this;
     }
 
 
@@ -69,5 +107,4 @@ public class SignVideoManager implements LifecycleObserver {
                 signVideo.releasePlayer();
         }
     }
-
 }

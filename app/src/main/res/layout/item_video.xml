@@ -16,19 +16,20 @@
         android:background="@drawable/selector_button_white"
         android:clickable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
+        android:paddingTop="@dimen/spacing_simple"
+        android:paddingBottom="@dimen/spacing_simple"
         >
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_answer_view"
         android:layout_width="@dimen/exoplayer_small"
         android:layout_height="@dimen/exoplayer_small"
-        app:controller_layout_id="@layout/signplayer_custom_playback_control_small"
-        app:use_controller="false"
-        android:paddingTop="@dimen/spacing_single"
-        android:paddingBottom="@dimen/spacing_single"
+        app:controller_layout_id="@layout/signplayer_custom_playback_control"
+        app:use_controller="true"
+
+        android:layout_gravity="center"
         app:practiceVideo="@{option}"
         app:position="@{position}"
-        android:layout_gravity="center"
+        app:play="@{false}"
         />
 
     </FrameLayout>

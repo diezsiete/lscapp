@@ -31,7 +31,7 @@ public class TakeSignView extends PracticeView {
             if(practiceWithData != null && practiceWithData.entity.code.equals("take-sign")) {
                 binding.setPractice(practiceWithData);
                 if(practiceWithData.getAnswerUser() != null && practiceWithData.getAnswerUser() != 2){
-                    practiceViewModel.saveAnswer();
+                    //practiceViewModel.saveAnswer();
                     //cameraHelper.rotate();
                 }
             }
@@ -39,8 +39,8 @@ public class TakeSignView extends PracticeView {
 
         cameraHelper = new SignCameraHelper(
                 (Activity) getContext(), binding.texture, binding.btnTakepicture, foto -> {
-            //cameraHelper.rotate();
             practiceViewModel.postCntk(foto);
+            //cameraHelper.rotate();
         });
 
 

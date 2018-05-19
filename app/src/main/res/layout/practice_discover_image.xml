@@ -3,26 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable
-            name="discoverImageView"
-            type="com.diezsiete.lscapp.ui.practice.DiscoverImageView" />
-        <variable
-            name="textId"
-            type="int" />
-        <variable
-            name="position"
-            type="int" />
-        <variable
-            name="practice"
-            type="com.diezsiete.lscapp.vo.PracticeWithData" />
-    </data>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-
         <LinearLayout
             android:id="@+id/practice_view_container"
             android:layout_width="match_parent"
@@ -30,24 +14,6 @@
             android:orientation="vertical"
             android:gravity="center_horizontal"
             >
-
-            <TextView
-                android:id="@+id/question_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="@dimen/spacing_single"
-                android:layout_marginTop="@dimen/spacing_quadruple"
-                android:layout_marginStart="@dimen/spacing_single"
-                android:layout_marginEnd="@dimen/spacing_single"
-                android:layout_marginBottom="@dimen/spacing_single"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="?android:attr/textColorPrimary"
-                tools:ignore="Overdraw,UnusedAttribute,PrivateResource"
-                android:text="@{context.getString(textId)}"
-                android:background="@color/practice_question"
-                />
-
             <AdapterViewFlipper
                 android:id="@+id/discover_image_flipper"
                 android:layout_width="match_parent"
@@ -56,25 +22,5 @@
                 />
 
         </LinearLayout>
-
-
-
-
-        <ImageButton
-            android:id="@+id/submitAnswer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_forward_white"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/spacing_double"
-            android:background="@drawable/button_style"
-            android:backgroundTint="@{practice.lesson.color}"
-            android:onClick="@{() -> discoverImageView.onClickSubmitAnswer()}"
-            app:buttonEnable="@{position == 0 ? true : practice.enableSave}"
-            android:layout_margin="@dimen/spacing_single"
-            />
-
-
-
     </RelativeLayout>
 </layout>

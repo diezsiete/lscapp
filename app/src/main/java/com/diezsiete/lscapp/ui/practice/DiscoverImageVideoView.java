@@ -19,24 +19,28 @@ import com.diezsiete.lscapp.vo.PracticeWithData;
 import javax.inject.Inject;
 
 @SuppressLint("ViewConstructor")
-public class DiscoverImageVideoView extends FrameLayout {
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
+public class DiscoverImageVideoView extends PracticeView {
 
     public DiscoverImageVideoView(Fragment fragment) {
-        super(fragment.getContext());
-        DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(fragment);
-        LayoutInflater layoutInflater = LayoutInflater.from(fragment.getContext());
+        super(fragment);
+    }
 
+    @Override
+    protected void bind() {
         PracticeDiscoverImageVideoBinding binding = DataBindingUtil.inflate(
                 layoutInflater, R.layout.practice_discover_image_video, this, true, dataBindingComponent);
 
-        PracticeViewModel practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
-
-        practiceViewModel.getCurrentPractice().observe(fragment, practiceWithData -> {
-            if(practiceWithData != null)
-                binding.setPractice(practiceWithData);
+        addPracticeObserver(new PracticeObserver() {
+            @Override
+            public void onPracticeChanged(PracticeWithData practice) {
+                if(practice.getAnswerUser() == null)
+                    binding.setPractice(practice);
+            }
         });
+    }
 
+    @Override
+    protected ViewDataBinding createPracticeContentView() {
+        return null;
     }
 }

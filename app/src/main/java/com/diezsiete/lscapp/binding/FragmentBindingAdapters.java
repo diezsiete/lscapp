@@ -27,7 +27,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,7 +38,7 @@ import android.widget.ProgressBar;
 //import com.bumptech.glide.Glide;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
 import com.diezsiete.lscapp.ui.lesson.LessonFragment;
-import com.diezsiete.lscapp.ui.view.signvideo.SignVideoPlayer;
+import com.diezsiete.lscapp.util.signvideo.SignVideo;
 import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.squareup.picasso.Picasso;
@@ -73,6 +72,7 @@ public class FragmentBindingAdapters {
         this.activity = activity;
     }
 
+
     @BindingAdapter("imageUrl")
     public void bindImage(ImageView imageView, String url) {
         //Glide.with(fragment).load(url).into(imageView);
@@ -102,8 +102,8 @@ public class FragmentBindingAdapters {
     }
 
 
-    @BindingAdapter(value={"practiceVideo", "position"}, requireAll = false)
-    public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position) {
+    @BindingAdapter(value={"practiceVideo", "position", "play"}, requireAll = false)
+    public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position, boolean play) {
         Log.d("JOSE", TAG + " bindPracticeVideo position[" + position + "]" );
         if(urls != null && urls.size() > 0) {
             /*SignVideoPlayer player = new SignVideoPlayer(playerView.getContext(), playerView);
@@ -112,12 +112,15 @@ public class FragmentBindingAdapters {
             player.initialize();
             */
             SignVideoManager videoManager = ((LessonFragment) fragment).videoManager;
-            videoManager.getSignVideo(position)
-                    .setPlayer(playerView)
-                    .clearResources()
-                    .addExternalResources(urls)
-                    .prepare()
-                    .play();
+            SignVideo signVideo = videoManager.getSignVideo(position)
+                .setPlayer(playerView)
+                .clearResources()
+                .addExternalResources(urls)
+                .prepare();
+            if (play)
+                signVideo.play();
+            else
+                signVideo.stop();
         }
     }
 

@@ -14,7 +14,7 @@
         app:optRoundCardBottomEdges="false"
         android:layout_marginLeft="@dimen/spacing_simple"
         android:layout_marginRight="@dimen/spacing_simple"
-        android:layout_marginBottom="@dimen/spacing_double"
+        android:layout_marginBottom="@dimen/spacing_simple"
         >
 
         <LinearLayout

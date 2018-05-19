@@ -25,31 +25,22 @@ public class TranslateVideoView extends PracticeView {
         PracticeTranslateVideoBinding binding = DataBindingUtil.inflate(
                 layoutInflater, R.layout.practice_translate_video, this, false, dataBindingComponent);
 
-
-        PracticeWithData practice = practiceViewModel.getCurrentPracticeWithData();
-        binding.setPractice(practice);
-
-
         WordSelector wordSelector = new WordSelector(binding.wordSelectorRoot, options -> {
             practiceViewModel.setAnswerUser(options);
         });
-        wordSelector.setOptions(practice.getWords().get(0));
+
+        addPracticeObserver(new PracticeObserver() {
+            private boolean setted = false;
+            @Override
+            public void onPracticeChanged(PracticeWithData practice) {
+                if(!setted) {
+                    binding.setPractice(practice);
+                    wordSelector.setOptions(practice.getWords().get(0));
+                    setted = true;
+                }
+            }
+        });
 
         return binding;
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        //mVideoPlayer.release();
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        //mVideoPlayer.initialize();
-        super.onAttachedToWindow();
-    }
-
-
-
 }

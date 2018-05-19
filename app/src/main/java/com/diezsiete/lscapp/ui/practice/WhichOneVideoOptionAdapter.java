@@ -32,12 +32,15 @@ import com.diezsiete.lscapp.ui.common.DataBoundListAdapter;
 import com.diezsiete.lscapp.ui.common.DataBoundViewHolder;
 import com.diezsiete.lscapp.vo.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class WhichOneVideoOptionAdapter extends DataBoundListAdapter<List<String>, ItemWhichOneVideoOptionBinding> {
     private final DataBindingComponent dataBindingComponent;
-    private final ClickCallback clickCallback;
+    private ClickCallback clickCallback;
+    private View.OnFocusChangeListener focusChangeListener;
+    private View viewPrevSel;
 
     public WhichOneVideoOptionAdapter(DataBindingComponent dataBindingComponent, ClickCallback clickCallback) {
         this.dataBindingComponent = dataBindingComponent;
@@ -48,14 +51,15 @@ public class WhichOneVideoOptionAdapter extends DataBoundListAdapter<List<String
     public final DataBoundViewHolder<ItemWhichOneVideoOptionBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
         ItemWhichOneVideoOptionBinding binding = createBinding(parent);
         DataBoundViewHolder<ItemWhichOneVideoOptionBinding> viewHolder = new DataBoundViewHolder<>(binding);
-        binding.getRoot().setOnFocusChangeListener((view, hasFocus) -> {
-            if(hasFocus){
+
+
+        binding.getRoot().setOnClickListener(view -> {
                 final int position = viewHolder.getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION && clickCallback != null) {
                     clickCallback.onClick(position);
                 }
-            }
-        });
+            });
+
         return viewHolder;
     }
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.diezsiete.lscapp.databinding.ItemVideoBinding;
 import com.diezsiete.lscapp.ui.common.DataBoundListAdapter;
 import com.diezsiete.lscapp.ui.common.DataBoundViewHolder;
+import com.diezsiete.lscapp.vo.PracticeWithData;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.utils.signvideoplayer.SignVideoPlayerHelper;
@@ -36,14 +37,6 @@ public class WhichOneVideosAdapter extends DataBoundListAdapter<List<String>, It
     public final DataBoundViewHolder<ItemVideoBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
         ItemVideoBinding binding = createBinding(parent);
         DataBoundViewHolder<ItemVideoBinding> viewHolder = new DataBoundViewHolder<>(binding);
-        binding.getRoot().setOnFocusChangeListener((view, hasFocus) -> {
-            if(hasFocus){
-                final int position = viewHolder.getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    clickCallback.onClick(position);
-                }
-            }
-        });
         return viewHolder;
     }
 

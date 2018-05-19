@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -24,29 +25,25 @@ import javax.inject.Inject;
 
 
 @SuppressLint("ViewConstructor")
-public class DiscoverImageImagesView extends FrameLayout {
-
-    protected DataBindingComponent dataBindingComponent;
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
-    protected LayoutInflater layoutInflater;
+public class DiscoverImageImagesView extends PracticeView {
 
     public DiscoverImageImagesView(Fragment fragment) {
-        super(fragment.getContext());
-        layoutInflater = LayoutInflater.from(fragment.getContext());
+        super(fragment);
+    }
 
+    private boolean practiceCompleted = false;
+
+    @Override
+    protected void bind() {
         PracticeDiscoverImageImagesBinding binding = DataBindingUtil.inflate(
                 layoutInflater, R.layout.practice_discover_image_images, this, true);
 
-        PracticeViewModel practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
-
-        PracticeWithData practice = practiceViewModel.getCurrentPracticeWithData();
-
         DiscoverImageGridAdapter adapter = new DiscoverImageGridAdapter(getContext(), optionIndex -> {
-            List<Integer> answerUserList = new ArrayList<>();
-            answerUserList.add(optionIndex);
-            practiceViewModel.setAnswerUser(answerUserList);
-            Log.d("JOSE", "optionIndex : " + optionIndex);
+            if(!practiceCompleted) {
+                List<Integer> answerUserList = new ArrayList<>();
+                answerUserList.add(optionIndex);
+                practiceViewModel.setAnswerUser(answerUserList);
+            }
         });
 
         RecyclerView gridView = binding.gridView;
@@ -55,12 +52,27 @@ public class DiscoverImageImagesView extends FrameLayout {
         gridView.setLayoutManager(sglm);
         gridView.setAdapter(adapter);
 
-        for(Picture picture : practice.getPictures()) {
-            picture.width = 150;
-            picture.height = (int) (50 + Math.random() * 450);
-            adapter.addDrawable(picture);
-        }
-        adapter.notifyDataSetChanged();
+        addPracticeObserver(new PracticeObserver() {
+            @Override
+            public void onPracticeChanged(PracticeWithData practice) {
+                binding.setPractice(practice);
+
+                if(practice.getAnswerUser() == null) {
+                    for(Picture picture : practice.getPictures()) {
+                        picture.width = 150;
+                        picture.height = (int) (50 + Math.random() * 450);
+                        adapter.addDrawable(picture);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                if(practice.getCompleted())
+                    practiceCompleted = true;
+            }
+        });
     }
 
+    @Override
+    protected ViewDataBinding createPracticeContentView() {
+        return null;
+    }
 }

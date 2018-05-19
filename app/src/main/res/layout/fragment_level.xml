@@ -23,9 +23,6 @@
             android:background="@color/lesson_title_background"
             android:textColor="@android:color/white"
             android:padding="@dimen/spacing_simple"
-            android:layout_marginStart="@dimen/spacing_simple"
-            android:layout_marginEnd="@dimen/spacing_simple"
-            android:layout_marginTop="@dimen/spacing_single"
             android:elevation="2dp"
              />
 

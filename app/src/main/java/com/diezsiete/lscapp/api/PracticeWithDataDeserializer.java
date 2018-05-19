@@ -1,6 +1,7 @@
 package com.diezsiete.lscapp.api;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeVideos;
@@ -60,6 +61,8 @@ PracticeWithDataDeserializer implements JsonDeserializer {
         Practice practice = new Practice(code);
         practice.answer = jsonElementToIntList(jsonObject.get("answer"));
         practice.pictures = jsonElementToStringList(jsonObject.get("pictures"));
+
+        Log.d("JOSE", "DESERIALIZE : " + code);
 
         List<PracticeWords> practiceWords = new ArrayList<>();
 

@@ -79,10 +79,13 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
 
         mainActivityViewModel.setToolbarData(getString(R.string.sign_practice),
             "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)), "");
+
+        binding.get().setCallback(() -> levelViewModel.refresh());
     }
 
     private void initRecyclerView() {
         levelViewModel.getResults().observe(this, result -> {
+            binding.get().setResource(result);
             adapter.get().replace(result == null ? null : result.data);
             binding.get().executePendingBindings();
         });

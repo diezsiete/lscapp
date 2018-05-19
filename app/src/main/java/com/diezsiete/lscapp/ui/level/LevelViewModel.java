@@ -52,4 +52,8 @@ public class LevelViewModel extends ViewModel{
             return;
         this.levelId.setValue(levelId);
     }
+
+    public void refresh() {
+
+    }
 }

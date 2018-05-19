@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#008484</color>
     <color name="colorAccent">#F7605D</color>
     <color name="colorPopUpBackgroud">#5a000000</color>
-
+    <color name="transparent">#00ffffff</color>
     <color name="touch_effect">#9ccc</color>
 
     <color name="word_selector_token">#CCCCCC</color>
@@ -23,6 +23,8 @@
     <color name="practice_question">#EBEBEB</color>
     <color name="show_sign_word">#EBEBEB</color>
     <color name="practice_item_bg">#afafaf</color>
-    <color name="practice_item_sel">#00AB81</color>
-    <color name="practice_answer_back">#0f000000</color>
+    <color name="practice_item_sel">#00799D</color>
+    <color name="practice_answer_back">#1e000000</color>
+    <color name="answer_success">#00AB81</color>
+    <color name="answer_danger">#8af7605d</color>
 </resources>

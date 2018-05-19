@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="practice"
+            type="com.diezsiete.lscapp.vo.PracticeWithData" />
+    </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
+
+        <com.diezsiete.lscapp.ui.view.LSCRecyclerView
             android:id="@+id/grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="10dp"
+            android:padding="@dimen/spacing_nano"
+            android:clipToPadding="false"
+            android:transitionGroup="false"
+            app:practice="@{practice}"
             />
 
     </android.support.constraint.ConstraintLayout>

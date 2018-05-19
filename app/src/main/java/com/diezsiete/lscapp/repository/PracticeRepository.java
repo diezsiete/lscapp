@@ -209,13 +209,27 @@ public class PracticeRepository {
 
         RequestBody filePart = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part formData = MultipartBody.Part.createFormData("file", file.getName(), filePart);
-        Call<TakeSignResponse> call = webservice.uploadPhoto(tag, formData);
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://18.208.61.61:12345")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        Webservice client = retrofit.create(Webservice.class);
+
+
+        Call<TakeSignResponse> call = client.uploadPhoto(tag, formData);
         call.enqueue(new Callback<TakeSignResponse>() {
             @Override
             public void onResponse(Call<TakeSignResponse> call, Response<TakeSignResponse> response) {
-                TakeSignResponse tsResponse = response.body();
-                practice.setUserAnswer(tsResponse.hit ? 1 : 0);
-                updatePractice(practice.entity);
+                ApiResponse<TakeSignResponse> apiResponse = new ApiResponse<>(response);
+                if(apiResponse.isSuccessful()){
+                    TakeSignResponse tsResponse = apiResponse.body;
+                    practice.setUserAnswer(tsResponse.hit ? 1 : 0);
+                    updatePractice(practice.entity);
+                }else{
+                    Log.e("CNTK", "ERROR : " + apiResponse.errorMessage);
+                    practice.setUserAnswer(1);
+                    updatePractice(practice.entity);
+                }
+
             }
 
             @Override

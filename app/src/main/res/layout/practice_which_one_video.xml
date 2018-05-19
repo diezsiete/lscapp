@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="java.util.List"/>
+        <variable
+            name="videoUrl"
+            type="List&lt;String&gt;" />
         <variable
             name="practice"
             type="com.diezsiete.lscapp.vo.PracticeWithData" />
@@ -25,11 +29,12 @@
             android:layout_height="@dimen/exoplayer_medium"
             app:controller_layout_id="@layout/signplayer_custom_playback_control"
             app:use_controller="true"
-            app:practiceVideo="@{practice.getVideo()}"
+            app:practiceVideo="@{videoUrl}"
+            app:play="@{true}"
             />
 
 
-        <android.support.v7.widget.RecyclerView
+        <com.diezsiete.lscapp.ui.view.LSCRecyclerView
             android:id="@+id/grid_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +43,7 @@
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             android:transitionGroup="false"
             app:spanCount="2" tools:ignore="UnusedAttribute"
+            app:practice="@{practice}"
             />
 
     </LinearLayout>

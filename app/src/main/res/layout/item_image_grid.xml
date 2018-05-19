@@ -5,7 +5,6 @@
     android:padding="@dimen/spacing_single"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true"
     android:background="@drawable/selector_button_white"
     >
 

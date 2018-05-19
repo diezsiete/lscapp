@@ -26,8 +26,12 @@ public class ShowSignView extends PracticeView {
                 layoutInflater, R.layout.practice_show_sign, this, false, dataBindingComponent);
 
 
-        PracticeWithData practice = practiceViewModel.getCurrentPracticeWithData();
-        binding.setPractice(practice);
+        addPracticeObserver(new PracticeObserver() {
+            @Override
+            public void onPracticeChanged(PracticeWithData practice) {
+                binding.setPractice(practice);
+            }
+        });
 
         return binding;
     }

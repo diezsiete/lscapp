@@ -79,7 +79,7 @@ public class SignCameraHelper {
     private String cameraId;
     private Size imageDimension;
 
-    private int cameraListIndex = 0;
+    private int cameraListIndex = 1;
 
 
     public SignCameraHelper(Activity activity, TextureView textureView, View button, CameraEvents cameraEvents) {
@@ -135,7 +135,6 @@ public class SignCameraHelper {
     }
 
     private void openCamera() {
-        Log.d("JOSE", mActivity == null ? "Activity null" : "Activity not null");
         CameraManager manager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
         Log.e(TAG, "is camera open");
         try {
@@ -236,7 +235,7 @@ public class SignCameraHelper {
                     super.onCaptureCompleted(session, request, result);
                     //Toast.makeText(mActivity, "Saved:" + mFile, Toast.LENGTH_SHORT).show();
                     mCameraEventListener.onPhotoTaken(mFile);
-                    createCameraPreview();
+                    //createCameraPreview();
                 }
             };
             mCameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {

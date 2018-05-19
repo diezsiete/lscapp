@@ -44,12 +44,11 @@ public class DiscoverImageGridAdapter extends RecyclerView.Adapter {
         holder.positionTextView = (TextView) itemView.findViewById(R.id.item_position_view);
         itemView.setTag(holder);
 
-        itemView.setOnFocusChangeListener((view, hasFocus) -> {
-            if(hasFocus) {
-                final int adapterPostion = holder.getAdapterPosition();
-                if (adapterPostion != RecyclerView.NO_POSITION) {
-                    clickCallback.onClick(adapterPostion);
-                }
+
+        itemView.setOnClickListener(view -> {
+            final int adapterPostion = holder.getAdapterPosition();
+            if (adapterPostion != RecyclerView.NO_POSITION) {
+                clickCallback.onClick(adapterPostion);
             }
         });
 

@@ -24,6 +24,7 @@
             app:controller_layout_id="@layout/signplayer_custom_playback_control"
             app:use_controller="true"
             app:practiceVideo="@{practice.getVideo()}"
+            app:play="@{true}"
             />
     </LinearLayout>
 </layout>

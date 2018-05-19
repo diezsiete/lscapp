@@ -23,7 +23,7 @@ import com.diezsiete.lscapp.vo.Word;
         Word.class,
         User.class
     },
-    version = 36,
+    version = 38,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {

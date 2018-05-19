@@ -4,19 +4,14 @@
     <item>
         <shape>
             <gradient
-                android:startColor="#FFFFFF"
-                android:endColor="#FFFFFF"
+                android:startColor="#97DD44"
+                android:endColor="#97DD44"
                 android:angle="270" />
             <stroke
                 android:width="4dp"
                 android:color="#97DD44" />
             <corners
                 android:radius="6dp" />
-            <padding
-                android:left="10dp"
-                android:top="@dimen/spacing_double"
-                android:right="10dp"
-                android:bottom="@dimen/spacing_double" />
         </shape>
     </item>
 </selector>

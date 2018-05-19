@@ -16,7 +16,7 @@
         android:textColor="@android:color/white"
         android:clickable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
+        android:focusableInTouchMode="false"
         android:layout_marginStart="@dimen/spacing_double"
         android:layout_marginEnd="@dimen/spacing_double"
         android:layout_marginTop="@dimen/spacing_simple"

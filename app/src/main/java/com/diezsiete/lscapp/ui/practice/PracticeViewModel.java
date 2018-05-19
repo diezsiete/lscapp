@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.diezsiete.lscapp.api.ApiResponse;
 import com.diezsiete.lscapp.db.LSCAppTypeConverters;
@@ -29,13 +30,17 @@ import javax.inject.Inject;
 public class PracticeViewModel extends ViewModel {
     //private final LiveData<Resource<List<Practice>>> practices;
     //private final LiveData<List<String>> practicesCodes;
+
     private final MediatorLiveData<List<String>> practicesCodesMediator = new MediatorLiveData<>();
+    private final MediatorLiveData<PracticeWithData> practiceMediator = new MediatorLiveData<>();
+    private final List<practiceMediatorCallback> practiceMediatorCallbacks = new ArrayList<>();
+
     private final LiveData<Resource<List<PracticeWithData>>> practicesWithData;
     private final LiveData<PracticeWithData> practice;
     private final MutableLiveData<Integer> currentPracticeId = new MutableLiveData<>();
     private final MutableLiveData<String> lessonId = new MutableLiveData<>();
     private final MutableLiveData<String> goToLevel = new MutableLiveData<>();
-    //private final MediatorLiveData practiceMediator = new MediatorLiveData<>();
+
 
 
     private int currentPracticeIndex = 0;
@@ -75,13 +80,15 @@ public class PracticeViewModel extends ViewModel {
             }
         });
 
-        Transformations.switchMap(mediator, id -> {
+
+
+        /*Transformations.switchMap(mediator, id -> {
             if (id.isEmpty()) {
                 return AbsentLiveData.create();
             }else {
                 return practiceRepository.loadPracticesWithDataByLessonId(id);
             }
-        });
+        });*/
 
         practicesWithData = Transformations.switchMap(mediator, id -> {
             if (id.isEmpty()) {
@@ -109,6 +116,8 @@ public class PracticeViewModel extends ViewModel {
                 for (PracticeWithData practiceWithData : practices.data)
                     codes.add(practiceWithData.entity.code);
                 practicesCodesMediator.setValue(codes);
+
+                currentPracticeId.setValue(getCurrentPracticeWithData().entity.id);
             }
         });
 
@@ -121,6 +130,14 @@ public class PracticeViewModel extends ViewModel {
             }
         });
 
+
+        practiceMediator.addSource(practice, p -> {
+            if(p != null){
+                practiceMediator.setValue(p);
+                for(int i = 0; i < practiceMediatorCallbacks.size(); i++)
+                    practiceMediatorCallbacks.get(i).execute(p);
+            }
+        });
 
 
 
@@ -149,14 +166,21 @@ public class PracticeViewModel extends ViewModel {
         PracticeWithData practice = this.practice.getValue();
         String practiceAnswer = practice.getStringAnswer();
         boolean ok = practice.validateAnswer();
+
+
+        practiceMediatorCallbacks.add(practiceCallback -> {
+            practiceMediatorCallbacks.clear();
+
+            if(practice.entity.code.equals("show-sign")){
+                setShowNext();
+            }else{
+                AnswerMessage message = ok ? AnswerMessage.success(practiceAnswer) : AnswerMessage.danger(practiceAnswer);
+                answerMessage.setValue(message);
+            }
+        });
         practiceRepository.updatePractice(practice.entity);
 
-        if(practice.entity.code.equals("show-sign")){
-            setShowNext();
-        }else{
-            AnswerMessage message = ok ? AnswerMessage.success(practiceAnswer) : AnswerMessage.danger(practiceAnswer);
-            answerMessage.setValue(message);
-        }
+
 
     }
 
@@ -171,9 +195,13 @@ public class PracticeViewModel extends ViewModel {
 
     public LiveData<PracticeWithData> getCurrentPractice() {
         fetch = false;
-        return practice;
+        //return practice;
+        return practiceMediator;
     }
 
+    /**
+     * @Deprecated
+     */
     public void startNewPractice(){
         currentPracticeId.setValue(getCurrentPracticeWithData().entity.id);
     }
@@ -187,17 +215,26 @@ public class PracticeViewModel extends ViewModel {
     }
 
     public void setShowNext() {
-        int practicesSize = practicesCodesMediator.getValue().size();
+        final int practicesSize = practicesCodesMediator.getValue().size();
         if(currentPracticeIndex < practicesSize) {
-            answerMessage.setValue(null);
             currentPracticeIndex++;
-            int progressBarPos = currentPracticeIndex * 100 / practicesSize;
-            lessonRepository.updateLessonProgress(this.lessonId.getValue(), progressBarPos);
-            if(currentPracticeIndex < practicesSize)
+
+            practiceMediatorCallbacks.add(practice -> {
+                practiceMediatorCallbacks.clear();
+                answerMessage.setValue(null);
+                int progressBarPos = currentPracticeIndex * 100 / practicesSize;
+                lessonRepository.updateLessonProgress(this.lessonId.getValue(), progressBarPos);
                 this.showNext.setValue(true);
+            });
+
+            if(currentPracticeIndex < practicesSize)
+                currentPracticeId.setValue(getCurrentPracticeWithData().entity.id);
+            else{
+                int progressBarPos = currentPracticeIndex * 100 / practicesSize;
+                lessonRepository.updateLessonProgress(this.lessonId.getValue(), progressBarPos);
+            }
         }
     }
-
 
     public LiveData<Boolean> showNext() {
         return showNext;
@@ -216,18 +253,17 @@ public class PracticeViewModel extends ViewModel {
     }
 
     public void postCntk(File file){
-        /*practiceMediator.addSource(practice, new Observer<PracticeWithData>() {
-            @Override
-            public void onChanged(@Nullable PracticeWithData practiceWithData) {
-                int i = 0;
-                if(practiceWithData != null && practiceWithData.getAnswerUser() != 2){
-                    practiceMediator.removeSource(practice);
-                    saveAnswer();
-                }
+        practiceMediatorCallbacks.add(takeSignPractice -> {
+            if(takeSignPractice.getAnswerUser() != 2){
+                practiceMediatorCallbacks.clear();
+                saveAnswer();
             }
-        });*/
-
+        });
         practiceRepository.postCntk(practice.getValue(), getCurrentPracticeWithData().getWord(), file);
+    }
+
+    private interface practiceMediatorCallback {
+        public void execute(PracticeWithData practice);
     }
 
 }
