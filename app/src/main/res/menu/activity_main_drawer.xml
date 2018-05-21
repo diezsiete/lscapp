@@ -12,15 +12,11 @@
             android:id="@+id/nav_dictionary"
             android:icon="@drawable/ic_library_books_black"
             android:title="@string/dictionary" />
-        <item
-            android:id="@+id/nav_leaderboard"
-            android:icon="@drawable/ic_language_black"
-            android:title="@string/leaderboard" />
 
         <item
-            android:id="@+id/nav_configuration"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/configuration" />
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/profile" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_outline_black"

@@ -137,11 +137,8 @@ public class MainActivity extends AppCompatActivity
             navigationController.navigateToLevelSelection();
         } else if (id == R.id.nav_dictionary) {
             navigationController.navigateToDictionary();
-        } else if (id == R.id.nav_leaderboard) {
-
-        } else if (id == R.id.nav_configuration) {
+        } else if (id == R.id.nav_profile) {
             //attachFragment(SettingsFragment.newInstance());
-
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_sign_out) {
