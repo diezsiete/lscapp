@@ -10,4 +10,7 @@ import com.diezsiete.lscapp.db.entity.User;
 public interface UserDao extends BaseDao<User> {
     @Query("SELECT * FROM user LIMIT 1")
     LiveData<User> load();
+
+    @Query("DELETE FROM user")
+    void deleteAll();
 }

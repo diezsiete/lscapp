@@ -113,6 +113,10 @@ public class UserViewModel extends ViewModel{
         return authenticatedUser;
     }
 
+    public void logout(){
+        userRepository.delete();
+    }
+
 
     public static class UserValidation {
         public String email;

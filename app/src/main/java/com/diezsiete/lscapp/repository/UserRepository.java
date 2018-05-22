@@ -44,6 +44,10 @@ public class UserRepository {
         return userDao.load();
     }
 
+    public void delete() {
+        this.appExecutors.diskIO().execute(userDao::deleteAll);
+    }
+
     public LiveData<Resource<User>> register(String email, String password, String passwordConfirm) {
         return new NetworkBoundResource<User, Authentication>(appExecutors) {
             @Override
