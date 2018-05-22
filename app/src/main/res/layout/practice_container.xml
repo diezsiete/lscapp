@@ -49,9 +49,8 @@
             android:src="@drawable/ic_arrow_forward_white"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
-            android:background="@drawable/button_style"
-            android:backgroundTint="@{practiceWithData.lesson.color}"
             android:onClick="@{() -> practiceView.onClickSubmitAnswer()}"
+            app:backgroundButton="@{practiceWithData.lesson.color}"
             app:buttonEnable="@{practiceView.enableSave(practiceWithData)}"
             android:layout_margin="@dimen/spacing_single"
             />

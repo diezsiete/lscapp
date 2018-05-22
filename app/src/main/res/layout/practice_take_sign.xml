@@ -10,6 +10,9 @@
         <variable
             name="practice"
             type="com.diezsiete.lscapp.vo.PracticeWithData" />
+        <variable
+            name="takeSignView"
+            type="com.diezsiete.lscapp.ui.practice.TakeSignView" />
     </data>
 
 
@@ -45,7 +48,9 @@
                 <TextureView
                     android:id="@+id/texture"
                     android:layout_width="300dp"
-                    android:layout_height="300dp" />
+                    android:layout_height="300dp"
+                    app:signCamera="@{true}"
+                    />
 
                 <ProgressBar
                     android:id="@+id/pb_takesign"
@@ -73,6 +78,7 @@
                     android:layout_marginEnd="@dimen/spacing_double"
                     android:layout_marginBottom="@dimen/spacing_single"
                     android:visibility="@{practice.answerUser == null || practice.answerUser == 2 ? View.VISIBLE : View.INVISIBLE}"
+                    android:onClick="@{() -> takeSignView.onClickTakePhoto()}"
                     />
 
             </android.support.v7.widget.CardView>

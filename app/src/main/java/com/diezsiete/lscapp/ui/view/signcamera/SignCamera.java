@@ -1,4 +1,4 @@
-package com.diezsiete.lscapp.ui.widget;
+package com.diezsiete.lscapp.ui.view.signcamera;
 
 
 import android.Manifest;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SignCameraHelper {
+public class SignCamera {
     private CameraEvents mCameraEventListener;
     private static final String TAG = "SignCameraHelper";
 
@@ -55,19 +55,14 @@ public class SignCameraHelper {
         ORIENTATIONS.append(Surface.ROTATION_180, 90);
         ORIENTATIONS.append(Surface.ROTATION_270, 0);
     }
-    private String[] PERMISSIONS = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-    };
-    private static final int PERMISSION_ALL = 105;
 
     private Activity mActivity;
     private TextureView mTextureView;
     private View mTakePictureButton;
-    private boolean mPermissionsGranted = false;
+
 
     private CameraDevice mCameraDevice;
+    private ImageReader mImageReader;
     private CaptureRequest.Builder mCaptureRequestBuilder;
     private CameraCaptureSession mCameraCaptureSessions;
     private HandlerThread mBackgroundThread;
@@ -82,7 +77,18 @@ public class SignCameraHelper {
     private int cameraListIndex = 1;
 
 
-    public SignCameraHelper(Activity activity, TextureView textureView, View button, CameraEvents cameraEvents) {
+    public SignCamera(Activity activity, CameraEvents cameraEvents) {
+        mActivity = activity;
+        mCameraEventListener = cameraEvents;
+    }
+
+    public void setTexture(TextureView textureView) {
+        mTextureView = textureView;
+        mTextureView.setSurfaceTextureListener(textureListener);
+    }
+
+
+    public SignCamera(Activity activity, TextureView textureView, View button, CameraEvents cameraEvents) {
         mActivity = activity;
         mTextureView = textureView;
         mTakePictureButton = button;
@@ -100,15 +106,11 @@ public class SignCameraHelper {
     }
 
     public void start() {
-        mPermissionsGranted = hasAllPermissions(mActivity, PERMISSIONS);
-        if (!mPermissionsGranted) {
-            ActivityCompat.requestPermissions(mActivity, PERMISSIONS, PERMISSION_ALL);
-        }
+
 
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
-            //openCamera();
-            setupCameraIfPossible();
+            openCamera();
         } else {
             mTextureView.setSurfaceTextureListener(textureListener);
         }
@@ -117,14 +119,6 @@ public class SignCameraHelper {
     public void stop() {
         closeCamera();
         stopBackgroundThread();
-    }
-
-
-
-    private void setupCameraIfPossible() {
-        if (mPermissionsGranted) {
-            openCamera();
-        }
     }
 
     private String getCameraId(CameraManager manager) throws CameraAccessException{
@@ -151,7 +145,14 @@ public class SignCameraHelper {
         Log.e(TAG, "openCamera : " + cameraId);
     }
     private void closeCamera() {
-
+        if (null != mCameraDevice) {
+            mCameraDevice.close();
+            mCameraDevice = null;
+        }
+        if (null != mImageReader) {
+            mImageReader.close();
+            mImageReader = null;
+        }
     }
 
     protected void createCameraPreview() {
@@ -195,7 +196,7 @@ public class SignCameraHelper {
         }
     }
 
-    private void takePicture() {
+    public void takePicture() {
         if(null == mCameraDevice) {
             Log.e(TAG, "cameraDevice is null");
             return;
@@ -213,12 +214,12 @@ public class SignCameraHelper {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
             }
-            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            mImageReader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
             List<Surface> outputSurfaces = new ArrayList<Surface>(2);
-            outputSurfaces.add(reader.getSurface());
+            outputSurfaces.add(mImageReader.getSurface());
             outputSurfaces.add(new Surface(mTextureView.getSurfaceTexture()));
             final CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(reader.getSurface());
+            captureBuilder.addTarget(mImageReader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             // Orientation
             int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
@@ -228,7 +229,7 @@ public class SignCameraHelper {
             mInt++;
 
 
-            reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+            mImageReader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
@@ -272,23 +273,11 @@ public class SignCameraHelper {
         }
     }
 
-    private static boolean hasAllPermissions(Context context, String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     private TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
-            //openCamera();
-            setupCameraIfPossible();
+            openCamera();
         }
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -354,12 +343,6 @@ public class SignCameraHelper {
             }
         }
     };
-
-    public void rotate(){
-        stop();
-        cameraListIndex = cameraListIndex == 0 ? 1 : 0;
-        start();
-    }
 
     public interface CameraEvents {
         public void onPhotoTaken(File file);

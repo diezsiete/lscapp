@@ -21,10 +21,13 @@ import android.app.Activity;
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
@@ -36,8 +39,10 @@ import android.widget.ProgressBar;
 //import com.bumptech.glide.Glide;
 
 //import com.bumptech.glide.Glide;
+import com.diezsiete.lscapp.ui.MainActivity;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
 import com.diezsiete.lscapp.ui.lesson.LessonFragment;
+import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
 import com.diezsiete.lscapp.util.signvideo.SignVideo;
 import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
@@ -101,7 +106,6 @@ public class FragmentBindingAdapters {
         }
     }
 
-
     @BindingAdapter(value={"practiceVideo", "position", "play"}, requireAll = false)
     public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position, boolean play) {
         Log.d("JOSE", TAG + " bindPracticeVideo position[" + position + "]" );
@@ -121,6 +125,14 @@ public class FragmentBindingAdapters {
                 signVideo.play();
             else
                 signVideo.stop();
+        }
+    }
+
+    @BindingAdapter("signCamera")
+    public void bindSignCamera(TextureView view, boolean signCamera) {
+        if(signCamera){
+            SignCameraManager signCameraManager = ((MainActivity) fragment.getActivity()).getSignCameraManager();
+            signCameraManager.setTexture(view).startSignCamera();
         }
     }
 
@@ -189,25 +201,25 @@ public class FragmentBindingAdapters {
     }
 
 
-
-    @BindingAdapter("android:backgroundTint")
-    public void imageButtonBackgroundTintHex(ImageButton button, String color) {
-        if(color != null && !color.isEmpty()) {
-            Drawable buttonDrawable = button.getBackground();
-            buttonDrawable = DrawableCompat.wrap(buttonDrawable);
-            //the color is a direct color int and not a color resource
-            DrawableCompat.setTint(buttonDrawable, Color.parseColor(color));
-            button.setBackground(buttonDrawable);
-        }
+    @BindingAdapter("backgroundButton")
+    public void backgroundButtonDrawable(Button button, String color) {
+        setBackgroundButtonDrawable(button, color);
     }
-    @BindingAdapter("android:backgroundTint")
-    public void buttonBackgroundTintHex(Button button, String color) {
-        if(color != null && !color.isEmpty()) {
-            Drawable buttonDrawable = button.getBackground();
-            buttonDrawable = DrawableCompat.wrap(buttonDrawable);
-            //the color is a direct color int and not a color resource
-            DrawableCompat.setTint(buttonDrawable, Color.parseColor(color));
-            button.setBackground(buttonDrawable);
+
+    @BindingAdapter("backgroundButton")
+    public void backgroundImageButtonDrawable(ImageButton button, String color){
+        setBackgroundButtonDrawable(button, color);
+    }
+
+    private void setBackgroundButtonDrawable(View button, String color) {
+        if(color != null && !color.isEmpty()){
+            int intColor = Color.parseColor(color);
+            GradientDrawable gradient = new GradientDrawable(
+                    GradientDrawable.Orientation.BOTTOM_TOP, new int[]  {intColor, intColor});
+            gradient.setShape(GradientDrawable.RECTANGLE);
+            gradient.setCornerRadius(10.f);
+            button.setBackgroundResource(0);
+            button.setBackground(gradient);
         }
     }
 }

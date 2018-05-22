@@ -21,9 +21,6 @@ import android.view.View;
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.vo.PracticeWithData;
 
-/*@InverseBindingMethods(value = {
-        @InverseBindingMethod(type = LSCRecyclerView.class, attribute = "answer")
-})*/
 public class LSCRecyclerView extends RecyclerView {
     public View viewPrevSel;
 
@@ -47,27 +44,18 @@ public class LSCRecyclerView extends RecyclerView {
                 View answer = view.getLayoutManager().findViewByPosition(practice.getAnswer());
                 if(answerUser != null && answer != null) {
                     if (!practice.getCompleted()) {
-                        answerSetSelected(view, answerUser);
+                        answerUser.setSelected(true);
+                        if(view.viewPrevSel != null)
+                            view.viewPrevSel.setSelected(false);
+                        view.viewPrevSel = answerUser;
                     }else if (!practice.getAnswerCorrect()) {
                         setAnswerDrawable(answer, R.color.answer_success);
                         setAnswerDrawable(answerUser, R.color.answer_danger);
-                        /*Drawable drawable = childAnswerUser.getBackground();
-                        drawable = DrawableCompat.wrap(drawable);
-                        //the color is a direct color int and not a color resource
-                        DrawableCompat.setTint(drawable, Color.parseColor("#8ddd2c38"));
-                        childAnswerUser.setBackground(drawable);*/
                     }else
                         setAnswerDrawable(answerUser, R.color.answer_success);
                 }
             }
         }
-    }
-
-    private static void answerSetSelected(LSCRecyclerView view, View answer) {
-        answer.setSelected(true);
-        if(view.viewPrevSel != null)
-            view.viewPrevSel.setSelected(false);
-        view.viewPrevSel = answer;
     }
 
     private static void setAnswerDrawable(View answer, @ColorRes int colorRes) {

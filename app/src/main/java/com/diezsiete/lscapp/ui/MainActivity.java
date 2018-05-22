@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
@@ -28,6 +30,7 @@ import com.diezsiete.lscapp.databinding.ActivityMainBinding;
 import com.diezsiete.lscapp.ui.common.NavigationController;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryViewModel;
 import com.diezsiete.lscapp.ui.level.LevelViewModel;
+import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
 
 import javax.inject.Inject;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     private MainActivityViewModel mainActivityViewModel;
     private DictionaryViewModel dictionaryViewModel;
     private UserViewModel userViewModel;
+
+    private SignCameraManager signCameraManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,5 +152,33 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawers();
         return true;
+    }
+
+    //TODO
+    private  static final int REQUEST_CAMERA_RESULT = 105;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // Called when you request permission to read and write to external storage
+        Log.d("JOSE", "onRequestPermissionsResult : " + requestCode);
+        switch (requestCode) {
+            case REQUEST_CAMERA_RESULT: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                    Toast.makeText(this, "EXITO", Toast.LENGTH_SHORT).show();
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
+
+    public SignCameraManager getSignCameraManager() {
+        if(signCameraManager == null){
+            signCameraManager = new SignCameraManager(this, getLifecycle());
+        }
+        return signCameraManager;
     }
 }

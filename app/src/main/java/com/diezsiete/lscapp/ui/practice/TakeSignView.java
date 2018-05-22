@@ -6,17 +6,18 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.View;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.databinding.PracticeTakeSignBinding;
-import com.diezsiete.lscapp.ui.widget.SignCameraHelper;
+import com.diezsiete.lscapp.ui.MainActivity;
+import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
+import com.diezsiete.lscapp.vo.PracticeWithData;
 
 
 @SuppressLint("ViewConstructor")
 public class TakeSignView extends PracticeView {
 
-    SignCameraHelper cameraHelper;
+    private SignCameraManager signCameraManager;
 
     public TakeSignView(Fragment fragment) {
         super(fragment);
@@ -24,37 +25,26 @@ public class TakeSignView extends PracticeView {
 
     protected ViewDataBinding createPracticeContentView() {
         PracticeTakeSignBinding binding = DataBindingUtil.inflate(
-                layoutInflater, R.layout.practice_take_sign, this, false);
+                layoutInflater, R.layout.practice_take_sign, this, false, dataBindingComponent);
+        binding.setTakeSignView(this);
 
-
-        practiceViewModel.getCurrentPractice().observe(fragment, practiceWithData -> {
-            if(practiceWithData != null && practiceWithData.entity.code.equals("take-sign")) {
-                binding.setPractice(practiceWithData);
-                if(practiceWithData.getAnswerUser() != null && practiceWithData.getAnswerUser() != 2){
-                    //practiceViewModel.saveAnswer();
-                    //cameraHelper.rotate();
-                }
+        addPracticeObserver(new PracticeObserver() {
+            @Override
+            public void onPracticeChanged(PracticeWithData practice) {
+                binding.setPractice(practice);
+                setPracticeQuestion(practice.getQuestion());
             }
         });
 
-        cameraHelper = new SignCameraHelper(
-                (Activity) getContext(), binding.texture, binding.btnTakepicture, foto -> {
+        signCameraManager = ((MainActivity) fragment.getActivity()).getSignCameraManager();
+        signCameraManager.setListener(foto -> {
             practiceViewModel.postCntk(foto);
-            //cameraHelper.rotate();
         });
-
 
         return binding;
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        cameraHelper.stop();
-    }
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        cameraHelper.start();
+    public void onClickTakePhoto() {
+        signCameraManager.takePicture();
     }
 }

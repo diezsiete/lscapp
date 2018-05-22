@@ -22,6 +22,7 @@ import com.diezsiete.lscapp.ui.MainActivityViewModel;
 import com.diezsiete.lscapp.ui.level.LessonViewModel;
 import com.diezsiete.lscapp.ui.practice.PracticeAdapter;
 import com.diezsiete.lscapp.ui.practice.PracticeViewModel;
+import com.diezsiete.lscapp.ui.view.SignCameraHelper;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.util.signvideo.SignVideoManager;
 
@@ -46,6 +47,14 @@ public class LessonFragment extends Fragment implements Injectable {
     private ObjectAnimator mProgressBarAnimator;
 
     public SignVideoManager videoManager;
+
+    public static LessonFragment create(String lessonId) {
+        LessonFragment lessonFragment = new LessonFragment();
+        Bundle args = new Bundle();
+        args.putString(LESSON_ID_KEY, lessonId);
+        lessonFragment.setArguments(args);
+        return lessonFragment;
+    }
 
     @Nullable
     @Override
@@ -122,12 +131,6 @@ public class LessonFragment extends Fragment implements Injectable {
         binding.get().practiceView.setOutAnimation(this.getContext(), R.animator.practice_left_out);
     }
 
-    public static LessonFragment create(String lessonId) {
-        LessonFragment lessonFragment = new LessonFragment();
-        Bundle args = new Bundle();
-        args.putString(LESSON_ID_KEY, lessonId);
-        lessonFragment.setArguments(args);
-        return lessonFragment;
-    }
+
 
 }
