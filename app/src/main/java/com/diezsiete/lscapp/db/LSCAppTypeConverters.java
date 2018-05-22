@@ -20,7 +20,7 @@ public class LSCAppTypeConverters {
 
     @TypeConverter
     public static String stringListToString(List<String> strings) {
-        return TextUtils.join(",", strings);
+        return strings != null ? TextUtils.join(",", strings) : "";
     }
 
     @SuppressLint("RestrictedApi")

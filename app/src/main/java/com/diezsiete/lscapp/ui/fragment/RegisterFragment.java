@@ -70,9 +70,9 @@ public class RegisterFragment extends Fragment implements Injectable {
             if(userValidation != null)
                 binding.get().setUserValidation(userValidation);
         });
-
-        userViewModel.getGoToMain().observe(this, goToMain -> {
-            if(goToMain != null && goToMain){
+        
+        userViewModel.getAuthenticatedUser().observe(this, userResource -> {
+            if(userResource != null && userResource.data != null){
                 navigationController.navigateToLevelSelection();
             }
         });

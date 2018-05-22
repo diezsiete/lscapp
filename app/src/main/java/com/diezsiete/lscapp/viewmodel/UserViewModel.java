@@ -1,23 +1,16 @@
 package com.diezsiete.lscapp.viewmodel;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.IdRes;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.repository.LevelRepository;
+import com.diezsiete.lscapp.db.entity.User;
 import com.diezsiete.lscapp.repository.UserRepository;
 import com.diezsiete.lscapp.util.AbsentLiveData;
-import com.diezsiete.lscapp.vo.Level;
+import com.diezsiete.lscapp.vo.Authentication;
 import com.diezsiete.lscapp.vo.Resource;
-import com.diezsiete.lscapp.vo.User;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,12 +24,27 @@ public class UserViewModel extends ViewModel{
 
     private final UserRepository userRepository;
 
-    private final MutableLiveData<Boolean> goToMain = new MutableLiveData<>();
+    private MutableLiveData<UserValidation> triggerAuthentication = new MutableLiveData<>();
+
+    private final LiveData<Resource<User>> authenticatedUser;
 
     @Inject
     UserViewModel(UserRepository userRepository) {
         user = userRepository.load();
         this.userRepository = userRepository;
+
+
+        authenticatedUser = Transformations.switchMap(triggerAuthentication, userValidation -> {
+            if (userValidation == null) {
+                return AbsentLiveData.create();
+            }else {
+                //if(!userValidation.passwordConfirm.isEmpty())
+                return userRepository.register(userValidation.email, userValidation.password, userValidation.passwordConfirm);
+                //else
+                    //return userRepository.login(userValidation.email, userValidation.password);
+            }
+        });
+
     }
 
     public LiveData<User> getUser() {
@@ -93,21 +101,17 @@ public class UserViewModel extends ViewModel{
     }
 
     public boolean register(String email, String password, String passwordConfirm){
-        boolean ok = setEmail(email);
-        if(ok)
-            ok = setPassword(password);
-        if(ok)
-            ok = setPasswordConfirm(passwordConfirm);
-        if(ok){
-            userRepository.create(email, password, passwordConfirm, () -> goToMain.setValue(true));
+        boolean ok = false;
+        if(setEmail(email) && setPassword(password) && setPasswordConfirm(passwordConfirm)){
+            triggerAuthentication.setValue(userVali);
+            ok = true;
         }
         return ok;
     }
 
-    public LiveData<Boolean> getGoToMain() {
-        return goToMain;
+    public LiveData<Resource<User>> getAuthenticatedUser(){
+        return authenticatedUser;
     }
-
 
 
     public static class UserValidation {

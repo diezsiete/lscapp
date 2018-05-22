@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 
-import com.diezsiete.lscapp.vo.User;
+import com.diezsiete.lscapp.db.entity.User;
 
 @Dao
 public interface UserDao extends BaseDao<User> {

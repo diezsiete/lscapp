@@ -3,13 +3,13 @@ package com.diezsiete.lscapp.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.diezsiete.lscapp.db.entity.User;
 import com.diezsiete.lscapp.vo.Lesson;
 import com.diezsiete.lscapp.vo.Level;
 import com.diezsiete.lscapp.vo.Practice;
 import com.diezsiete.lscapp.vo.PracticeVideos;
 import com.diezsiete.lscapp.vo.PracticeVideosWord;
 import com.diezsiete.lscapp.vo.PracticeWords;
-import com.diezsiete.lscapp.vo.User;
 import com.diezsiete.lscapp.vo.Word;
 
 @Database(
@@ -23,7 +23,7 @@ import com.diezsiete.lscapp.vo.Word;
         Word.class,
         User.class
     },
-    version = 39,
+    version = 40,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {
