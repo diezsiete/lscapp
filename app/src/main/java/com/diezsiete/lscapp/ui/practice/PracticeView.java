@@ -33,8 +33,8 @@ public abstract class PracticeView extends FrameLayout{
 
     protected LiveData<PracticeWithData> practiceLiveData;
 
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    //@Inject
+    //ViewModelProvider.Factory viewModelFactory;
 
     protected LayoutInflater layoutInflater;
 
@@ -50,7 +50,9 @@ public abstract class PracticeView extends FrameLayout{
         this.fragment = fragment;
 
         dataBindingComponent = new FragmentDataBindingComponent(fragment);
-        practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
+        //practiceViewModel = ViewModelProviders.of(fragment, viewModelFactory).get(PracticeViewModel.class);
+
+        practiceViewModel = ViewModelProviders.of(fragment, ((LessonFragment) fragment).practiceViewModelFactory).get(PracticeViewModel.class);
         layoutInflater = LayoutInflater.from(fragment.getContext());
 
         videoManager = ((LessonFragment) fragment).videoManager;

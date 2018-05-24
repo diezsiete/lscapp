@@ -39,7 +39,7 @@ public class LSCRecyclerView extends RecyclerView {
     @BindingAdapter("practice")
     public static void getPracticeAnswer(LSCRecyclerView view, PracticeWithData practice) {
         if(practice != null) {
-            if(practice.getAnswerUser() != null){
+            if(practice.getAnswerUser() != null && practice.getAnswer() != null){
                 View answerUser = view.getLayoutManager().findViewByPosition(practice.getAnswerUser());
                 View answer = view.getLayoutManager().findViewByPosition(practice.getAnswer());
                 if(answerUser != null && answer != null) {

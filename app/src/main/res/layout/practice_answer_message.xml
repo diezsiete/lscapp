@@ -15,6 +15,7 @@
             type="com.diezsiete.lscapp.vo.Lesson" />
     </data>
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/answer_message_cont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="@{answerMessage != null ? View.VISIBLE : View.INVISIBLE}"

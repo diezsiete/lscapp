@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * taken from https://inducesmile.com/android/android-camera2-api-example-tutorial/
+ */
 public class SignCamera {
     private CameraEvents mCameraEventListener;
     private static final String TAG = "SignCameraHelper";

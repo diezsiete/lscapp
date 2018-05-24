@@ -30,7 +30,7 @@ import retrofit2.http.Path;
 
 public interface Webservice {
     @FormUrlEncoded
-    @POST
+    @POST("/login")
     LiveData<ApiResponse<Authentication>> login(
             @Field("email") String email,
             @Field("password") String password
@@ -43,6 +43,9 @@ public interface Webservice {
             @Field("password") String password,
             @Field("confirmPassword") String confirmPassword
     );
+
+    @GET("/profile/{profileId}")
+    LiveData<ApiResponse<User>> getProfile(@Path("profileId") String profileId);
 
     @GET("/level")
     LiveData<ApiResponse<List<Level>>> getLevels();

@@ -88,4 +88,8 @@ public class LessonViewModel extends ViewModel{
         this.lessonId.setValue(lessonId);
     }
 
+    public void retry() {
+
+    }
+
 }

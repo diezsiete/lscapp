@@ -32,9 +32,13 @@ public class LessonFragment extends Fragment implements Injectable {
     private static final String LESSON_ID_KEY = "lessonId";
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    public ViewModelProvider.Factory lessonViewModelFactory;
+    @Inject
+    public ViewModelProvider.Factory practiceViewModelFactory;
+    @Inject
+    public ViewModelProvider.Factory mainActivityViewModelFactory;
 
-    DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
+    public DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
     AutoClearedValue<FragmentLessonBinding> binding;
     AutoClearedValue<PracticeAdapter> adapter;
@@ -72,9 +76,9 @@ public class LessonFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mainActivityViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(MainActivityViewModel.class);
-        lessonViewModel = ViewModelProviders.of(this, viewModelFactory).get(LessonViewModel.class);
-        practiceViewModel = ViewModelProviders.of(this, viewModelFactory).get(PracticeViewModel.class);
+        mainActivityViewModel = ViewModelProviders.of(getActivity(), mainActivityViewModelFactory).get(MainActivityViewModel.class);
+        lessonViewModel = ViewModelProviders.of(this, lessonViewModelFactory).get(LessonViewModel.class);
+        practiceViewModel = ViewModelProviders.of(this, practiceViewModelFactory).get(PracticeViewModel.class);
 
         binding.get().setViewmodel(practiceViewModel);
 
@@ -105,11 +109,13 @@ public class LessonFragment extends Fragment implements Injectable {
         });
 
         practiceViewModel.showNext().observe(this, result -> {
-            binding.get().practiceView.showNext();
+            if(result != null)
+                binding.get().practiceView.showNext();
         });
 
         practiceViewModel.goToLevel().observe(this, result -> {
-            mainActivityViewModel.goToLevel(result);
+            if(result != null)
+                mainActivityViewModel.goToLevel(result);
         });
 
         videoManager = new SignVideoManager(this.getContext(), getLifecycle());

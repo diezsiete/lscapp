@@ -33,12 +33,14 @@ import javax.inject.Inject;
 public class LevelSelectionFragment extends Fragment implements Injectable {
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    public ViewModelProvider.Factory levelViewModelFactory;
+    @Inject
+    public ViewModelProvider.Factory mainActivityViewModelFactory;
 
     @Inject
-    NavigationController navigationController;
+    public NavigationController navigationController;
 
-    DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
+    public DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
     AutoClearedValue<FragmentLevelSelectionBinding> binding;
 
@@ -63,8 +65,8 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        levelViewModel = ViewModelProviders.of(this, viewModelFactory).get(LevelViewModel.class);
-        mainActivityViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(MainActivityViewModel.class);
+        levelViewModel = ViewModelProviders.of(this, levelViewModelFactory).get(LevelViewModel.class);
+        mainActivityViewModel = ViewModelProviders.of(getActivity(), mainActivityViewModelFactory).get(MainActivityViewModel.class);
 
         initRecyclerView();
         LevelListAdapter rvAdapter = new LevelListAdapter(dataBindingComponent,
@@ -80,7 +82,7 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
         mainActivityViewModel.setToolbarData(getString(R.string.sign_practice),
             "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)), "");
 
-        binding.get().setCallback(() -> levelViewModel.refresh());
+        binding.get().setCallback(() -> levelViewModel.retry());
     }
 
     private void initRecyclerView() {
@@ -89,5 +91,10 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
             adapter.get().replace(result == null ? null : result.data);
             binding.get().executePendingBindings();
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 }

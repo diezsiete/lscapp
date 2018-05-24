@@ -80,6 +80,67 @@ public class UserRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<User>> login(String email, String password) {
+        return new NetworkBoundResource<User, Authentication>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull Authentication item) {
+                if(!item.profileId.isEmpty()){
+                    userDao.insert(new User(item.profileId, email));
+                }
+            }
+            @Override
+            protected boolean shouldFetch(@Nullable User data) {
+                return true;
+            }
+            @NonNull
+            @Override
+            protected LiveData<User> loadFromDb() {
+                return userDao.load();
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Authentication>> createCall() {
+                return webservice.login(email, password);
+            }
+
+            @Override
+            protected void onFetchFailed() {
+
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<User>> getProfile(String profileId) {
+        return new NetworkBoundResource<User, User>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull User item) {
+                userDao.insert(item);
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable User data) {
+                return true;
+            }
+            @NonNull
+            @Override
+            protected LiveData<User> loadFromDb() {
+                return userDao.load();
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<User>> createCall() {
+                return webservice.getProfile(profileId);
+            }
+
+            @Override
+            protected void onFetchFailed() {
+
+            }
+        }.asLiveData();
+    }
+
     public LiveData<Resource<User>> putLessonCompleted(User user, Lesson lesson) {
         return new NetworkBoundResource<User, User>(appExecutors) {
             @Override

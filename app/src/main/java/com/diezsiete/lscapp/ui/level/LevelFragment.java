@@ -42,11 +42,16 @@ public class LevelFragment extends Fragment implements Injectable {
     private static final String LEVEL_ID_KEY = "levelId";
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    public ViewModelProvider.Factory levelViewModelFactory;
     @Inject
-    NavigationController navigationController;
+    public ViewModelProvider.Factory lessonViewModelFactory;
+    @Inject
+    public ViewModelProvider.Factory mainActivityViewModelFactory;
 
-    DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
+    @Inject
+    public NavigationController navigationController;
+
+    public DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
     AutoClearedValue<FragmentLevelBinding> binding;
 
@@ -72,9 +77,9 @@ public class LevelFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        levelViewModel = ViewModelProviders.of(this, viewModelFactory).get(LevelViewModel.class);
-        lessonViewModel = ViewModelProviders.of(this, viewModelFactory).get(LessonViewModel.class);
-        mainActivityViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(MainActivityViewModel.class);
+        levelViewModel = ViewModelProviders.of(this, levelViewModelFactory).get(LevelViewModel.class);
+        lessonViewModel = ViewModelProviders.of(this, lessonViewModelFactory).get(LessonViewModel.class);
+        mainActivityViewModel = ViewModelProviders.of(getActivity(), mainActivityViewModelFactory).get(MainActivityViewModel.class);
 
         Bundle args = getArguments();
         if (args != null && args.containsKey(LEVEL_ID_KEY)) {
@@ -101,12 +106,14 @@ public class LevelFragment extends Fragment implements Injectable {
 
         mainActivityViewModel.setShowBackButton(true);
 
+        binding.get().setCallback(() -> lessonViewModel.retry());
 
         initLessonsList();
     }
 
     private void initLessonsList() {
         lessonViewModel.getResults().observe(this, result -> {
+            binding.get().setResource(result);
             adapter.get().replace(result == null ? null : result.data);
             binding.get().executePendingBindings();
         });

@@ -25,17 +25,18 @@
     </data>
     <LinearLayout android:orientation="vertical"
                   app:visibleGone="@{resource.data == null}"
-                  android:layout_width="wrap_content"
+                  android:layout_width="match_parent"
                   android:gravity="center"
                   android:padding="@dimen/spacing_single"
-                  android:layout_height="wrap_content">
+                  android:layout_height="match_parent">
         <ProgressBar
                 app:visibleGone="@{resource.status == Status.LOADING}"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/progress_bar"
-                android:layout_margin="8dp"/>
+                android:layout_margin="8dp"
+            />
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/api_retry_error"

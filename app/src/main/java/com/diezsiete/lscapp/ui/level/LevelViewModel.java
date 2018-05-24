@@ -53,7 +53,7 @@ public class LevelViewModel extends ViewModel{
         this.levelId.setValue(levelId);
     }
 
-    public void refresh() {
+    public void retry() {
 
     }
 }
