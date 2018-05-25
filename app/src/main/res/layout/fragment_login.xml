@@ -7,6 +7,9 @@
         <variable
             name="loginFragment"
             type="com.diezsiete.lscapp.ui.fragment.LoginFragment" />
+        <variable
+            name="userValidation"
+            type="com.diezsiete.lscapp.viewmodel.UserViewModel.UserValidation" />
     </data>
 
     <LinearLayout
@@ -51,7 +54,10 @@
                         android:hint="@string/prompt_email"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        app:inputValidation="@{userValidation.emailValidation}"
+                        android:text="@{userValidation.email}"
+                        />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -69,7 +75,10 @@
                         android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        app:inputValidation="@{userValidation.passwordValidation}"
+                        android:text="@{userValidation.password}"
+                        />
 
                 </android.support.design.widget.TextInputLayout>
 

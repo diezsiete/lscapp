@@ -38,10 +38,10 @@ public class UserViewModel extends ViewModel{
             if (userValidation == null) {
                 return AbsentLiveData.create();
             }else {
-                //if(!userValidation.passwordConfirm.isEmpty())
-                return userRepository.register(userValidation.email, userValidation.password, userValidation.passwordConfirm);
-                //else
-                    //return userRepository.login(userValidation.email, userValidation.password);
+                if(userValidation.passwordConfirm == null)
+                    return userRepository.login(userValidation.email, userValidation.password);
+                else
+                    return userRepository.register(userValidation.email, userValidation.password, userValidation.passwordConfirm);
             }
         });
 
@@ -103,6 +103,15 @@ public class UserViewModel extends ViewModel{
     public boolean register(String email, String password, String passwordConfirm){
         boolean ok = false;
         if(setEmail(email) && setPassword(password) && setPasswordConfirm(passwordConfirm)){
+            triggerAuthentication.setValue(userVali);
+            ok = true;
+        }
+        return ok;
+    }
+
+    public boolean login(String email, String password) {
+        boolean ok = false;
+        if(setEmail(email) && setPassword(password)){
             triggerAuthentication.setValue(userVali);
             ok = true;
         }

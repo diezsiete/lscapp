@@ -3,6 +3,7 @@ package com.diezsiete.lscapp.ui.fragment;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
@@ -73,6 +75,7 @@ public class RegisterFragment extends Fragment implements Injectable {
 
         userViewModel.getAuthenticatedUser().observe(this, userResource -> {
             if(userResource != null && userResource.data != null){
+                closeKeyboard();
                 navigationController.navigateToLevelSelection();
             }
         });
@@ -86,22 +89,36 @@ public class RegisterFragment extends Fragment implements Injectable {
             !userViewModel.setPassword(textView.getText().toString())
         );
         binding.get().passwordConfirm.setOnEditorActionListener(((textView, i, keyEvent) -> {
-            return !clickRegisterButton();
-            /*boolean ok = userViewModel.setPasswordConfirm(textView.getText().toString());
-            if (ok && i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_NULL)
-                ok = clickRegisterButton();
-            return !ok;*/
+            boolean ok = false;
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_NULL)
+                ok = register();
+            return !ok;
         }));
+
+        binding.get().email.requestFocus();
     }
 
-    public boolean clickRegisterButton() {
+    public void clickRegisterButton() {
+        register();
+    }
+
+    public void clickLoginButton() {
+        navigationController.navigateToLogin();
+    }
+
+    private boolean register(){
         String email = binding.get().email.getText().toString();
         String password = binding.get().password.getText().toString();
         String passwordConfirm = binding.get().passwordConfirm.getText().toString();
         return userViewModel.register(email, password, passwordConfirm);
     }
 
-    public void clickLoginButton() {
-        navigationController.navigateToLogin();
+    private void closeKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) getContext().
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(inputManager != null && getActivity().getCurrentFocus() != null)
+            inputManager.hideSoftInputFromWindow(
+                    getActivity().getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
