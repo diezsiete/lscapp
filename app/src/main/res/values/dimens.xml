@@ -23,6 +23,6 @@
     <dimen name="lesson_selection_image_size">100dp</dimen>
 
     <dimen name="exoplayer_full">250dp</dimen>
-    <dimen name="exoplayer_medium">190dp</dimen>
+    <dimen name="exoplayer_medium">185dp</dimen>
     <dimen name="exoplayer_small">150dp</dimen>
 </resources>

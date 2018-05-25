@@ -53,6 +53,16 @@ public class WordSelector {
         return tokenPhantom;
     }
 
+    private TextView createTokenSeparator(String text, ViewGroup viewGroup) {
+        TextView tokenPhantom = (TextView) mInflater.inflate(R.layout.word_selector_token_separator, viewGroup, false);
+        if(mGroup.isDebugDraw()){
+            tokenPhantom.setBackgroundColor(mInflater.getContext().getResources().getColor(R.color.colorAccent));
+        }else
+            tokenPhantom.setVisibility(View.INVISIBLE);
+        tokenPhantom.setText(text);
+        return tokenPhantom;
+    }
+
     private void modifyOptionsSel(int viewId) {
         if(mOptionsSel.indexOfValue(viewId) < 0) {
             int key = mOptionsSel.size() == 0 ? 0 : mOptionsSel.keyAt(mOptionsSel.size() - 1) + 1;
@@ -144,7 +154,7 @@ public class WordSelector {
         }
         LayerDrawable ld = new LayerDrawable(drawables);
         for(int i = 0; i < tops.length; i++)
-            ld.setLayerInset(i, 0, tops[i] - 15, 0,0);
+            ld.setLayerInset(i, 0, tops[i] - 9, 0,0);
 
         mGroup.setBackground(ld);
     }
@@ -202,7 +212,7 @@ public class WordSelector {
             mTokensPhantom.append(i, createTokenPhantom(options.get(i-1), mGroup));
             mTokens.append(i, createToken(options.get(i-1), i,  mGroup));
         }
-        TextView mSeparator = createTokenPhantom("Separator", mGroup);
+        TextView mSeparator = createTokenSeparator("Separator", mGroup);
         mSeparator.setTag("SEPARATOR");
         setNewLine(mSeparator, true);
         mTokensPhantom.append(options.size() + 1, mSeparator);

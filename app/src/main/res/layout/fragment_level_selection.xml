@@ -17,7 +17,7 @@
             android:id="@+id/levels"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/spacing_nano"
+            android:paddingTop="@dimen/spacing_single"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"

@@ -37,6 +37,7 @@ public class TranslateVideoView extends PracticeView {
                     binding.setPractice(practice);
                     wordSelector.setOptions(practice.getWords().get(0));
                     setted = true;
+                    setPracticeQuestion(practice.getQuestion());
                 }
             }
         });

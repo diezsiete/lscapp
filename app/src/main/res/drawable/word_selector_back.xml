@@ -11,7 +11,7 @@
     <!-- Upper rectangle (background color) -->
     <item android:top="2dp">
         <shape android:shape="rectangle">
-            <solid android:color="#FFFFFF" />
+            <solid android:color="#fffafafa" />
         </shape>
     </item>
 </layer-list>
