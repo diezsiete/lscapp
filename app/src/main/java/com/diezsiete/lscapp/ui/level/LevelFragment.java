@@ -105,6 +105,7 @@ public class LevelFragment extends Fragment implements Injectable {
         adapter = new AutoClearedValue<>(this, rvAdapter);
 
         mainActivityViewModel.setShowBackButton(true);
+        mainActivityViewModel.lockDrawer();
 
         binding.get().setCallback(() -> lessonViewModel.retry());
 

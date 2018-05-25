@@ -6,8 +6,6 @@ import android.arch.lifecycle.ViewModel;
 
 import com.diezsiete.lscapp.vo.MainToolbarData;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 public class MainActivityViewModel extends ViewModel {
@@ -17,6 +15,8 @@ public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<String> goToLevel = new MutableLiveData<>();
 
     private final MutableLiveData<MainToolbarData> toolbarData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> drawerData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> menuItemSelected = new MutableLiveData<>();
 
     private final MainToolbarData mainToolbar;
 
@@ -50,7 +50,12 @@ public class MainActivityViewModel extends ViewModel {
     public LiveData<MainToolbarData> getToolbarData() {
         return this.toolbarData;
     }
-
+    public LiveData<Boolean> getDrawerData() {
+        return this.drawerData;
+    }
+    public LiveData<Integer> getMenuItemSelected() {
+        return this.menuItemSelected;
+    }
     public void setToolbarTitle(String title) {
         mainToolbar.title = title;
         toolbarData.setValue(mainToolbar);
@@ -67,6 +72,18 @@ public class MainActivityViewModel extends ViewModel {
         mainToolbar.color = color;
         mainToolbar.image = image;
         toolbarData.setValue(mainToolbar);
+    }
+
+    public void lockDrawer(){
+        drawerData.setValue(true);
+    }
+
+    public void unlockDrawer(){
+        drawerData.setValue(false);
+    }
+
+    public void setMenuItemSelected(int index){
+        menuItemSelected.setValue(index);
     }
 
 }

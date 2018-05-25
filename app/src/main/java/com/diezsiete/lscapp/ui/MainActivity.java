@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
-        //menu item practicar seleccionado por default
-        navigationView.getMenu().getItem(0).setChecked(true);
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mainActivityViewModel.getShowBackButton().observe(this, showBackButton -> {
@@ -97,6 +94,25 @@ public class MainActivity extends AppCompatActivity
 
         });
 
+        mainActivityViewModel.getToolbarData().observe(this, toolbarData -> {
+            binding.setToolbarData(toolbarData);
+            if(toolbarData != null && !toolbarData.color.isEmpty()){
+                getWindow().setStatusBarColor(Color.parseColor(toolbarData.color));
+            }
+        });
+
+        mainActivityViewModel.getDrawerData().observe(this, locked -> {
+            if(locked != null)
+                mDrawer.setDrawerLockMode(locked ?
+                        DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED);
+        });
+
+        mainActivityViewModel.getMenuItemSelected().observe(this, itemIndex ->{
+            if(itemIndex != null)
+                navigationView.getMenu().getItem(itemIndex).setChecked(true);
+        });
+
+
         userViewModel.getUser().observe(this, user ->{
             if(user == null){
                 getSupportActionBar().hide();
@@ -104,13 +120,6 @@ public class MainActivity extends AppCompatActivity
             }else if(savedInstanceState == null) {
                 getSupportActionBar().show();
                 navigationController.navigateToLevelSelection();
-            }
-        });
-
-        mainActivityViewModel.getToolbarData().observe(this, toolbarData -> {
-            binding.setToolbarData(toolbarData);
-            if(toolbarData != null && !toolbarData.color.isEmpty()){
-                getWindow().setStatusBarColor(Color.parseColor(toolbarData.color));
             }
         });
     }

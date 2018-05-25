@@ -83,6 +83,9 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
             "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)), "");
 
         binding.get().setCallback(() -> levelViewModel.retry());
+
+        mainActivityViewModel.unlockDrawer();
+        mainActivityViewModel.setMenuItemSelected(0);
     }
 
     private void initRecyclerView() {

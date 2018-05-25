@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment implements Injectable {
 
 
     private UserViewModel userViewModel;
+    private MainActivityViewModel mainActivityViewModel;
 
 
     @Nullable
@@ -66,6 +67,7 @@ public class LoginFragment extends Fragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
 
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        mainActivityViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(MainActivityViewModel.class);
 
         binding.get().setLoginFragment(this);
 
@@ -91,9 +93,7 @@ public class LoginFragment extends Fragment implements Injectable {
             return !ok;
         });
 
-
-        //binding.get().email.requestFocus();
-
+        mainActivityViewModel.lockDrawer();
     }
 
     public void clickLoginButton() {
