@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.TextureView;
 
+import com.diezsiete.lscapp.util.AppConstants;
 import com.diezsiete.lscapp.util.signvideo.SignVideo;
 import com.google.android.exoplayer2.util.Util;
 
@@ -22,23 +23,28 @@ import java.util.List;
 public class SignCameraManager implements LifecycleObserver {
     private final static String TAG = "SignCameraManager";
 
-    private static final int PERMISSION_ALL = 105;
+    public final static int PERMISSION_DENIED_STATUS_PERMANENTLY = 1;
+    public final static int PERMISSION_DENIED_STATUS_TEMPORALLY = 2;
+
     private String[] PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
     private boolean mPermissionsGranted = false;
+    private boolean mPermissionsAsked = false;
+    private int mPermissionDeniedStatus;
 
     private SignCamera signCamera;
     private Activity activity;
 
-
     private SignCameraListener listener;
 
 
-    public interface onSingleTapUpListener {
-        void onSingleTapUp(int position, boolean playing);
+    public interface SignCameraListener {
+        public void onPhotoTaken(File file);
+        public void onPermissionDenied();
+        public void onPermissionGranted();
     }
 
     public SignCameraManager(Activity activity, Lifecycle lifecycle) {
@@ -48,11 +54,17 @@ public class SignCameraManager implements LifecycleObserver {
 
     public void startSignCamera(){
         if(signCamera != null) {
-            mPermissionsGranted = hasAllPermissions(activity, PERMISSIONS);
-            if (!mPermissionsGranted) {
-                ActivityCompat.requestPermissions(activity, PERMISSIONS, PERMISSION_ALL);
-            } else {
+            if(!mPermissionsAsked) {
+                mPermissionsGranted = hasAllPermissions(activity, PERMISSIONS);
+                if (!mPermissionsGranted) {
+                    ActivityCompat.requestPermissions(activity, PERMISSIONS, AppConstants.CAMERA_REQUEST_PERMISSION);
+                }
+            }
+
+            if(mPermissionsGranted) {
                 signCamera.start();
+                if(listener != null)
+                    listener.onPermissionGranted();
             }
         }
     }
@@ -78,6 +90,28 @@ public class SignCameraManager implements LifecycleObserver {
     public void takePicture() {
         if(signCamera != null)
             signCamera.takePicture();
+    }
+
+    public void callOnPermissionDenied(Activity activity){
+        mPermissionsAsked = true;
+        mPermissionDeniedStatus = checkPermissionsDeniedTemporally(activity);
+        if(listener != null)
+            listener.onPermissionDenied();
+    }
+
+    public void callOnPermissionGranted(){
+        mPermissionsAsked = true;
+        mPermissionsGranted = true;
+        if(listener != null)
+            listener.onPermissionGranted();
+    }
+
+    public int getPermissionDeniedStatus() {
+        return mPermissionDeniedStatus;
+    }
+    public SignCameraManager resetPermissionAsked() {
+        mPermissionsAsked = false;
+        return this;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -118,7 +152,13 @@ public class SignCameraManager implements LifecycleObserver {
         return true;
     }
 
-    public interface SignCameraListener {
-        public void onPhotoTaken(File file);
+    private int checkPermissionsDeniedTemporally(Activity activity){
+        boolean allTemporally = true;
+        for(String permission : PERMISSIONS){
+            if (!hasAllPermissions(activity, permission) && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+                allTemporally = false;
+            }
+        }
+        return allTemporally ? PERMISSION_DENIED_STATUS_TEMPORALLY : PERMISSION_DENIED_STATUS_PERMANENTLY;
     }
 }

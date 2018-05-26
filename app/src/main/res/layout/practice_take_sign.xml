@@ -13,6 +13,9 @@
         <variable
             name="takeSignView"
             type="com.diezsiete.lscapp.ui.practice.TakeSignView" />
+        <variable
+            name="permissionGranted"
+            type="boolean" />
     </data>
 
 
@@ -60,6 +63,37 @@
                     android:layout_gravity="center"
                     android:visibility="@{practice.answerUser != null &amp;&amp; practice.answerUser == 2 ? View.VISIBLE : View.GONE}" />
 
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="@{permissionGranted ? View.GONE : View.VISIBLE }"
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_visibility_off"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/camera_permission_denied_messsage"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/spacing_single"
+                    />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/camera_permission_activate"
+                        android:textAllCaps="false"
+                        android:background="@drawable/button_style"
+                        android:onClick="@{() -> takeSignView.onClickEnablePermissionCamera()}"
+                        android:layout_marginTop="@dimen/spacing_double"
+                        android:textColor="@android:color/white"
+                        />
+
+                </android.support.v7.widget.LinearLayoutCompat>
 
                 <Button
                     android:id="@+id/btn_takepicture"
@@ -73,11 +107,12 @@
                     android:textColor="@android:color/white"
                     android:textAllCaps="false"
                     android:background="@drawable/button_style"
+                    android:backgroundTint="@color/colorPrimary"
                     android:enabled="@{practice.answerUser == null}"
                     android:layout_marginStart="@dimen/spacing_double"
                     android:layout_marginEnd="@dimen/spacing_double"
                     android:layout_marginBottom="@dimen/spacing_single"
-                    android:visibility="@{practice.answerUser == null || practice.answerUser == 2 ? View.VISIBLE : View.INVISIBLE}"
+                    android:visibility="@{takeSignView.buttonTakePhotoVisibility(practice, permissionGranted)}"
                     android:onClick="@{() -> takeSignView.onClickTakePhoto()}"
                     />
 

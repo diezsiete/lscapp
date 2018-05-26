@@ -74,4 +74,7 @@
     <string name="practice_take_picture_button">Tomar foto</string>
     <string name="practice_take_sign_analizing">Analizando&#8230;</string>
 
+    <string name="camera_permission_denied_messsage">Permisos denegados</string>
+    <string name="camera_permission_activate">Habilitar permisos</string>
+
 </resources>

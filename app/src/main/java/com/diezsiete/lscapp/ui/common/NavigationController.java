@@ -16,6 +16,9 @@
 
 package com.diezsiete.lscapp.ui.common;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 
 
@@ -36,11 +39,13 @@ import javax.inject.Inject;
 public class NavigationController {
     private final int containerId;
     private final FragmentManager fragmentManager;
+    private final MainActivity mainActivity;
 
     @Inject
     public NavigationController(MainActivity mainActivity) {
         this.containerId = R.id.main_container;
         this.fragmentManager = mainActivity.getSupportFragmentManager();
+        this.mainActivity = mainActivity;
     }
 
     public void navigateToLevelSelection() {
@@ -85,5 +90,13 @@ public class NavigationController {
         fragmentManager.beginTransaction()
                 .replace(containerId, registerFragment)
                 .commitAllowingStateLoss();
+    }
+
+    public void navigateToPermissions(){
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri = Uri.fromParts("package", mainActivity.getPackageName(), null);
+        intent.setData(uri);
+        mainActivity.startActivity(intent);
     }
 }

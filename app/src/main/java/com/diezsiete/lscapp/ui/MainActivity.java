@@ -1,5 +1,6 @@
 package com.diezsiete.lscapp.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +33,7 @@ import com.diezsiete.lscapp.ui.common.NavigationController;
 import com.diezsiete.lscapp.ui.dictionary.DictionaryViewModel;
 import com.diezsiete.lscapp.ui.level.LevelViewModel;
 import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
+import com.diezsiete.lscapp.util.AppConstants;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
 
 import javax.inject.Inject;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     @Inject
-    NavigationController navigationController;
+    public NavigationController navigationController;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -114,10 +117,14 @@ public class MainActivity extends AppCompatActivity
 
 
         userViewModel.getUser().observe(this, user ->{
-            if(user == null){
+            /*if(user == null){
                 getSupportActionBar().hide();
                 navigationController.navigateToLogin();
             }else if(savedInstanceState == null) {
+                getSupportActionBar().show();
+                navigationController.navigateToLevelSelection();
+            }*/
+            if(savedInstanceState == null){
                 getSupportActionBar().show();
                 navigationController.navigateToLevelSelection();
             }
@@ -163,21 +170,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //TODO
-    private  static final int REQUEST_CAMERA_RESULT = 105;
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // Called when you request permission to read and write to external storage
-        Log.d("JOSE", "onRequestPermissionsResult : " + requestCode);
         switch (requestCode) {
-            case REQUEST_CAMERA_RESULT: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // If you get permission, launch the camera
-                    Toast.makeText(this, "EXITO", Toast.LENGTH_SHORT).show();
-                } else {
-                    // If you do not get permission, show a Toast
-                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+            case AppConstants.CAMERA_REQUEST_PERMISSION: {
+                if(signCameraManager != null) {
+                    boolean permissionsGranted = true;
+                    for (int grantResult : grantResults) {
+                        if (grantResult == PackageManager.PERMISSION_DENIED)
+                            permissionsGranted = false;
+                    }
+                    if(permissionsGranted)
+                        signCameraManager.callOnPermissionGranted();
+                    else
+                        signCameraManager.callOnPermissionDenied(this);
                 }
                 break;
             }

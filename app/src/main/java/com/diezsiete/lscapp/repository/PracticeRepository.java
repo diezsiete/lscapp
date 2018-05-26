@@ -222,10 +222,11 @@ public class PracticeRepository {
                 ApiResponse<TakeSignResponse> apiResponse = new ApiResponse<>(response);
                 if(apiResponse.isSuccessful()){
                     TakeSignResponse tsResponse = apiResponse.body;
+                    Log.d("CNTK", "["+tag+"]SUCCESS : hit["+tsResponse.hit +"], probability["+tsResponse.probability+"]");
                     practice.setUserAnswer(tsResponse.hit ? 1 : 0);
                     updatePractice(practice.entity);
                 }else{
-                    Log.e("CNTK", "ERROR : " + apiResponse.errorMessage);
+                    Log.e("CNTK", "["+tag+"]ERROR : " + apiResponse.errorMessage);
                     practice.setUserAnswer(1);
                     updatePractice(practice.entity);
                 }

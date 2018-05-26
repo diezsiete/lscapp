@@ -109,8 +109,6 @@ public class SignCamera {
     }
 
     public void start() {
-
-
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             openCamera();
@@ -228,7 +226,7 @@ public class SignCamera {
             int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
 
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            mFile = new File(Environment.getExternalStorageDirectory()+"/pic"+mInt+".jpg");
+            mFile = new File(Environment.getExternalStorageDirectory()+"/lsc_pic"+mInt+".jpg");
             mInt++;
 
 
@@ -266,13 +264,15 @@ public class SignCamera {
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
     private void stopBackgroundThread() {
-        mBackgroundThread.quitSafely();
-        try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(mBackgroundThread != null) {
+            mBackgroundThread.quitSafely();
+            try {
+                mBackgroundThread.join();
+                mBackgroundThread = null;
+                mBackgroundHandler = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

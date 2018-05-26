@@ -256,6 +256,7 @@ public class PracticeViewModel extends ViewModel {
         practiceMediatorCallbacks.add(takeSignPractice -> {
             if(takeSignPractice.getAnswerUser() != 2){
                 practiceMediatorCallbacks.clear();
+                boolean deleted = file.delete();
                 saveAnswer();
             }
         });
