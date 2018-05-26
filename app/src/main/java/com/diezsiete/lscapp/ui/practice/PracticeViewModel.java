@@ -28,9 +28,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PracticeViewModel extends ViewModel {
-    //private final LiveData<Resource<List<Practice>>> practices;
-    //private final LiveData<List<String>> practicesCodes;
-
     private final MediatorLiveData<List<String>> practicesCodesMediator = new MediatorLiveData<>();
     private final MediatorLiveData<PracticeWithData> practiceMediator = new MediatorLiveData<>();
     private final List<practiceMediatorCallback> practiceMediatorCallbacks = new ArrayList<>();
@@ -41,8 +38,6 @@ public class PracticeViewModel extends ViewModel {
     private final MutableLiveData<String> lessonId = new MutableLiveData<>();
     private final MutableLiveData<String> goToLevel = new MutableLiveData<>();
 
-
-
     private int currentPracticeIndex = 0;
 
 
@@ -52,43 +47,21 @@ public class PracticeViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> showNext = new MutableLiveData<>();
 
-
-
     private PracticeRepository practiceRepository;
     private LessonRepository lessonRepository;
 
     private List<Integer> answerUser = new ArrayList<>();
 
-
+    private PracticeWithData currentPractice;
 
     @Inject
     PracticeViewModel(PracticeRepository practiceRepository, LessonRepository lessonRepository) {
-        /*practices = Transformations.switchMap(lessonId, id -> {
-            if (id.isEmpty()) {
-                return AbsentLiveData.create();
-            }else {
-                return practiceRepository.loadPracticesByLessonId(id);
-            }
-        });*/
-
-
-
         MediatorLiveData<String> mediator = new MediatorLiveData<>();
         mediator.addSource(lessonId, id -> {
             if(id != null && !id.isEmpty()){
                 practiceRepository.deletePracticesByLessonId(id, () -> mediator.setValue(id));
             }
         });
-
-
-
-        /*Transformations.switchMap(mediator, id -> {
-            if (id.isEmpty()) {
-                return AbsentLiveData.create();
-            }else {
-                return practiceRepository.loadPracticesWithDataByLessonId(id);
-            }
-        });*/
 
         practicesWithData = Transformations.switchMap(mediator, id -> {
             if (id.isEmpty()) {
@@ -97,18 +70,6 @@ public class PracticeViewModel extends ViewModel {
                 return practiceRepository.loadPracticesWithDataByLessonId(id);
             }
         });
-
-        /*practicesCodes = Transformations.switchMap(practicesWithData, practices -> {
-            if(practices == null || practices.data == null || practices.data.size() == 0)
-                return AbsentLiveData.create();
-            else{
-                List<Integer> ids = new ArrayList<>();
-                for(PracticeWithData practice : practices.data) {
-                    ids.add(practice.entity.id);
-                }
-                return practiceRepository.getPracticesCodes(ids);
-            }
-        });*/
 
         practicesCodesMediator.addSource(practicesWithData, practices -> {
             if(practices != null && practices.data != null && practices.data.size() > 0 && fetch) {
@@ -130,24 +91,18 @@ public class PracticeViewModel extends ViewModel {
             }
         });
 
-
         practiceMediator.addSource(practice, p -> {
             if(p != null){
+                currentPractice = p;
                 practiceMediator.setValue(p);
                 for(int i = 0; i < practiceMediatorCallbacks.size(); i++)
                     practiceMediatorCallbacks.get(i).execute(p);
             }
         });
 
-
-
         this.practiceRepository = practiceRepository;
         this.lessonRepository = lessonRepository;
     }
-
-    /*public LiveData<Resource<List<Practice>>> getPractices() {
-        return practices;
-    }*/
 
     public LiveData<List<String>> getPracticesCodes() {
         //return practicesCodes;
@@ -163,7 +118,7 @@ public class PracticeViewModel extends ViewModel {
     }
 
     public void saveAnswer() {
-        PracticeWithData practice = this.practice.getValue();
+        PracticeWithData practice = currentPractice;
         String practiceAnswer = practice.getStringAnswer();
         boolean ok = practice.validateAnswer();
 
@@ -179,9 +134,6 @@ public class PracticeViewModel extends ViewModel {
             }
         });
         practiceRepository.updatePractice(practice.entity);
-
-
-
     }
 
 
