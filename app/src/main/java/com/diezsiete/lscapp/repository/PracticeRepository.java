@@ -7,34 +7,24 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.LSCApp;
-import com.diezsiete.lscapp.api.ApiResponse;
-import com.diezsiete.lscapp.api.Webservice;
+import com.diezsiete.lscapp.remote.Api;
+import com.diezsiete.lscapp.remote.ApiResponse;
 import com.diezsiete.lscapp.db.LSCAppDb;
-import com.diezsiete.lscapp.db.PracticeDao;
-import com.diezsiete.lscapp.db.PracticeVideosDao;
-import com.diezsiete.lscapp.db.PracticeVideosWordDao;
-import com.diezsiete.lscapp.db.PracticeWordsDao;
+import com.diezsiete.lscapp.db.dao.PracticeDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosWordDao;
+import com.diezsiete.lscapp.db.dao.PracticeWordsDao;
 import com.diezsiete.lscapp.util.RateLimiter;
-import com.diezsiete.lscapp.vo.Lesson;
-import com.diezsiete.lscapp.vo.Practice;
-import com.diezsiete.lscapp.vo.PracticeVideos;
-import com.diezsiete.lscapp.vo.PracticeVideosData;
-import com.diezsiete.lscapp.vo.PracticeVideosWord;
-import com.diezsiete.lscapp.vo.PracticeVideosWordData;
-import com.diezsiete.lscapp.vo.PracticeWithData;
-import com.diezsiete.lscapp.vo.PracticeWords;
+import com.diezsiete.lscapp.db.entity.PracticeEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideos;
+import com.diezsiete.lscapp.db.entity.PracticeVideosWord;
+import com.diezsiete.lscapp.db.entity.Practice;
+import com.diezsiete.lscapp.db.entity.PracticeWordsEntity;
 import com.diezsiete.lscapp.vo.Resource;
-import com.diezsiete.lscapp.vo.ShowSign;
 import com.diezsiete.lscapp.vo.TakeSignResponse;
-import com.diezsiete.lscapp.vo.WhichOneVideo;
-import com.diezsiete.lscapp.vo.WhichOneVideos;
-import com.diezsiete.lscapp.vo.Word;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -43,7 +33,6 @@ import javax.inject.Singleton;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class PracticeRepository {
-    private final Webservice webservice;
+    private final Api api;
     private final LSCAppDb db;
     private final PracticeDao practiceDao;
     private final PracticeWordsDao practiceWordsDao;
@@ -64,11 +53,11 @@ public class PracticeRepository {
 
     @Inject
     PracticeRepository(
-            Webservice webservice, LSCAppDb db, PracticeDao practiceDao,
+            Api api, LSCAppDb db, PracticeDao practiceDao,
             PracticeWordsDao practiceWordsDao, PracticeVideosDao practiceVideosDao,
             PracticeVideosWordDao practiceVideosWordDao,
             AppExecutors appExecutors) {
-        this.webservice = webservice;
+        this.api = api;
         this.db = db;
         this.practiceDao = practiceDao;
         this.practiceWordsDao = practiceWordsDao;
@@ -77,23 +66,23 @@ public class PracticeRepository {
         this.appExecutors = appExecutors;
     }
 
-    private void updatePracticesFromCall(List<PracticeWithData> practices, String lessonId) {
+    private void updatePracticesFromCall(List<Practice> practices, String lessonId) {
         db.beginTransaction();
         try {
-            for (PracticeWithData practiceWithData : practices) {
-                Practice practice = practiceWithData.entity;
-                practice.lessonId = lessonId;
-                long practiceId =practiceDao.insert(practice);
-                for(PracticeWords practiceWords  : practiceWithData.words) {
-                    practiceWords.practiceId = practiceId;
-                    practiceWordsDao.insert(practiceWords);
+            for (Practice practice : practices) {
+                PracticeEntity practiceEntity = practice.entity;
+                practiceEntity.lessonId = lessonId;
+                long practiceId =practiceDao.insert(practiceEntity);
+                for(PracticeWordsEntity practiceWordsEntity : practice.words) {
+                    practiceWordsEntity.practiceId = practiceId;
+                    practiceWordsDao.insert(practiceWordsEntity);
                 }
 
-                for(PracticeVideosData practiceVideos : practiceWithData.videos){
+                for(PracticeVideos practiceVideos : practice.videos){
                     practiceVideos.entity.practiceId = practiceId;
                     long id = practiceVideosDao.insert(practiceVideos.entity);
-                    for(PracticeVideosWordData practiceVideosWord : practiceVideos.videosWord){
-                        Log.d("JOSE", "PracticeRepository.updatePracticesFromCall Word : " + practiceVideosWord.entity.wordId);
+                    for(PracticeVideosWord practiceVideosWord : practiceVideos.videosWord){
+                        Log.d("JOSE", "PracticeRepository.updatePracticesFromCall WordEntity : " + practiceVideosWord.entity.wordId);
                         practiceVideosWord.entity.practiceVideosId = id;
                         practiceVideosWordDao.insert(practiceVideosWord.entity);
                     }
@@ -110,49 +99,31 @@ public class PracticeRepository {
     }
 
 
-    public LiveData<Resource<List<PracticeWithData>>> loadPracticesWithDataByLessonId(String lessonId) {
-        return new NetworkBoundResource<List<PracticeWithData>, List<PracticeWithData>>(appExecutors) {
-            private MediatorLiveData<List<PracticeWithData>> practicesMediator;
+    public LiveData<Resource<List<Practice>>> loadPracticesWithDataByLessonId(String lessonId) {
+        return new NetworkBoundResource<List<Practice>, List<Practice>>(appExecutors) {
+            private MediatorLiveData<List<Practice>> practicesMediator;
 
             @Override
-            protected void saveCallResult(@NonNull List<PracticeWithData> practices) {
+            protected void saveCallResult(@NonNull List<Practice> practices) {
                 updatePracticesFromCall(practices, lessonId);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<PracticeWithData> data) {
+            protected boolean shouldFetch(@Nullable List<Practice> data) {
                 return true;
                 //return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("practice");
             }
 
             @NonNull
             @Override
-            protected LiveData<List<PracticeWithData>> loadFromDb() {
+            protected LiveData<List<Practice>> loadFromDb() {
                 return practiceDao.loadPracticesWithDataByLessonId(lessonId);
-                /*return new BoundPracticeCode() {
-                    @NonNull
-                    @Override
-                    protected LiveData<List<PracticeWithData>> loadFromDb() {
-                        return practiceDao.loadPracticesWithDataByLessonId(lessonId);
-                    }
-                }.asLiveData();
-                LiveData<List<PracticeWithData>> dbSource = practiceDao.loadPracticesWithDataByLessonId(lessonId);
-                if(practicesMediator == null){
-                    practicesMediator = new MediatorLiveData<>();
-                    practicesMediator.addSource(dbSource, data -> {
-                        List<PracticeWithData> newList = new ArrayList<>();
-                        for(PracticeWithData practiceWithData : data)
-                            newList.add(instanceByCode(practiceWithData));
-                        practicesMediator.setValue(newList);
-                    });
-                }
-                return practicesMediator;*/
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<List<PracticeWithData>>> createCall() {
-                return webservice.getPracticesWithDataByLessonId(lessonId);
+            protected LiveData<ApiResponse<List<Practice>>> createCall() {
+                return api.getPracticesWithDataByLessonId(lessonId);
             }
 
             @Override
@@ -163,34 +134,21 @@ public class PracticeRepository {
 
     }
 
-    private PracticeWithData instanceByCode(PracticeWithData oldPracticeWithData){
-        switch (oldPracticeWithData.entity.code){
-            case "show-sign" :
-                return new ShowSign(oldPracticeWithData);
-            case "which-one-video" :
-                return new WhichOneVideo(oldPracticeWithData);
-            case "which-one-videos" :
-                return new WhichOneVideos(oldPracticeWithData);
-            default:
-                return oldPracticeWithData;
-        }
-    }
-
     public LiveData<List<String>> getPracticesCodes(List<Integer> ids) {
         return practiceDao.getPracticesCodes(ids);
     }
 
-    public LiveData<PracticeWithData> getPracticeWithData(int practiceId) {
+    public LiveData<Practice> getPracticeWithData(int practiceId) {
         return practiceDao.loadPracticeWithData(practiceId);
     }
 
-    public void updatePractice(Practice practice) {
-        appExecutors.diskIO().execute(() -> practiceDao.update(practice));
+    public void updatePractice(PracticeEntity practiceEntity) {
+        appExecutors.diskIO().execute(() -> practiceDao.update(practiceEntity));
     }
 
-    public void updatePractice(Practice practice, Runnable runnable) {
+    public void updatePractice(PracticeEntity practiceEntity, Runnable runnable) {
         appExecutors.diskIO().execute(() -> {
-            practiceDao.update(practice);
+            practiceDao.update(practiceEntity);
             appExecutors.mainThread().execute(runnable);
         });
     }
@@ -203,7 +161,7 @@ public class PracticeRepository {
     }
 
 
-    public void postCntk(final PracticeWithData practice, String tag, File file) {
+    public void postCntk(final Practice practice, String tag, File file) {
         practice.setUserAnswer(2);
         updatePractice(practice.entity);
 
@@ -212,7 +170,7 @@ public class PracticeRepository {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://18.208.61.61:12345")
                 .addConverterFactory(GsonConverterFactory.create()).build();
-        Webservice client = retrofit.create(Webservice.class);
+        Api client = retrofit.create(Api.class);
 
 
         Call<TakeSignResponse> call = client.uploadPhoto(tag, formData);

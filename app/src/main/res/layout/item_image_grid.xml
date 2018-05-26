@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.diezsiete.lscapp.ui.widget.DynamicHeightImageView
+        <com.diezsiete.lscapp.ui.view.DynamicHeightImageView
             android:id="@+id/dynamic_height_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

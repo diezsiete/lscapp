@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="level" type="com.diezsiete.lscapp.vo.Level"/>
+        <variable name="levelEntity" type="com.diezsiete.lscapp.db.entity.LevelEntity"/>
         <variable
             name="resource"
             type="com.diezsiete.lscapp.vo.Resource" />
-        <variable name="callback" type="com.diezsiete.lscapp.ui.common.RetryCallback"/>
+        <variable name="callback" type="com.diezsiete.lscapp.ui.RetryCallback"/>
     </data>
 
 
@@ -21,7 +21,7 @@
                 android:id="@+id/lessons_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/lessons"
+                android:text="@string/lessonEntities"
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:gravity="center"
                 android:background="@color/lesson_title_background"

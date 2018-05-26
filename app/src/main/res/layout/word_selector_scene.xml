@@ -24,7 +24,7 @@
 </org.apmem.tools.layouts.FlowLayout>
 -->
 
-<com.diezsiete.lscapp.ui.widget.wordselector.WordSelectorLayout
+<com.diezsiete.lscapp.ui.view.wordselector.WordSelectorLayout
     xmlns:f="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

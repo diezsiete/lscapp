@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="word"
-            type="com.diezsiete.lscapp.vo.Word" />
+            name="wordEntity"
+            type="com.diezsiete.lscapp.db.entity.WordEntity" />
     </data>
 <TextView
     android:id="@+id/word_item"
@@ -18,7 +18,7 @@
     android:paddingBottom="12dp"
     android:paddingLeft="5dp"
     android:background="@drawable/dictionary_item"
-    tools:text="@{word.word}" />
+    tools:text="@{wordEntity.word}" />
 
 </layout>
 

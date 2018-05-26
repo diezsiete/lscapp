@@ -20,21 +20,20 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 
-import com.diezsiete.lscapp.LSCApp;
-import com.diezsiete.lscapp.api.PracticeWithDataDeserializer;
-import com.diezsiete.lscapp.api.Webservice;
+import com.diezsiete.lscapp.remote.Api;
+import com.diezsiete.lscapp.remote.PracticeWithDataDeserializer;
 import com.diezsiete.lscapp.db.LSCAppDb;
-import com.diezsiete.lscapp.db.LessonDao;
-import com.diezsiete.lscapp.db.LevelDao;
-import com.diezsiete.lscapp.db.PracticeDao;
-import com.diezsiete.lscapp.db.PracticeVideosDao;
-import com.diezsiete.lscapp.db.PracticeVideosWordDao;
-import com.diezsiete.lscapp.db.PracticeWordsDao;
-import com.diezsiete.lscapp.db.UserDao;
-import com.diezsiete.lscapp.db.WordDao;
+import com.diezsiete.lscapp.db.dao.LessonDao;
+import com.diezsiete.lscapp.db.dao.LevelDao;
+import com.diezsiete.lscapp.db.dao.PracticeDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosWordDao;
+import com.diezsiete.lscapp.db.dao.PracticeWordsDao;
+import com.diezsiete.lscapp.db.dao.UserDao;
+import com.diezsiete.lscapp.db.dao.WordDao;
 import com.diezsiete.lscapp.util.AppConstants;
 import com.diezsiete.lscapp.util.LiveDataCallAdapterFactory;
-import com.diezsiete.lscapp.vo.PracticeWithData;
+import com.diezsiete.lscapp.db.entity.Practice;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,13 +52,13 @@ class AppModule {
     private GsonConverterFactory buildGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Adding custom deserializers
-        gsonBuilder.registerTypeAdapter(PracticeWithData.class, new PracticeWithDataDeserializer());
+        gsonBuilder.registerTypeAdapter(Practice.class, new PracticeWithDataDeserializer());
         Gson myGson = gsonBuilder.create();
         return GsonConverterFactory.create(myGson);
     }
 
     @Singleton @Provides
-    Webservice provideWebService() {
+    Api provideWebService() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addNetworkInterceptor(new StethoInterceptor()).build();
 
@@ -69,7 +68,7 @@ class AppModule {
                 .addConverterFactory(buildGsonConverter())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()
-                .create(Webservice.class);
+                .create(Api.class);
     }
 
     @Singleton @Provides

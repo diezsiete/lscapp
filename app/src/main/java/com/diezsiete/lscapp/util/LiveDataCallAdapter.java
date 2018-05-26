@@ -19,7 +19,7 @@ package com.diezsiete.lscapp.util;
 
 import android.arch.lifecycle.LiveData;
 
-import com.diezsiete.lscapp.api.ApiResponse;
+import com.diezsiete.lscapp.remote.ApiResponse;
 
 import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -1,25 +1,17 @@
 package com.diezsiete.lscapp.ui.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
-import android.databinding.InverseBindingMethod;
-import android.databinding.InverseBindingMethods;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.vo.PracticeWithData;
+import com.diezsiete.lscapp.db.entity.Practice;
 
 public class LSCRecyclerView extends RecyclerView {
     public View viewPrevSel;
@@ -37,7 +29,7 @@ public class LSCRecyclerView extends RecyclerView {
     }
 
     @BindingAdapter("practice")
-    public static void getPracticeAnswer(LSCRecyclerView view, PracticeWithData practice) {
+    public static void getPracticeAnswer(LSCRecyclerView view, Practice practice) {
         if(practice != null) {
             if(practice.getAnswerUser() != null && practice.getAnswer() != null){
                 View answerUser = view.getLayoutManager().findViewByPosition(practice.getAnswerUser());

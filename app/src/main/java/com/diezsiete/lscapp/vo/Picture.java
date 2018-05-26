@@ -7,7 +7,7 @@ public class Picture {
     public float ratio;
     public String url;
 
-    Picture(String url) {
+    public Picture(String url) {
         this.url = url;
     }
 }

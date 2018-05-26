@@ -9,8 +9,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +16,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import com.diezsiete.lscapp.R;
-import com.diezsiete.lscapp.binding.FragmentDataBindingComponent;
-import com.diezsiete.lscapp.databinding.FragmentLevelSelectionBinding;
-import com.diezsiete.lscapp.databinding.FragmentLoginBinding;
+import com.diezsiete.lscapp.ui.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.FragmentRegisterBinding;
 import com.diezsiete.lscapp.di.Injectable;
-import com.diezsiete.lscapp.ui.MainActivityViewModel;
-import com.diezsiete.lscapp.ui.common.LevelListAdapter;
-import com.diezsiete.lscapp.ui.common.NavigationController;
+import com.diezsiete.lscapp.ui.NavigationController;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
-import com.diezsiete.lscapp.vo.Level;
 
 import javax.inject.Inject;
 

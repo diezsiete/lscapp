@@ -21,10 +21,10 @@
         <import type="com.diezsiete.lscapp.vo.Resource"/>
         <import type="com.diezsiete.lscapp.vo.Status"/>
         <variable name="resource" type="Resource"/>
-        <variable name="callback" type="com.diezsiete.lscapp.ui.common.RetryCallback"/>
+        <variable name="callback" type="com.diezsiete.lscapp.ui.RetryCallback"/>
     </data>
     <LinearLayout android:orientation="vertical"
-                  app:visibleGone="@{resource.data == null}"
+                  app:visibleGone="@{resource.status != Status.SUCCESS}"
                   android:layout_width="match_parent"
                   android:gravity="center"
                   android:padding="@dimen/spacing_single"

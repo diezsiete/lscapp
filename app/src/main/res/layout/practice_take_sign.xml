@@ -9,10 +9,10 @@
         <import type="android.view.View" />
         <variable
             name="practice"
-            type="com.diezsiete.lscapp.vo.PracticeWithData" />
+            type="com.diezsiete.lscapp.db.entity.Practice" />
         <variable
             name="takeSignView"
-            type="com.diezsiete.lscapp.ui.practice.TakeSignView" />
+            type="com.diezsiete.lscapp.ui.view.practice.TakeSignView" />
         <variable
             name="permissionGranted"
             type="boolean" />

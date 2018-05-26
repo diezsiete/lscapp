@@ -9,7 +9,7 @@
             type="List&lt;String&gt;" />
         <variable
             name="practice"
-            type="com.diezsiete.lscapp.vo.PracticeWithData" />
+            type="com.diezsiete.lscapp.db.entity.Practice" />
     </data>
 
     <LinearLayout

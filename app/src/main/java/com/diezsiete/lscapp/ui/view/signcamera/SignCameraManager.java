@@ -9,16 +9,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.TextureView;
 
 import com.diezsiete.lscapp.util.AppConstants;
-import com.diezsiete.lscapp.util.signvideo.SignVideo;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SignCameraManager implements LifecycleObserver {
     private final static String TAG = "SignCameraManager";

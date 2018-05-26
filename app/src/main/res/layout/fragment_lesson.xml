@@ -8,10 +8,10 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
+            type="com.diezsiete.lscapp.viewmodel.PracticeViewModel" />
         <variable
-            name="lesson"
-            type="com.diezsiete.lscapp.vo.Lesson" />
+            name="lessonEntity"
+            type="com.diezsiete.lscapp.db.entity.LessonEntity" />
         <variable
             name="answerMessage"
             type="com.diezsiete.lscapp.vo.AnswerMessage" />
@@ -43,7 +43,7 @@
                 android:scaleY="0.7"
                 android:visibility="gone"
                 android:src="@drawable/ic_medal"
-                app:practiceEndVisible="@{lesson.progress}"
+                app:practiceEndVisible="@{lessonEntity.progress}"
                 app:startDelay="@{0}"
                 />
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_marginTop="@dimen/spacing_quadruple"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                app:practiceEndVisible="@{lesson.progress}"
+                app:practiceEndVisible="@{lessonEntity.progress}"
                 app:startDelay="@{0}"
                 android:alpha="0"
                 android:scaleX="0.7"
@@ -68,7 +68,7 @@
                 android:layout_marginBottom="80dp"
                 android:layout_gravity="center_horizontal|bottom"
                 android:gravity="center"
-                app:practiceEndVisible="@{lesson.progress}"
+                app:practiceEndVisible="@{lessonEntity.progress}"
                 app:startDelay="@{0}"
                 android:alpha="0"
                 android:scaleX="0.7"
@@ -85,7 +85,7 @@
                 android:progressTint="?android:colorAccent"
                 tools:ignore="UnusedAttribute"
                 android:max="100"
-                app:progressAnimation="@{lesson.progress}"
+                app:progressAnimation="@{lessonEntity.progress}"
                 />
 
 
@@ -94,14 +94,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="0dp"
-                app:practiceEndInvisible="@{lesson.progress}"
+                app:practiceEndInvisible="@{lessonEntity.progress}"
                 app:startDelay="@{0}"
                 />
 
             <include layout="@layout/practice_answer_message"
                 bind:answerMessage="@{answerMessage}"
                 bind:viewmodel="@{viewmodel}"
-                bind:lesson="@{lesson}"
+                bind:lessonEntity="@{lessonEntity}"
                 />
 
         </FrameLayout>
@@ -114,15 +114,15 @@
             android:textColor="@android:color/white"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
-            app:backgroundButton="@{lesson.color}"
+            app:backgroundButton="@{lessonEntity.color}"
             android:layout_margin="@dimen/spacing_single"
             android:visibility="gone"
             android:alpha="0"
             android:scaleX="0.7"
             android:scaleY="0.7"
-            app:practiceEndVisible="@{lesson.progress}"
+            app:practiceEndVisible="@{lessonEntity.progress}"
             app:startDelay="@{300}"
-            android:onClick="@{() -> viewmodel.goToLevel(lesson.levelId)}"
+            android:onClick="@{() -> viewmodel.goToLevel(lessonEntity.levelId)}"
             />
 
     </RelativeLayout>

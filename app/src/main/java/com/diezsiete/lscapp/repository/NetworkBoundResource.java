@@ -17,14 +17,13 @@ package com.diezsiete.lscapp.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.api.ApiResponse;
+import com.diezsiete.lscapp.remote.ApiResponse;
 import com.diezsiete.lscapp.vo.Resource;
 
 import java.util.Objects;

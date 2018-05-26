@@ -5,8 +5,8 @@
 
     <data>
         <import type="android.view.View" />
-        <variable name="practiceWithData" type="com.diezsiete.lscapp.vo.PracticeWithData" />
-        <variable name="practiceView" type="com.diezsiete.lscapp.ui.practice.PracticeView" />
+        <variable name="practice" type="com.diezsiete.lscapp.db.entity.Practice" />
+        <variable name="practiceView" type="com.diezsiete.lscapp.ui.view.practice.PracticeView" />
         <variable name="question" type="String" />
     </data>
 
@@ -50,8 +50,8 @@
             android:layout_alignParentBottom="true"
             android:padding="@dimen/spacing_double"
             android:onClick="@{() -> practiceView.onClickSubmitAnswer()}"
-            app:backgroundButton="@{practiceWithData.lesson.color}"
-            app:buttonEnable="@{practiceView.enableSave(practiceWithData)}"
+            app:backgroundButton="@{practice.lessonEntity.color}"
+            app:buttonEnable="@{practiceView.enableSave(practice)}"
             android:layout_margin="@dimen/spacing_single"
             />
 

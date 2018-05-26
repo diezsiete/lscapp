@@ -3,27 +3,35 @@ package com.diezsiete.lscapp.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-import com.diezsiete.lscapp.db.entity.User;
-import com.diezsiete.lscapp.vo.Lesson;
-import com.diezsiete.lscapp.vo.Level;
-import com.diezsiete.lscapp.vo.Practice;
-import com.diezsiete.lscapp.vo.PracticeVideos;
-import com.diezsiete.lscapp.vo.PracticeVideosWord;
-import com.diezsiete.lscapp.vo.PracticeWords;
-import com.diezsiete.lscapp.vo.Word;
+import com.diezsiete.lscapp.db.dao.LessonDao;
+import com.diezsiete.lscapp.db.dao.LevelDao;
+import com.diezsiete.lscapp.db.dao.PracticeDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosDao;
+import com.diezsiete.lscapp.db.dao.PracticeVideosWordDao;
+import com.diezsiete.lscapp.db.dao.PracticeWordsDao;
+import com.diezsiete.lscapp.db.dao.UserDao;
+import com.diezsiete.lscapp.db.dao.WordDao;
+import com.diezsiete.lscapp.db.entity.LessonEntity;
+import com.diezsiete.lscapp.db.entity.UserEntity;
+import com.diezsiete.lscapp.db.entity.LevelEntity;
+import com.diezsiete.lscapp.db.entity.PracticeEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideosEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideosWordEntity;
+import com.diezsiete.lscapp.db.entity.PracticeWordsEntity;
+import com.diezsiete.lscapp.db.entity.WordEntity;
 
 @Database(
     entities = {
-        Level.class,
-        Lesson.class,
-        Practice.class,
-        PracticeWords.class,
-        PracticeVideos.class,
-        PracticeVideosWord.class,
-        Word.class,
-        User.class
+        LevelEntity.class,
+        LessonEntity.class,
+        PracticeEntity.class,
+        PracticeWordsEntity.class,
+        PracticeVideosEntity.class,
+        PracticeVideosWordEntity.class,
+        WordEntity.class,
+        UserEntity.class
     },
-    version = 41,
+    version = 43,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {

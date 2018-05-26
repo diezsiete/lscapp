@@ -9,10 +9,10 @@
             type="com.diezsiete.lscapp.vo.AnswerMessage" />
         <variable
             name="viewmodel"
-            type="com.diezsiete.lscapp.ui.practice.PracticeViewModel" />
+            type="com.diezsiete.lscapp.viewmodel.PracticeViewModel" />
         <variable
-            name="lesson"
-            type="com.diezsiete.lscapp.vo.Lesson" />
+            name="lessonEntity"
+            type="com.diezsiete.lscapp.db.entity.LessonEntity" />
     </data>
     <android.support.constraint.ConstraintLayout
         android:id="@+id/answer_message_cont"

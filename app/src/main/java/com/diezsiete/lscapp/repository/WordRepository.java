@@ -5,14 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.api.ApiResponse;
-import com.diezsiete.lscapp.api.Webservice;
-import com.diezsiete.lscapp.db.WordDao;
-import com.diezsiete.lscapp.util.AbsentLiveData;
+import com.diezsiete.lscapp.remote.ApiResponse;
+import com.diezsiete.lscapp.remote.Api;
+import com.diezsiete.lscapp.db.dao.WordDao;
 import com.diezsiete.lscapp.util.RateLimiter;
-import com.diezsiete.lscapp.vo.Level;
 import com.diezsiete.lscapp.vo.Resource;
-import com.diezsiete.lscapp.vo.Word;
+import com.diezsiete.lscapp.db.entity.WordEntity;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,75 +20,75 @@ import javax.inject.Singleton;
 
 @Singleton
 public class WordRepository {
-    private final Webservice webservice;
+    private final Api api;
     private final WordDao wordDao;
     private final AppExecutors appExecutors;
 
     private RateLimiter<String> repoListRateLimit = new RateLimiter<>(10, TimeUnit.MINUTES);
 
     @Inject
-    WordRepository(Webservice webservice, WordDao wordDao, AppExecutors appExecutors) {
-        this.webservice = webservice;
+    WordRepository(Api api, WordDao wordDao, AppExecutors appExecutors) {
+        this.api = api;
         this.wordDao = wordDao;
         this.appExecutors = appExecutors;
     }
 
 
-    public LiveData<Resource<List<Word>>> loadWords() {
-        return new NetworkBoundResource<List<Word>, List<Word>>(appExecutors) {
+    public LiveData<Resource<List<WordEntity>>> loadWords() {
+        return new NetworkBoundResource<List<WordEntity>, List<WordEntity>>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull List<Word> item) {
+            protected void saveCallResult(@NonNull List<WordEntity> item) {
                 wordDao.insert(item);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<Word> data) {
-                return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("words");
+            protected boolean shouldFetch(@Nullable List<WordEntity> data) {
+                return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("wordEntities");
             }
 
             @NonNull
             @Override
-            protected LiveData<List<Word>> loadFromDb() {
+            protected LiveData<List<WordEntity>> loadFromDb() {
                 return wordDao.loadAll();
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<List<Word>>> createCall() {
-                return webservice.getWords();
+            protected LiveData<ApiResponse<List<WordEntity>>> createCall() {
+                return api.getWords();
             }
 
             @Override
             protected void onFetchFailed() {
-                repoListRateLimit.reset("words");
+                repoListRateLimit.reset("wordEntities");
             }
         }.asLiveData();
     }
 
 
 
-    public LiveData<Resource<Word>> loadWord(String word) {
-        return new NetworkBoundResource<Word, Word>(appExecutors) {
+    public LiveData<Resource<WordEntity>> loadWord(String word) {
+        return new NetworkBoundResource<WordEntity, WordEntity>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull Word item) {
+            protected void saveCallResult(@NonNull WordEntity item) {
                 wordDao.insert(item);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable Word data) {
+            protected boolean shouldFetch(@Nullable WordEntity data) {
                 return data == null || repoListRateLimit.shouldFetch("word");
             }
 
             @NonNull
             @Override
-            protected LiveData<Word> loadFromDb() {
+            protected LiveData<WordEntity> loadFromDb() {
                 return wordDao.load(word);
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Word>> createCall() {
-                return webservice.getWord(word);
+            protected LiveData<ApiResponse<WordEntity>> createCall() {
+                return api.getWord(word);
             }
 
         }.asLiveData();

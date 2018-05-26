@@ -16,12 +16,12 @@
 
 package com.diezsiete.lscapp.di;
 
-import com.diezsiete.lscapp.ui.dictionary.DictionaryFragment;
+import com.diezsiete.lscapp.ui.fragment.DictionaryFragment;
 import com.diezsiete.lscapp.ui.fragment.LoginFragment;
 import com.diezsiete.lscapp.ui.fragment.RegisterFragment;
-import com.diezsiete.lscapp.ui.lesson.LessonFragment;
-import com.diezsiete.lscapp.ui.level.LevelFragment;
-import com.diezsiete.lscapp.ui.level.LevelSelectionFragment;
+import com.diezsiete.lscapp.ui.fragment.LessonFragment;
+import com.diezsiete.lscapp.ui.fragment.LevelFragment;
+import com.diezsiete.lscapp.ui.fragment.LevelSelectionFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

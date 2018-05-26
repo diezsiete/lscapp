@@ -6,15 +6,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.api.ApiResponse;
-import com.diezsiete.lscapp.api.Webservice;
-import com.diezsiete.lscapp.db.UserDao;
-import com.diezsiete.lscapp.db.entity.User;
-import com.diezsiete.lscapp.util.AbsentLiveData;
+import com.diezsiete.lscapp.db.entity.LessonEntity;
+import com.diezsiete.lscapp.db.entity.UserEntity;
+import com.diezsiete.lscapp.remote.Api;
+import com.diezsiete.lscapp.remote.ApiResponse;
+import com.diezsiete.lscapp.db.dao.UserDao;
 import com.diezsiete.lscapp.util.RateLimiter;
 import com.diezsiete.lscapp.vo.Authentication;
 import com.diezsiete.lscapp.vo.CompletedLesson;
-import com.diezsiete.lscapp.vo.Lesson;
 import com.diezsiete.lscapp.vo.Resource;
 
 import java.util.concurrent.TimeUnit;
@@ -22,25 +21,22 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
 @Singleton
 public class UserRepository {
-    private final Webservice webservice;
+    private final Api api;
     private final UserDao userDao;
     private final AppExecutors appExecutors;
 
     private RateLimiter<String> repoListRateLimit = new RateLimiter<>(10, TimeUnit.MINUTES);
 
     @Inject
-    UserRepository(Webservice webservice, UserDao userDao, AppExecutors appExecutors) {
-        this.webservice = webservice;
+    UserRepository(Api api, UserDao userDao, AppExecutors appExecutors) {
+        this.api = api;
         this.userDao = userDao;
         this.appExecutors = appExecutors;
     }
 
-    public LiveData<User> load() {
+    public LiveData<UserEntity> load() {
         return userDao.load();
     }
 
@@ -48,29 +44,29 @@ public class UserRepository {
         this.appExecutors.diskIO().execute(userDao::deleteAll);
     }
 
-    public LiveData<Resource<User>> register(String email, String password, String passwordConfirm) {
-        return new NetworkBoundResource<User, Authentication>(appExecutors) {
+    public LiveData<Resource<UserEntity>> register(String email, String password, String passwordConfirm) {
+        return new NetworkBoundResource<UserEntity, Authentication>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull Authentication item) {
                 if(!item.profileId.isEmpty()){
-                    userDao.insert(new User(item.profileId, email));
+                    userDao.insert(new UserEntity(item.profileId, email));
                 }
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable User data) {
+            protected boolean shouldFetch(@Nullable UserEntity data) {
                 return true;
             }
             @NonNull
             @Override
-            protected LiveData<User> loadFromDb() {
+            protected LiveData<UserEntity> loadFromDb() {
                 return userDao.load();
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<Authentication>> createCall() {
-                return webservice.registerUser(email, password, passwordConfirm);
+                return api.registerUser(email, password, passwordConfirm);
             }
 
             @Override
@@ -80,28 +76,28 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<User>> login(String email, String password) {
-        return new NetworkBoundResource<User, Authentication>(appExecutors) {
+    public LiveData<Resource<UserEntity>> login(String email, String password) {
+        return new NetworkBoundResource<UserEntity, Authentication>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull Authentication item) {
                 if(!item.profileId.isEmpty()){
-                    userDao.insert(new User(item.profileId, email));
+                    userDao.insert(new UserEntity(item.profileId, email));
                 }
             }
             @Override
-            protected boolean shouldFetch(@Nullable User data) {
+            protected boolean shouldFetch(@Nullable UserEntity data) {
                 return true;
             }
             @NonNull
             @Override
-            protected LiveData<User> loadFromDb() {
+            protected LiveData<UserEntity> loadFromDb() {
                 return userDao.load();
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<Authentication>> createCall() {
-                return webservice.login(email, password);
+                return api.login(email, password);
             }
 
             @Override
@@ -111,27 +107,27 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<User>> getProfile(String profileId) {
-        return new NetworkBoundResource<User, User>(appExecutors) {
+    public LiveData<Resource<UserEntity>> getProfile(String profileId) {
+        return new NetworkBoundResource<UserEntity, UserEntity>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull User item) {
+            protected void saveCallResult(@NonNull UserEntity item) {
                 userDao.insert(item);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable User data) {
+            protected boolean shouldFetch(@Nullable UserEntity data) {
                 return true;
             }
             @NonNull
             @Override
-            protected LiveData<User> loadFromDb() {
+            protected LiveData<UserEntity> loadFromDb() {
                 return userDao.load();
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<User>> createCall() {
-                return webservice.getProfile(profileId);
+            protected LiveData<ApiResponse<UserEntity>> createCall() {
+                return api.getProfile(profileId);
             }
 
             @Override
@@ -141,28 +137,28 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<User>> putLessonCompleted(User user, Lesson lesson) {
-        return new NetworkBoundResource<User, User>(appExecutors) {
+    public LiveData<Resource<UserEntity>> putLessonCompleted(UserEntity userEntity, LessonEntity lessonEntity) {
+        return new NetworkBoundResource<UserEntity, UserEntity>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull User item) {
+            protected void saveCallResult(@NonNull UserEntity item) {
                 Log.d("JOSE", "OKS");
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable User data) {
+            protected boolean shouldFetch(@Nullable UserEntity data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<User> loadFromDb() {
+            protected LiveData<UserEntity> loadFromDb() {
                 return null;
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<User>> createCall() {
-                return webservice.putCompletedLesson(user.profileId, new CompletedLesson(lesson.lessonId));
+            protected LiveData<ApiResponse<UserEntity>> createCall() {
+                return api.putCompletedLesson(userEntity.profileId, new CompletedLesson(lessonEntity.lessonId));
             }
 
             @Override

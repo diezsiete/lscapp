@@ -3,17 +3,13 @@ package com.diezsiete.lscapp.repository;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.api.ApiResponse;
-import com.diezsiete.lscapp.api.Webservice;
-import com.diezsiete.lscapp.db.LessonDao;
-import com.diezsiete.lscapp.db.LevelDao;
-import com.diezsiete.lscapp.util.AbsentLiveData;
+import com.diezsiete.lscapp.db.entity.LessonEntity;
+import com.diezsiete.lscapp.remote.ApiResponse;
+import com.diezsiete.lscapp.remote.Api;
+import com.diezsiete.lscapp.db.dao.LessonDao;
 import com.diezsiete.lscapp.util.RateLimiter;
-import com.diezsiete.lscapp.vo.Lesson;
-import com.diezsiete.lscapp.vo.Level;
 import com.diezsiete.lscapp.vo.Resource;
 
 import java.util.List;
@@ -24,59 +20,59 @@ import javax.inject.Singleton;
 
 @Singleton
 public class LessonRepository {
-    private final Webservice webservice;
+    private final Api api;
     private final LessonDao lessonDao;
     private final AppExecutors appExecutors;
 
     private RateLimiter<String> repoListRateLimit = new RateLimiter<>(10, TimeUnit.MINUTES);
 
     @Inject
-    LessonRepository(Webservice webservice, LessonDao lessonDao, AppExecutors appExecutors) {
-        this.webservice = webservice;
+    LessonRepository(Api api, LessonDao lessonDao, AppExecutors appExecutors) {
+        this.api = api;
         this.lessonDao = lessonDao;
         this.appExecutors = appExecutors;
     }
 
 
-    public LiveData<Resource<List<Lesson>>> loadLessonsByLevelId(String levelId) {
-        return new NetworkBoundResource<List<Lesson>, List<Lesson>>(appExecutors) {
+    public LiveData<Resource<List<LessonEntity>>> loadLessonsByLevelId(String levelId) {
+        return new NetworkBoundResource<List<LessonEntity>, List<LessonEntity>>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull List<Lesson> item) {
-                for(Lesson lesson : item)
-                    lesson.levelId = levelId;
+            protected void saveCallResult(@NonNull List<LessonEntity> item) {
+                for(LessonEntity lessonEntity : item)
+                    lessonEntity.levelId = levelId;
                 lessonDao.insert(item);
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<Lesson> data) {
-                return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("lesson");
+            protected boolean shouldFetch(@Nullable List<LessonEntity> data) {
+                return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("lessonEntity");
             }
 
             @NonNull
             @Override
-            protected LiveData<List<Lesson>> loadFromDb() {
+            protected LiveData<List<LessonEntity>> loadFromDb() {
                 return lessonDao.loadLessonsByLevelId(levelId);
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<List<Lesson>>> createCall() {
-                return webservice.getLessonsByLevelId(levelId);
+            protected LiveData<ApiResponse<List<LessonEntity>>> createCall() {
+                return api.getLessonsByLevelId(levelId);
             }
 
             @Override
             protected void onFetchFailed() {
-                repoListRateLimit.reset("lesson-"+levelId);
+                repoListRateLimit.reset("lessonEntity-"+levelId);
             }
         }.asLiveData();
     }
 
-    public LiveData<Lesson> getLesson(String lessonId) {
+    public LiveData<LessonEntity> getLesson(String lessonId) {
         return lessonDao.loadLesson(lessonId);
     }
 
-    public void update(Lesson lesson) {
-        appExecutors.diskIO().execute(() -> lessonDao.update(lesson));
+    public void update(LessonEntity lessonEntity) {
+        appExecutors.diskIO().execute(() -> lessonDao.update(lessonEntity));
     }
 
     public void updateLessonProgress(String lessonId, int progress) {

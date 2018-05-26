@@ -3,11 +3,11 @@ package com.diezsiete.lscapp.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import com.diezsiete.lscapp.ui.MainActivityViewModel;
-import com.diezsiete.lscapp.ui.dictionary.DictionaryViewModel;
-import com.diezsiete.lscapp.ui.level.LessonViewModel;
-import com.diezsiete.lscapp.ui.level.LevelViewModel;
-import com.diezsiete.lscapp.ui.practice.PracticeViewModel;
+import com.diezsiete.lscapp.viewmodel.MainActivityViewModel;
+import com.diezsiete.lscapp.viewmodel.DictionaryViewModel;
+import com.diezsiete.lscapp.viewmodel.LessonViewModel;
+import com.diezsiete.lscapp.viewmodel.LevelViewModel;
+import com.diezsiete.lscapp.viewmodel.PracticeViewModel;
 import com.diezsiete.lscapp.viewmodel.LSCAppViewModelFactory;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
 

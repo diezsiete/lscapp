@@ -6,10 +6,9 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.text.TextUtils;
 
-import com.diezsiete.lscapp.db.entity.User;
+import com.diezsiete.lscapp.db.entity.UserEntity;
 import com.diezsiete.lscapp.repository.UserRepository;
 import com.diezsiete.lscapp.util.AbsentLiveData;
-import com.diezsiete.lscapp.vo.Authentication;
 import com.diezsiete.lscapp.vo.Resource;
 
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ public class UserViewModel extends ViewModel{
 
     private UserValidation userVali = new UserValidation();
 
-    private final LiveData<User> user;
+    private final LiveData<UserEntity> user;
 
     private final MutableLiveData<UserValidation> userValidation = new MutableLiveData<>();
 
@@ -26,7 +25,7 @@ public class UserViewModel extends ViewModel{
 
     private MutableLiveData<UserValidation> triggerAuthentication = new MutableLiveData<>();
 
-    private final LiveData<Resource<User>> authenticatedUser;
+    private final LiveData<Resource<UserEntity>> authenticatedUser;
 
     @Inject
     UserViewModel(UserRepository userRepository) {
@@ -47,7 +46,7 @@ public class UserViewModel extends ViewModel{
 
     }
 
-    public LiveData<User> getUser() {
+    public LiveData<UserEntity> getUser() {
         return user;
     }
 
@@ -118,7 +117,7 @@ public class UserViewModel extends ViewModel{
         return ok;
     }
 
-    public LiveData<Resource<User>> getAuthenticatedUser(){
+    public LiveData<Resource<UserEntity>> getAuthenticatedUser(){
         return authenticatedUser;
     }
 

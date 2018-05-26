@@ -17,101 +17,101 @@
 package com.diezsiete.lscapp.util;
 
 
-import com.diezsiete.lscapp.vo.Lesson;
-import com.diezsiete.lscapp.vo.Level;
-import com.diezsiete.lscapp.vo.Practice;
-import com.diezsiete.lscapp.vo.PracticeVideos;
-import com.diezsiete.lscapp.vo.PracticeVideosData;
-import com.diezsiete.lscapp.vo.PracticeVideosWord;
-import com.diezsiete.lscapp.vo.PracticeVideosWordData;
-import com.diezsiete.lscapp.vo.PracticeWithData;
-import com.diezsiete.lscapp.vo.PracticeWords;
-import com.diezsiete.lscapp.vo.Word;
+import com.diezsiete.lscapp.db.entity.LessonEntity;
+import com.diezsiete.lscapp.db.entity.LevelEntity;
+import com.diezsiete.lscapp.db.entity.PracticeEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideosEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideos;
+import com.diezsiete.lscapp.db.entity.PracticeVideosWordEntity;
+import com.diezsiete.lscapp.db.entity.PracticeVideosWord;
+import com.diezsiete.lscapp.db.entity.Practice;
+import com.diezsiete.lscapp.db.entity.PracticeWordsEntity;
+import com.diezsiete.lscapp.db.entity.WordEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestUtil {
 
-    public static Level createLevel(String levelId, String name) {
+    public static LevelEntity createLevel(String levelId, String name) {
         return createLevel(levelId, name,
                 "Descripción",
                 "https://s3.amazonaws.com/lsc-resources/imagenes/app/sustantivos.png",
                 "#F4AD31");
     }
 
-    public static Level createLevel(String levelId, String name, String description, String image, String color) {
-        return new Level(levelId, name, description, image, color);
+    public static LevelEntity createLevel(String levelId, String name, String description, String image, String color) {
+        return new LevelEntity(levelId, name, description, image, color);
     }
 
-    public static Lesson createLesson(String lessonId, String name) {
-        Lesson lesson = new Lesson(lessonId, name,
+    public static LessonEntity createLesson(String lessonId, String name) {
+        LessonEntity lessonEntity = new LessonEntity(lessonId, name,
                 "https://s3.amazonaws.com/lsc-resources/imagenes/app/sustantivos.png",
                 "#F4AD31");
-        return lesson;
+        return lessonEntity;
     }
 
-    public static PracticeWithData createShowSign(Lesson lesson, String... values) {
-        PracticeWithData practice = new PracticeWithData();
+    public static Practice createShowSign(LessonEntity lessonEntity, String... values) {
+        Practice practice = new Practice();
         practice.entity = createPractice("show-sign");
         practice.words = createPracticeWords(values);
         practice.videos = createPracticeVideos();
-        List<Lesson> lessonList = new ArrayList<>();
-        lessonList.add(lesson);
-        practice.lesson = lessonList;
+        List<LessonEntity> lessonEntityList = new ArrayList<>();
+        lessonEntityList.add(lessonEntity);
+        practice.lessonEntity = lessonEntityList;
         return practice;
     }
 
-    public static PracticeWithData createWhichOneVideo(Lesson lesson, String... values) {
-        PracticeWithData practice = new PracticeWithData();
+    public static Practice createWhichOneVideo(LessonEntity lessonEntity, String... values) {
+        Practice practice = new Practice();
         practice.entity = createPractice("which-one-video");
         practice.words = createPracticeWords(values);
         practice.videos = createPracticeVideos();
-        List<Lesson> lessonList = new ArrayList<>();
-        lessonList.add(lesson);
-        practice.lesson = lessonList;
+        List<LessonEntity> lessonEntityList = new ArrayList<>();
+        lessonEntityList.add(lessonEntity);
+        practice.lessonEntity = lessonEntityList;
         practice.entity.answerUser = new ArrayList<>();
         practice.entity.answer = new ArrayList<>();
         return practice;
     }
 
-    private static Practice createPractice(String code) {
-        return new Practice(code);
+    private static PracticeEntity createPractice(String code) {
+        return new PracticeEntity(code);
     }
 
-    private static List<PracticeWords> createPracticeWords(String... values){
-        List<PracticeWords> practiceWords = new ArrayList<>();
+    private static List<PracticeWordsEntity> createPracticeWords(String... values){
+        List<PracticeWordsEntity> practiceWordEntities = new ArrayList<>();
         for (String value : values) {
             List<String> strings = new ArrayList<>();
             strings.add(value);
-            PracticeWords pw = new PracticeWords();
+            PracticeWordsEntity pw = new PracticeWordsEntity();
             pw.words = strings;
-            practiceWords.add(pw);
+            practiceWordEntities.add(pw);
         }
-        return practiceWords;
+        return practiceWordEntities;
     }
 
-    private static List<PracticeVideosData> createPracticeVideos(){
-        List<PracticeVideosData> practiceVideosDataList = new ArrayList<>();
-        PracticeVideosData pvd = new PracticeVideosData();
-        pvd.entity = new PracticeVideos();
+    private static List<PracticeVideos> createPracticeVideos(){
+        List<PracticeVideos> practiceVideosList = new ArrayList<>();
+        PracticeVideos pvd = new PracticeVideos();
+        pvd.entity = new PracticeVideosEntity();
         pvd.videosWord = new ArrayList<>();
 
-        PracticeVideosWordData pvwd = new PracticeVideosWordData();
-        pvwd.entity = new PracticeVideosWord();
-        pvwd.words = new ArrayList<>();
-        pvwd.words.add(new Word("A", "https://s3.amazonaws.com/lsc-resources/videos/a.mp4"));
+        PracticeVideosWord pvwd = new PracticeVideosWord();
+        pvwd.entity = new PracticeVideosWordEntity();
+        pvwd.wordEntities = new ArrayList<>();
+        pvwd.wordEntities.add(new WordEntity("A", "https://s3.amazonaws.com/lsc-resources/videos/a.mp4"));
 
         pvd.videosWord.add(pvwd);
 
-        practiceVideosDataList.add(pvd);
+        practiceVideosList.add(pvd);
 
-        return practiceVideosDataList;
+        return practiceVideosList;
     }
 
     /*
-    public static User createUser(String login) {
-        return new User(login, null,
+    public static UserEntity createUser(String login) {
+        return new UserEntity(login, null,
                 login + " name", null, null, null);
     }
 
