@@ -110,11 +110,6 @@ public class FragmentBindingAdapters {
     public void bindPracticeVideo(SimpleExoPlayerView playerView, List<String> urls, int position, boolean play) {
         Log.d("JOSE", TAG + " bindPracticeVideo position[" + position + "]" );
         if(urls != null && urls.size() > 0) {
-            /*SignVideoPlayer player = new SignVideoPlayer(playerView.getContext(), playerView);
-            player.addExternalResource(urls.get(0));
-            player.onSingleTapUpPlayStop = true;
-            player.initialize();
-            */
             SignVideoManager videoManager = ((LessonFragment) fragment).videoManager;
             SignVideo signVideo = videoManager.getSignVideo(position)
                 .setPlayer(playerView)

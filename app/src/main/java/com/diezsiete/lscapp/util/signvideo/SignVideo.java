@@ -83,6 +83,12 @@ public class SignVideo {
         return this;
     }
 
+    public SignVideo resetPlayer(){
+        if(playerView != null && player != null)
+            playerView.setPlayer(player);
+        return this;
+    }
+
     private void addExternalUrl(String url) {
         _url = url;
         int pos = url.lastIndexOf('/') + 1;
@@ -110,9 +116,11 @@ public class SignVideo {
     }
 
     public SignVideo prepare() {
-        MediaSource mediaSource = buildMediaSource();
-        initExoPlayer();
-        player.prepare(mediaSource, true, false);
+        if(resources.size() > 0) {
+            MediaSource mediaSource = buildMediaSource();
+            initExoPlayer();
+            player.prepare(mediaSource, true, false);
+        }
         return this;
     }
 

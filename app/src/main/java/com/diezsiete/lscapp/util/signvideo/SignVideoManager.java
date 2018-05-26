@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SignVideoManager implements LifecycleObserver {
-    private final static String TAG = "SignVideoManager";
+    private final static String TAG = "JOSE";
 
     List<SignVideo> signVideos = new ArrayList<>();
     Context context;
@@ -87,7 +87,9 @@ public class SignVideoManager implements LifecycleObserver {
     protected void onResume() {
         Log.d(TAG, "onResume : initExoPlayer");
         for(SignVideo signVideo : signVideos)
-            signVideo.initExoPlayer();
+            signVideo
+                    .prepare()
+                    .resetPlayer();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -95,7 +97,7 @@ public class SignVideoManager implements LifecycleObserver {
         if(Util.SDK_INT > 23) {
             Log.d(TAG, "onStart : initExoPlayer");
             for(SignVideo signVideo : signVideos)
-                signVideo.initExoPlayer();
+                signVideo.prepare().resetPlayer();
         }
     }
 
