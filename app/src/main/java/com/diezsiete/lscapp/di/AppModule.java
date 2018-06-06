@@ -20,6 +20,7 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 
+import com.diezsiete.lscapp.db.dao.AchievementDao;
 import com.diezsiete.lscapp.remote.Api;
 import com.diezsiete.lscapp.remote.PracticeWithDataDeserializer;
 import com.diezsiete.lscapp.db.LSCAppDb;
@@ -106,5 +107,10 @@ class AppModule {
     @Singleton @Provides
     UserDao provideUserDao(LSCAppDb db) {
         return db.userDao();
+    }
+
+    @Singleton @Provides
+    AchievementDao provideAchievementDao(LSCAppDb db) {
+        return db.achievementDao();
     }
 }

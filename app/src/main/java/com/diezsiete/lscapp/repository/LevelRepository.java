@@ -38,8 +38,10 @@ public class LevelRepository {
     public LiveData<Resource<List<LevelEntity>>> loadLevels() {
         return new NetworkBoundResource<List<LevelEntity>, List<LevelEntity>>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull List<LevelEntity> item) {
-                levelDao.insert(item);
+            protected void saveCallResult(@NonNull List<LevelEntity> levels) {
+                for(LevelEntity level : levels)
+                    level.available = true;
+                levelDao.insert(levels);
             }
 
             @Override

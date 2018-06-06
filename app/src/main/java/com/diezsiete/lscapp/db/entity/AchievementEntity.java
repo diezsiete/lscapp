@@ -9,8 +9,9 @@ import android.support.annotation.NonNull;
 public class AchievementEntity {
     @PrimaryKey
     @NonNull
+    @ColumnInfo(name="achievement_id")
+    public String achievementId;
     public String title;
     public String description;
-    @ColumnInfo(name="image_url")
-    public String imageUrl;
+    public String image;
 }

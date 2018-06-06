@@ -19,6 +19,9 @@ public interface BaseDao<T> {
     @Update
     void update(T entity);
 
+    @Update
+    void update(List<T> entity);
+
     @Delete
     void delete(T entity);
 

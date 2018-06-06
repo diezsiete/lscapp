@@ -22,6 +22,8 @@ public class UserEntity {
     public String email;
     @ColumnInfo(name="profil_image_url")
     public String profileImageUrl;
+    @ColumnInfo(name="progress_name")
+    public String progressName;
     @ColumnInfo(name="general_progress")
     public String generalProgress;
     public String token;
@@ -29,6 +31,9 @@ public class UserEntity {
     public List<String> reachedAchievements;
     @ColumnInfo(name="completed_lessons")
     public List<String> completedLessons;
+    public String password;
+    @ColumnInfo(name="password_confirm")
+    public String passwordConfirm;
 
     public UserEntity(@NonNull String profileId, String email) {
         this.profileId = profileId;

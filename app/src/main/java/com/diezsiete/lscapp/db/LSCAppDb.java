@@ -3,6 +3,7 @@ package com.diezsiete.lscapp.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.diezsiete.lscapp.db.dao.AchievementDao;
 import com.diezsiete.lscapp.db.dao.LessonDao;
 import com.diezsiete.lscapp.db.dao.LevelDao;
 import com.diezsiete.lscapp.db.dao.PracticeDao;
@@ -11,6 +12,7 @@ import com.diezsiete.lscapp.db.dao.PracticeVideosWordDao;
 import com.diezsiete.lscapp.db.dao.PracticeWordsDao;
 import com.diezsiete.lscapp.db.dao.UserDao;
 import com.diezsiete.lscapp.db.dao.WordDao;
+import com.diezsiete.lscapp.db.entity.AchievementEntity;
 import com.diezsiete.lscapp.db.entity.LessonEntity;
 import com.diezsiete.lscapp.db.entity.UserEntity;
 import com.diezsiete.lscapp.db.entity.LevelEntity;
@@ -22,6 +24,7 @@ import com.diezsiete.lscapp.db.entity.WordEntity;
 
 @Database(
     entities = {
+        AchievementEntity.class,
         LevelEntity.class,
         LessonEntity.class,
         PracticeEntity.class,
@@ -31,7 +34,7 @@ import com.diezsiete.lscapp.db.entity.WordEntity;
         WordEntity.class,
         UserEntity.class
     },
-    version = 43,
+    version = 48,
     exportSchema = false
 )
 public abstract class LSCAppDb extends RoomDatabase {
@@ -50,4 +53,6 @@ public abstract class LSCAppDb extends RoomDatabase {
     public abstract WordDao wordDao();
 
     public abstract UserDao userDao();
+
+    public abstract AchievementDao achievementDao();
 }

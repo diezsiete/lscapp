@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="userEntity"
+            type="com.diezsiete.lscapp.db.entity.UserEntity" />
+    </data>
+
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{userEntity.name}"
+            android:gravity="center"
+            style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_marginTop="@dimen/spacing_double"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{userEntity.email}"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/spacing_single"
+            android:textColor="@color/colorPopUpBackgroud"
+            />
+
+        <TextView
+            android:id="@+id/progress_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/progress_title"
+            style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:gravity="center"
+            android:textColor="@color/lesson_title_background"
+            android:padding="@dimen/spacing_simple"
+            android:layout_marginTop="@dimen/spacing_double"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_double"
+            >
+            <ImageView
+                android:id="@+id/image_cup"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_cup"
+                android:contentDescription="@string/profile"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{userEntity.generalProgress + ` %`}"
+                android:layout_gravity="center_horizontal"
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="@dimen/spacing_double"
+                />
+        </FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{userEntity.progressName}"
+            android:gravity="center"
+            />
+
+
+
+        <TextView
+            android:id="@+id/achievements_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/achievements_title"
+            style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:gravity="center"
+            android:textColor="@color/lesson_title_background"
+            android:padding="@dimen/spacing_simple"
+            android:layout_marginTop="@dimen/spacing_double" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_achievements"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/spacing_single"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            android:transitionGroup="false"
+            app:spanCount="2" tools:ignore="UnusedAttribute" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</layout>

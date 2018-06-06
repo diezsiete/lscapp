@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#008484</color>
     <color name="colorAccent">#F7605D</color>
     <color name="colorPopUpBackgroud">#5a000000</color>
+    <color name="colorDisabled">#CCCCCC</color>
     <color name="transparent">#00ffffff</color>
     <color name="touch_effect">#9ccc</color>
 

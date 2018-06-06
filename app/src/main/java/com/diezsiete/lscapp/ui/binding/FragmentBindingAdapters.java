@@ -42,6 +42,7 @@ import com.diezsiete.lscapp.ui.fragment.LessonFragment;
 import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
 import com.diezsiete.lscapp.ui.view.signvideo.SignVideo;
 import com.diezsiete.lscapp.ui.view.signvideo.SignVideoManager;
+import com.diezsiete.lscapp.util.GrayscaleTransformation;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.squareup.picasso.Picasso;
 
@@ -75,14 +76,17 @@ public class FragmentBindingAdapters {
     }
 
 
-    @BindingAdapter("imageUrl")
-    public void bindImage(ImageView imageView, String url) {
+    @BindingAdapter(value={"imageUrl", "grayScaled"}, requireAll = false)
+    public void bindImage(ImageView imageView, String url, boolean grayScaled) {
         //Glide.with(fragment).load(url).into(imageView);
         if(url != null) {
             if(!url.isEmpty()) {
                 imageView.setVisibility(View.VISIBLE);
-                Picasso.with(fragment != null ? fragment.getContext() : activity.getBaseContext())
-                        .load(url).into(imageView);
+                Picasso picasso = Picasso.with(fragment != null ? fragment.getContext() : activity.getBaseContext());
+                if(grayScaled)
+                    picasso.load(url).transform(new GrayscaleTransformation(picasso)).into(imageView);
+                else
+                    picasso.load(url).into(imageView);
             }else
                 imageView.setVisibility(View.INVISIBLE);
         }

@@ -26,6 +26,8 @@ import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.ui.MainActivity;
 import com.diezsiete.lscapp.ui.fragment.DictionaryFragment;
 import com.diezsiete.lscapp.ui.fragment.LoginFragment;
+import com.diezsiete.lscapp.ui.fragment.ProfileEditFragment;
+import com.diezsiete.lscapp.ui.fragment.ProfileFragment;
 import com.diezsiete.lscapp.ui.fragment.RegisterFragment;
 import com.diezsiete.lscapp.ui.fragment.LessonFragment;
 import com.diezsiete.lscapp.ui.fragment.LevelFragment;
@@ -90,6 +92,25 @@ public class NavigationController {
         fragmentManager.beginTransaction()
                 .replace(containerId, registerFragment)
                 .commitAllowingStateLoss();
+    }
+
+    public void navigateToProfile() {
+        ProfileFragment profileFragment = new ProfileFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, profileFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToProfileEdit() {
+        ProfileEditFragment profileEditFragment = new ProfileEditFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, profileEditFragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigatePreviousFragment(){
+        fragmentManager.popBackStackImmediate();
     }
 
     public void navigateToPermissions(){

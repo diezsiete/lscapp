@@ -4,11 +4,11 @@ package com.diezsiete.lscapp.remote;
 
 import android.arch.lifecycle.LiveData;
 
+import com.diezsiete.lscapp.db.entity.AchievementEntity;
 import com.diezsiete.lscapp.db.entity.LessonEntity;
 import com.diezsiete.lscapp.db.entity.LevelEntity;
 import com.diezsiete.lscapp.db.entity.UserEntity;
 import com.diezsiete.lscapp.vo.Authentication;
-import com.diezsiete.lscapp.vo.CompletedLesson;
 import com.diezsiete.lscapp.db.entity.Practice;
 import com.diezsiete.lscapp.vo.TakeSignResponse;
 import com.diezsiete.lscapp.db.entity.WordEntity;
@@ -61,6 +61,9 @@ public interface Api {
     @GET("/word/{word}")
     LiveData<ApiResponse<WordEntity>> getWord(@Path("word") String word);
 
+    @GET("/achievement")
+    LiveData<ApiResponse<List<AchievementEntity>>> getAchievements();
+
 
     @Multipart
     @POST("/cntk/{tag}")
@@ -69,9 +72,15 @@ public interface Api {
         @Part MultipartBody.Part photo
     );
 
-
+    @FormUrlEncoded
     @PUT("/profile/{profileId}")
-    LiveData<ApiResponse<UserEntity>> putCompletedLesson(
-            @Path("profileId") String profileId, @Body CompletedLesson completedLesson);
+    LiveData<ApiResponse<UserEntity>> putProfile(
+            @Path("profileId") String profileId,
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("confirmPassword") String confirmPassword,
+            @Field("completedLesson") String completedLesson);
+
 
 }

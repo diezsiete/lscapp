@@ -12,10 +12,11 @@
     <string name="practice">Practicar</string>
     <string name="dictionary">Diccionario</string>
     <string name="leaderboard">Tabla de clasificación</string>
-    <string name="profile">Perfil</string>
     <string name="about">Acerca de</string>
     <string name="sign_out">Cerrar sesión</string>
     <string name="sign_practice">Práctica de Señas</string>
+    <string name="edit">Editar</string>
+    <string name="search">Buscar</string>
 
     <!-- Label for the show bass checkbox preference -->
     <string name="pref_background_black_label">Fondo negro</string>
@@ -41,6 +42,7 @@
 
     <!-- register and login -->
     <string name="title_activity_login">Iniciar sesión</string>
+    <string name="prompt_name">Nombre</string>
     <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="prompt_password_confirm">Confirmar contraseña</string>
@@ -76,5 +78,12 @@
 
     <string name="camera_permission_denied_messsage">Permisos denegados</string>
     <string name="camera_permission_activate">Habilitar permisos</string>
+
+    <!-- Profile -->
+    <string name="profile">Perfil</string>
+    <string name="profile_title">Mi Perfil</string>
+    <string name="progress_title">Progreso general</string>
+    <string name="achievements_title">Logros</string>
+    <string name="save">Guardar</string>
 
 </resources>

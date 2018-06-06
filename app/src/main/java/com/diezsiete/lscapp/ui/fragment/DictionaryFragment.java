@@ -12,6 +12,7 @@ import com.diezsiete.lscapp.viewmodel.MainActivityViewModel;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.ui.view.signvideo.SignVideoManager;
 import com.diezsiete.lscapp.viewmodel.DictionaryViewModel;
+import com.diezsiete.lscapp.vo.ToolbarData;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -77,7 +78,9 @@ public class DictionaryFragment extends Fragment implements Injectable {
 
 
         videoManager = new SignVideoManager(this.getContext(), getLifecycle());
-        mainActivityViewModel.setToolbarTitle(getString(R.string.dictionary));
+        mainActivityViewModel.setToolbarData(new ToolbarData(
+                getString(R.string.dictionary), false, true
+        ));
     }
 
     private void initLessonsList() {

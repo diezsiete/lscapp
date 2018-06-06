@@ -5,7 +5,7 @@
     <data>
         <variable
             name="toolbarData"
-            type="com.diezsiete.lscapp.vo.MainToolbarData" />
+            type="com.diezsiete.lscapp.vo.ToolbarData" />
     </data>
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -66,8 +66,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_main"
-            app:menu="@menu/activity_main_drawer" />
+            app:menu="@menu/drawer" />
 
     </android.support.v4.widget.DrawerLayout>
 </layout>

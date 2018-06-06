@@ -82,7 +82,6 @@ public class PracticeRepository {
                     practiceVideos.entity.practiceId = practiceId;
                     long id = practiceVideosDao.insert(practiceVideos.entity);
                     for(PracticeVideosWord practiceVideosWord : practiceVideos.videosWord){
-                        Log.d("JOSE", "PracticeRepository.updatePracticesFromCall WordEntity : " + practiceVideosWord.entity.wordId);
                         practiceVideosWord.entity.practiceVideosId = id;
                         practiceVideosWordDao.insert(practiceVideosWord.entity);
                     }

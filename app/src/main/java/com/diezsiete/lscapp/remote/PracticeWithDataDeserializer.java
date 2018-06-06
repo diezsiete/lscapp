@@ -61,8 +61,6 @@ PracticeWithDataDeserializer implements JsonDeserializer {
         practiceEntity.answer = jsonElementToIntList(jsonObject.get("answer"));
         practiceEntity.pictures = jsonElementToStringList(jsonObject.get("pictures"));
 
-        Log.d("JOSE", "DESERIALIZE : " + code);
-
         List<PracticeWordsEntity> practiceWordEntities = new ArrayList<>();
 
         List<List<String>> wordsList = deserializeArrayOfArrays(jsonObject, "words");

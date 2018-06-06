@@ -24,6 +24,7 @@ import com.diezsiete.lscapp.ui.adapter.PracticeAdapter;
 import com.diezsiete.lscapp.viewmodel.PracticeViewModel;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.ui.view.signvideo.SignVideoManager;
+import com.diezsiete.lscapp.vo.ToolbarData;
 
 import javax.inject.Inject;
 
@@ -100,7 +101,9 @@ public class LessonFragment extends Fragment implements Injectable {
         lessonViewModel.getLessonNoProgress().observe(this, lesson -> {
             binding.get().setLessonEntity(lesson);
             if(lesson != null)
-                mainActivityViewModel.setToolbarData(lesson.name, lesson.color, lesson.image);
+                mainActivityViewModel.setToolbarData(
+                        new ToolbarData(lesson.name, lesson.color, lesson.image, true));
+
         });
 
         practiceViewModel.answerMessage().observe(this, answerMessage -> {

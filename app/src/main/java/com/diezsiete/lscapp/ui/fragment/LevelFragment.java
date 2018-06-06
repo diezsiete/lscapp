@@ -14,6 +14,7 @@ import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.viewmodel.LessonViewModel;
 import com.diezsiete.lscapp.viewmodel.LevelViewModel;
 import com.diezsiete.lscapp.vo.Resource;
+import com.diezsiete.lscapp.vo.ToolbarData;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -87,7 +88,8 @@ public class LevelFragment extends Fragment implements Injectable {
         levelViewModel.getLevel().observe(this, resource -> {
             binding.get().setLevelEntity(resource == null ? null : resource.data);
             if(resource != null && resource.data != null)
-                mainActivityViewModel.setToolbarData(resource.data.name, resource.data.color, resource.data.image);
+                mainActivityViewModel.setToolbarData(
+                    new ToolbarData(resource.data.name, resource.data.color, resource.data.image, true));
             // this is only necessary because espresso cannot read data binding callbacks.
             binding.get().executePendingBindings();
         });
@@ -98,7 +100,7 @@ public class LevelFragment extends Fragment implements Injectable {
         binding.get().lessons.setAdapter(rvAdapter);
         adapter = new AutoClearedValue<>(this, rvAdapter);
 
-        mainActivityViewModel.setShowBackButton(true);
+
         mainActivityViewModel.lockDrawer();
 
         binding.get().setCallback(() -> lessonViewModel.retry());

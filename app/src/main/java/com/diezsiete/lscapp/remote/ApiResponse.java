@@ -3,6 +3,10 @@ package com.diezsiete.lscapp.remote;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.IOException;
 
 import retrofit2.Response;
@@ -32,6 +36,10 @@ public class ApiResponse<T> {
             if (response.errorBody() != null) {
                 try {
                     message = response.errorBody().string();
+                    if(code == 400) {
+                        JsonObject jsonObject = new JsonParser().parse(message).getAsJsonObject();
+                        message = jsonObject.get("errorMessage").getAsString();
+                    }
                 } catch (IOException ignored) {
                     Log.d("ApiResponse", "error while parsing response");
                 }

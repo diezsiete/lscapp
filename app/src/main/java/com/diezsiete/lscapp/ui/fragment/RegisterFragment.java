@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
 import com.diezsiete.lscapp.ui.binding.FragmentDataBindingComponent;
@@ -22,6 +23,7 @@ import com.diezsiete.lscapp.di.Injectable;
 import com.diezsiete.lscapp.ui.NavigationController;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
+import com.diezsiete.lscapp.vo.Status;
 
 import javax.inject.Inject;
 
@@ -67,9 +69,14 @@ public class RegisterFragment extends Fragment implements Injectable {
         });
 
         userViewModel.getAuthenticatedUser().observe(this, userResource -> {
-            if(userResource != null && userResource.data != null){
-                closeKeyboard();
-                navigationController.navigateToLevelSelection();
+            if (userResource != null) {
+                if (userResource.status == Status.SUCCESS && userResource.data != null) {
+                    closeKeyboard();
+                    navigationController.navigateToLevelSelection();
+                }
+                else if (userResource.status == Status.ERROR) {
+                    Toast.makeText(getContext(), userResource.message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

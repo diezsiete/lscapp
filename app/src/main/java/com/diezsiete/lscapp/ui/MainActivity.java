@@ -14,9 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.diezsiete.lscapp.R;
+import com.diezsiete.lscapp.databinding.DrawerHeaderBinding;
 import com.diezsiete.lscapp.ui.binding.FragmentDataBindingComponent;
 import com.diezsiete.lscapp.databinding.ActivityMainBinding;
 import com.diezsiete.lscapp.viewmodel.DictionaryViewModel;
@@ -24,6 +27,7 @@ import com.diezsiete.lscapp.ui.view.signcamera.SignCameraManager;
 import com.diezsiete.lscapp.util.AppConstants;
 import com.diezsiete.lscapp.viewmodel.MainActivityViewModel;
 import com.diezsiete.lscapp.viewmodel.UserViewModel;
+import com.diezsiete.lscapp.vo.ToolbarData;
 
 import javax.inject.Inject;
 
@@ -50,10 +54,19 @@ public class MainActivity extends AppCompatActivity
 
     private SignCameraManager signCameraManager;
 
+    private MenuItem actionEdit;
+    private MenuItem actionSearch;
+
+    private boolean actionBack = false;
+
+    private boolean onCreateNavigate = false;
+
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main, dataBindingComponent);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main, dataBindingComponent);
 
         mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         dictionaryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DictionaryViewModel.class);
@@ -69,14 +82,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mainActivityViewModel.getShowBackButton().observe(this, showBackButton -> {
-            if(showBackButton != null) {
-                getSupportActionBar().setHomeAsUpIndicator(
-                    showBackButton ? R.drawable.ic_arrow_back : R.drawable.ic_menu);
-            }
-        });
+
 
         mainActivityViewModel.goToLevel().observe(this, levelId -> {
             if(levelId != null && !levelId.isEmpty())
@@ -86,12 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         });
 
-        mainActivityViewModel.getToolbarData().observe(this, toolbarData -> {
-            binding.setToolbarData(toolbarData);
-            if(toolbarData != null && !toolbarData.color.isEmpty()){
-                getWindow().setStatusBarColor(Color.parseColor(toolbarData.color));
-            }
-        });
+        mainActivityViewModel.getToolbarData().observe(this, this::handleToolbar);
 
         mainActivityViewModel.getDrawerData().observe(this, locked -> {
             if(locked != null)
@@ -105,18 +107,27 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+        DrawerHeaderBinding drawerBind = DataBindingUtil.inflate(getLayoutInflater(), R.layout.drawer_header, binding
+                .navView, false);
+        binding.navView.addHeaderView(drawerBind.getRoot());
+
         userViewModel.getUser().observe(this, user ->{
-            /*if(user == null){
-                getSupportActionBar().hide();
-                navigationController.navigateToLogin();
-            }else if(savedInstanceState == null) {
-                getSupportActionBar().show();
-                navigationController.navigateToLevelSelection();
-            }*/
-            if(savedInstanceState == null){
-                getSupportActionBar().show();
-                navigationController.navigateToLevelSelection();
+            if(!onCreateNavigate) {
+                onCreateNavigate = true;
+                if (user == null) {
+                    navigationController.navigateToLogin();
+                } else if (savedInstanceState == null) {
+                    navigationController.navigateToLevelSelection();
+                }
             }
+            if(user != null)
+                drawerBind.setUserEntity(user);
+        });
+
+        mainActivityViewModel.getToast().observe(this, toastData -> {
+            if(toastData != null)
+                Toast.makeText(MainActivity.this, toastData.message,
+                        toastData.lengthShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
         });
     }
 
@@ -126,15 +137,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        actionEdit = menu.findItem(R.id.action_edit);
+        actionSearch = menu.findItem(R.id.action_search);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Boolean showBackButton = mainActivityViewModel.getShowBackButton().getValue();
-                if(showBackButton != null && showBackButton){
-                    navigationController.navigateToLevelSelection();
+                if(actionBack){
+                    navigationController.navigatePreviousFragment();
                 }else
                     mDrawer.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_edit:
+                navigationController.navigateToProfileEdit();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -148,10 +171,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_dictionary) {
             navigationController.navigateToDictionary();
         } else if (id == R.id.nav_profile) {
-            //attachFragment(SettingsFragment.newInstance());
+            navigationController.navigateToProfile();
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_sign_out) {
+            onCreateNavigate = false;
             userViewModel.logout();
         }
 
@@ -185,4 +209,27 @@ public class MainActivity extends AppCompatActivity
         }
         return signCameraManager;
     }
+
+    private void handleToolbar(ToolbarData toolbarData) {
+        binding.setToolbarData(toolbarData);
+        if(toolbarData != null) {
+            if (toolbarData.show)
+                getSupportActionBar().show();
+            else
+                getSupportActionBar().hide();
+
+            if (!toolbarData.color.isEmpty())
+                getWindow().setStatusBarColor(Color.parseColor(toolbarData.color));
+
+            actionBack = toolbarData.actionBack;
+            getSupportActionBar().setHomeAsUpIndicator(
+                    toolbarData.actionBack ? R.drawable.ic_arrow_back : R.drawable.ic_menu);
+
+            if (actionEdit != null)
+                actionEdit.setVisible(toolbarData.actionEdit);
+            if (actionSearch != null)
+                actionSearch.setVisible(toolbarData.actionSearch);
+        }
+    }
+
 }

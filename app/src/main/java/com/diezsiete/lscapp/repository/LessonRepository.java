@@ -38,14 +38,17 @@ public class LessonRepository {
         return new NetworkBoundResource<List<LessonEntity>, List<LessonEntity>>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull List<LessonEntity> item) {
-                for(LessonEntity lessonEntity : item)
+                for(LessonEntity lessonEntity : item) {
                     lessonEntity.levelId = levelId;
+                    lessonEntity.available = true;
+                }
                 lessonDao.insert(item);
             }
 
             @Override
             protected boolean shouldFetch(@Nullable List<LessonEntity> data) {
-                return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("lessonEntity");
+                return true;
+                //return data == null || data.isEmpty() || repoListRateLimit.shouldFetch("lessonEntity");
             }
 
             @NonNull

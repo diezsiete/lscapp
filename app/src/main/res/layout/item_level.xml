@@ -71,9 +71,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@string/practice"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@{levelEntity.available ? @color/colorPrimary : @color/colorDisabled}"
                     android:layout_margin="@dimen/spacing_single"
                     android:background="@color/transparent"
+                    android:enabled="@{levelEntity.available}"
                     />
             </android.support.v7.widget.ContentFrameLayout>
         </LinearLayout>

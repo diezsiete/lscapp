@@ -3,17 +3,14 @@ package com.diezsiete.lscapp.repository;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.diezsiete.lscapp.AppExecutors;
-import com.diezsiete.lscapp.db.entity.LessonEntity;
 import com.diezsiete.lscapp.db.entity.UserEntity;
 import com.diezsiete.lscapp.remote.Api;
 import com.diezsiete.lscapp.remote.ApiResponse;
 import com.diezsiete.lscapp.db.dao.UserDao;
 import com.diezsiete.lscapp.util.RateLimiter;
 import com.diezsiete.lscapp.vo.Authentication;
-import com.diezsiete.lscapp.vo.CompletedLesson;
 import com.diezsiete.lscapp.vo.Resource;
 
 import java.util.concurrent.TimeUnit;
@@ -49,6 +46,7 @@ public class UserRepository {
             @Override
             protected void saveCallResult(@NonNull Authentication item) {
                 if(!item.profileId.isEmpty()){
+                    userDao.deleteAll();
                     userDao.insert(new UserEntity(item.profileId, email));
                 }
             }
@@ -76,11 +74,14 @@ public class UserRepository {
         }.asLiveData();
     }
 
+
+
     public LiveData<Resource<UserEntity>> login(String email, String password) {
         return new NetworkBoundResource<UserEntity, Authentication>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull Authentication item) {
                 if(!item.profileId.isEmpty()){
+                    userDao.deleteAll();
                     userDao.insert(new UserEntity(item.profileId, email));
                 }
             }
@@ -137,28 +138,32 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<UserEntity>> putLessonCompleted(UserEntity userEntity, LessonEntity lessonEntity) {
+
+    protected LiveData<Resource<UserEntity>>
+    putProfile(String profileId, String name, String email, String password, String passwordConfirm,
+               String completedLessonId) {
         return new NetworkBoundResource<UserEntity, UserEntity>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull UserEntity item) {
-                Log.d("JOSE", "OKS");
+                if(!item.profileId.isEmpty()){
+                    userDao.update(item);
+                }
             }
 
             @Override
             protected boolean shouldFetch(@Nullable UserEntity data) {
                 return true;
             }
-
             @NonNull
             @Override
             protected LiveData<UserEntity> loadFromDb() {
-                return null;
+                return userDao.load();
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<UserEntity>> createCall() {
-                return api.putCompletedLesson(userEntity.profileId, new CompletedLesson(lessonEntity.lessonId));
+                return api.putProfile(profileId, name, email, password, passwordConfirm, completedLessonId);
             }
 
             @Override
@@ -166,5 +171,13 @@ public class UserRepository {
 
             }
         }.asLiveData();
+    }
+
+    public LiveData<Resource<UserEntity>> updateProfileBasicInfo(String profileId, String name, String email) {
+        return putProfile(profileId, name, email, null, null, null);
+    }
+    public LiveData<Resource<UserEntity>>
+    updateProfile(String profileId, String name, String email, String password, String passwordConfirm) {
+        return putProfile(profileId, name, email, password, passwordConfirm, null);
     }
 }

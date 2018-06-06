@@ -22,6 +22,7 @@ import com.diezsiete.lscapp.ui.adapter.LevelListAdapter;
 import com.diezsiete.lscapp.ui.NavigationController;
 import com.diezsiete.lscapp.util.AutoClearedValue;
 import com.diezsiete.lscapp.viewmodel.LevelViewModel;
+import com.diezsiete.lscapp.vo.ToolbarData;
 
 import javax.inject.Inject;
 
@@ -75,10 +76,9 @@ public class LevelSelectionFragment extends Fragment implements Injectable {
 
         adapter = new AutoClearedValue<>(this, rvAdapter);
 
-        mainActivityViewModel.setShowBackButton(false);
-
-        mainActivityViewModel.setToolbarData(getString(R.string.sign_practice),
-            "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)), "");
+        mainActivityViewModel.setToolbarData(new ToolbarData(getString(R.string.sign_practice),
+                "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)),
+                false));
 
         binding.get().setCallback(() -> levelViewModel.retry());
 
